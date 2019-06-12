@@ -1,0 +1,2 @@
+export const REGISTER_ITEM = 'REGISTER_ITEM';
+export const SET_ITEM_STATUS = 'SET_ITEM_STATUS';

@@ -1,0 +1,25 @@
+# General backup/log/swap files
+*~
+*.DS_Store
+*.bak
+*.log
+*.out
+*.so
+*.swp
+
+# Environment
+.env
+.env*.local
+
+# Node.js
+/node_modules/
+
+# PhpStorm
+.idea/
+
+# Webpack
+/build/
+
+
+# Git
+!.gitkeep
