@@ -1,3 +1,5 @@
+import _get from 'lodash/get';
+
 import { compose, withSafeTimeout } from '@wordpress/compose';
 import { withDispatch, withSelect } from '@wordpress/data';
 
@@ -17,15 +19,14 @@ export const mapDispatchToProps = ( dispatch ) => {
 };
 
 export const mapSelectToProps = ( select ) => {
-	const { getItems } = select( storeName );
-
 	const {
+		getCurrentPost,
 		isCurrentPostPublished,
 		isPublishSidebarEnabled,
 	} = select( 'core/editor' );
 
 	return {
-		items: getItems(),
+		items: _get( getCurrentPost(), 'prepublish_checks' ),
 		shouldRenderInPublishSidebar: isPublishSidebarEnabled() && ! isCurrentPostPublished(),
 	};
 };
