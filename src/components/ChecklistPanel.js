@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import _isEmpty from 'lodash/isEmpty';
 import _isEqual from 'lodash/isEqual';
+import _reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
@@ -47,10 +48,14 @@ class ChecklistPanel extends Component {
 	static getDerivedStateFromProps( props ) {
 		const { items } = props;
 
-		// TODO: Split into two functions.
-		const { completion, sortedItems } = Object.values( items ).reduce( ( { completion, sortedItems }, item ) => {
+		const { completion, sortedItems } = _reduce( items, ( { completion, sortedItems }, status, name ) => {
 			const [ completed, toComplete ] = completion;
 			const [ incompleteItems, completedItems, otherItems ] = sortedItems;
+
+			const item = {
+				name,
+				...status,
+			};
 
 			switch ( item.status ) {
 				case COMPLETE:

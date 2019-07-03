@@ -40,10 +40,11 @@ class Checklist extends Component {
 
 		return (
 			<ul className={ `${ baseClassName }__items` }>
-				{ items.map( ( { name, render, status } ) => (
+				{ items.map( ( { name, message, render, status } ) => (
 					<li key={ name } className={ `${ itemClassName } ${ itemClassName }--${ name }` }>
 						<ChecklistItem
 							name={ name }
+							message={ message }
 							render={ render }
 							renderStatusIcon={ renderStatusIcon }
 							setStatus={ setStatus }
