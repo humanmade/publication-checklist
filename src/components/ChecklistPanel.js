@@ -109,28 +109,6 @@ class ChecklistPanel extends Component {
 		};
 	}
 
-	/**
-	 * Set the status for the checklist item with the given name to the given value.
-	 *
-	 * @param {string} name - Item name.
-	 * @param {string} status - Item status.
-	 */
-	setStatus = ( name, status ) => {
-		const {
-			items,
-			setItemStatus,
-			setTimeout,
-		} = this.props;
-
-		const item = items[ name ];
-		if ( item && item.status !== status ) {
-			// Update the status as soon as possible.
-			setTimeout( () => {
-				setItemStatus( name, status );
-			} );
-		}
-	};
-
 	render() {
 		const { sortedItems } = this.state;
 
@@ -161,7 +139,6 @@ class ChecklistPanel extends Component {
 				<Checklist
 					baseClassName={ baseClassName }
 					items={ sortedItems }
-					setStatus={ this.setStatus }
 				/>
 			</div>
 		);
