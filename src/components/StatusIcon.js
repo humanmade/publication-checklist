@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { COMPLETED, INCOMPLETE, INFO } from '../itemStatus';
+import { COMPLETE, INCOMPLETE, INFO } from '../itemStatus';
 
 /**
  * Map a given item status to the according unicode character.
@@ -11,7 +11,7 @@ import { COMPLETED, INCOMPLETE, INFO } from '../itemStatus';
  */
 export const mapStatusToIcon = ( status ) => {
 	switch ( status ) {
-		case COMPLETED:
+		case COMPLETE:
 			return '✔';
 
 		case INCOMPLETE:

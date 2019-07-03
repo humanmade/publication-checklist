@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
 import Checklist from './Checklist';
 import CompletionIndicator from './CompletionIndicator';
 
-import { COMPLETED, INCOMPLETE } from '../itemStatus';
+import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
 
 const baseClassName = 'hm-publication-checklist';
@@ -53,7 +53,7 @@ class ChecklistPanel extends Component {
 			const [ incompleteItems, completedItems, otherItems ] = sortedItems;
 
 			switch ( item.status ) {
-				case COMPLETED:
+				case COMPLETE:
 					return {
 						completion: [
 							completed + 1,
