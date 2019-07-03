@@ -21,10 +21,11 @@
     "@wordpress/scripts": "^3.2.1",
     "eslint": "^5.16.0",
     "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jsdoc": "^8.0.1"
+    "eslint-plugin-jsdoc": "^8.0.1",
+    "node-sass": "^4.12.0"
   },
   "scripts": {
-    "build": "wp-scripts build",
+    "build": "wp-scripts build && node-sass -o build src",
     "lint:js": "wp-scripts lint-js src",
     "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
