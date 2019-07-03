@@ -13,7 +13,7 @@ class ChecklistItem extends Component {
 
 		return (
 			<Fragment>
-				{ renderStatusIcon( name, status ) }
+				{ renderStatusIcon() }
 				{ message }
 			</Fragment>
 		);

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import { withFilters } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
 import ChecklistItem from './ChecklistItem';
@@ -27,31 +28,34 @@ class Checklist extends Component {
 		);
 	};
 
-	render() {
-		const { renderStatusIcon } = this;
+	renderItem = ( item ) => {
+		const { name, message, status } = item;
 
+		const itemClassName = `${ this.props.baseClassName }__item`;
+		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItem );
+		const renderStatusIcon = () => this.renderStatusIcon( name, status )
+
+		return (
+			<li key={ name } className={ `${ itemClassName } ${ itemClassName }--${ name }` }>
+				<ItemElement
+					name={ name }
+					message={ message }
+					renderStatusIcon={ renderStatusIcon }
+					status={ status }
+				/>
+			</li>
+		);
+	}
+
+	render() {
 		const {
 			baseClassName,
 			items,
-			setStatus,
 		} = this.props;
-
-		const itemClassName = `${ baseClassName }__item`;
 
 		return (
 			<ul className={ `${ baseClassName }__items` }>
-				{ items.map( ( { name, message, render, status } ) => (
-					<li key={ name } className={ `${ itemClassName } ${ itemClassName }--${ name }` }>
-						<ChecklistItem
-							name={ name }
-							message={ message }
-							render={ render }
-							renderStatusIcon={ renderStatusIcon }
-							setStatus={ setStatus }
-							status={ status }
-						/>
-					</li>
-				) ) }
+				{ items.map( this.renderItem ) }
 			</ul>
 		);
 	}
@@ -60,7 +64,6 @@ class Checklist extends Component {
 Checklist.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
 	items: itemsCollectionPropType.isRequired,
-	setStatus: PropTypes.func.isRequired,
 };
 
 export default Checklist;
