@@ -1,13 +1,11 @@
 import classNames from 'classnames';
 import _isEmpty from 'lodash/isEmpty';
-import _isEqual from 'lodash/isEqual';
 import _reduce from 'lodash/reduce';
 import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
 import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editPost';
 import { Component, Fragment } from '@wordpress/element';
-import { doAction } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 import Checklist from './Checklist';
@@ -20,8 +18,6 @@ const baseClassName = 'hm-publication-checklist';
 const panelClassName = `${ baseClassName }__panel`;
 const sidebarName = 'hm-publication-checklist';
 
-export const ACTION_REGISTER_ITEMS = 'hm-publication-checklist.registerItems';
-
 class ChecklistPanel extends Component {
 	state = {
 		completion: {
@@ -30,20 +26,6 @@ class ChecklistPanel extends Component {
 		},
 		sortedItems: [],
 	};
-
-	componentDidMount() {
-		const { registerItem } = this.props;
-
-		// The following action allows third parties to register custom items for the publication checklist.
-		doAction( ACTION_REGISTER_ITEMS, registerItem );
-	}
-
-	shouldComponentUpdate( nextProps ) {
-		const { items } = this.props;
-
-		// Only ever update if there are new items.
-		return ! _isEqual( items, nextProps.items );
-	}
 
 	static getDerivedStateFromProps( props ) {
 		const { items } = props;
