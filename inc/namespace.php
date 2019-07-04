@@ -2,6 +2,8 @@
 
 namespace HM\PublicationChecklist;
 
+use stdClass;
+
 /**
  * Bootstrap.
  */
@@ -58,7 +60,7 @@ function register_prepublish_check( $id, $options ) {
  * @param array $data Raw REST API post data.
  * @return stdClass Map of check ID => status.
  */
-function get_check_status_for_api( $data ) {
+function get_check_status_for_api( array $data ) : ?stdClass {
 	/** @var WP_Post */
 	$post = get_post( $data['id'], ARRAY_A );
 	if ( empty( $post ) ) {
@@ -84,7 +86,7 @@ function get_check_status_for_api( $data ) {
  * @param array $meta Post metadata (may not have been saved).
  * @return Status[] Map of check ID => status.
  */
-function get_check_status( $data, $meta ) {
+function get_check_status( array $data, array $meta ) : array {
 	$checks = $GLOBALS['workflow_checks'];
 	$status = [];
 	foreach ( $checks as $id => $options ) {
