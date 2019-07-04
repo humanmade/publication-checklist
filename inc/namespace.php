@@ -74,6 +74,7 @@ function get_check_status_for_api( array $data ) : ?stdClass {
 		$status_data[ $id ] = [
 			'status' => $status->get_status(),
 			'message' => $status->get_message(),
+			'data' => $status->get_data(),
 		];
 	}
 	return (object) $status_data;

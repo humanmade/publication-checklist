@@ -21,6 +21,7 @@ class ChecklistItem extends Component {
 }
 
 ChecklistItem.propTypes = {
+	data: PropTypes.any,
 	name: PropTypes.string.isRequired,
 	message: PropTypes.string.isRequired,
 	renderStatusIcon: PropTypes.func.isRequired,

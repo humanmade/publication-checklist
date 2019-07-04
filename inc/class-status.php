@@ -31,14 +31,26 @@ class Status {
 	protected $message;
 
 	/**
+	 * Additional data about the check status.
+	 *
+	 * This data is passed to the frontend, and can be used to assist with
+	 * custom UI.
+	 *
+	 * @var mixed
+	 */
+	protected $data;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $status Status type.
 	 * @param string $message Human-readable message.
+	 * @param mixed $data Additional data about the check.
 	 */
-	public function __construct( string $status, string $message ) {
+	public function __construct( string $status, string $message, $data = null ) {
 		$this->status = $status;
 		$this->message = $message;
+		$this->data = $data;
 	}
 
 	/**
@@ -57,5 +69,14 @@ class Status {
 	 */
 	public function get_message() : string {
 		return $this->message;
+	}
+
+	/**
+	 * Get additional data about the status.
+	 *
+	 * @return mixed Additional data about the check status.
+	 */
+	public function get_data() {
+		return $this->data;
 	}
 }
