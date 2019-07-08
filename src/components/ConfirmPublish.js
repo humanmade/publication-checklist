@@ -26,7 +26,6 @@ class ConfirmPublish extends Component {
 			baseClassName,
 			canBePublished,
 			children,
-			isCompleted,
 			toComplete,
 		} = this.props;
 
