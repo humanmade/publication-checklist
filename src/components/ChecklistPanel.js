@@ -101,9 +101,7 @@ class ChecklistPanel extends Component {
 	render() {
 		const { completableItems, otherItems } = this.state;
 
-		if ( _isEmpty( completableItems ) && _isEmpty( otherItems ) ) {
-			return null;
-		}
+		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
 		const { shouldRenderInPublishSidebar } = this.props;
 
@@ -114,7 +112,7 @@ class ChecklistPanel extends Component {
 			toComplete,
 		} = completion;
 		const isToComplete = toComplete > 0;
-		const isCompleted = isToComplete && completed >= toComplete;
+		const isCompleted = completed >= toComplete;
 
 		const title = __( 'Publication Checklist', 'hm-publication-checklist' );
 
@@ -153,29 +151,33 @@ class ChecklistPanel extends Component {
 					isCompleted={ isCompleted }
 					toComplete={ toComplete }
 				/>
-				{ shouldRenderInPublishSidebar && (
-					<PluginPrePublishPanel
-						className={ classNames( panelClassName, {
-							[ `${ panelClassName }--to-complete` ]: isToComplete,
-							[ `${ panelClassName }--completed` ]: isCompleted,
-						} ) }
-						initialOpen
-						title={ title }
-					>
-						{ content }
-					</PluginPrePublishPanel>
+				{ showChecklist && (
+					<Fragment>
+						{ shouldRenderInPublishSidebar && (
+							<PluginPrePublishPanel
+								className={ classNames( panelClassName, {
+									[ `${ panelClassName }--to-complete` ]: isToComplete,
+									[ `${ panelClassName }--completed` ]: isCompleted,
+								} ) }
+								initialOpen
+								title={ title }
+							>
+								{ content }
+							</PluginPrePublishPanel>
+						) }
+						<PluginSidebarMoreMenuItem target={ sidebarName }>
+							{ title }
+						</PluginSidebarMoreMenuItem>
+						<PluginSidebar
+							name={ sidebarName }
+							title={ title }
+						>
+							<PanelBody>
+								{ content }
+							</PanelBody>
+						</PluginSidebar>
+					</Fragment>
 				) }
-				<PluginSidebarMoreMenuItem target={ sidebarName }>
-					{ title }
-				</PluginSidebarMoreMenuItem>
-				<PluginSidebar
-					name={ sidebarName }
-					title={ title }
-				>
-					<PanelBody>
-						{ content }
-					</PanelBody>
-				</PluginSidebar>
 			</Fragment>
 		);
 	}
