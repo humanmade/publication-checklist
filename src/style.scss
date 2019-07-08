@@ -30,6 +30,13 @@
 .editor-post-publish-panel__prepublish {
 	display: flex;
 	flex-direction: column;
+	padding-top: 1px !important;
+
+	/* Hide built-in summary. */
+	> div:first-child,
+	> p {
+		display: none;
+	}
 
 	.components-panel__body {
 		margin-top: -1px;
@@ -37,8 +44,8 @@
 	}
 
 	.hm-publication-checklist__panel {
-		margin-top: 0;
 		order: 1;
+		border-top: none;
 
 		&--to-complete .components-panel__body-title .components-button {
 			--indicator-size: 0.8em;
