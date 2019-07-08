@@ -32,6 +32,27 @@
 		font-weight: inherit;
 		margin-top: 1em;
 	}
+
+	/* https://github.com/WordPress/gutenberg/issues/16462 */
+	&__confirm.components-popover:not(.is-mobile).is-bottom {
+		z-index: 1000000;
+	}
+
+	&__confirm-content {
+		padding: 1em;
+
+		h2 {
+			margin: 0;
+			font: inherit;
+			font-weight: bold;
+		}
+
+		.components-button {
+			display: block;
+			text-align: center;
+			margin: 0 auto 0.5em;
+		}
+	}
 }
 
 .editor-post-publish-panel__prepublish {
@@ -47,11 +68,21 @@
 
 	.components-panel__body {
 		margin-top: -1px;
-		order: 2;
+		order: 3;
+	}
+
+	.components-panel__body.hm-publication-checklist__replacement-header {
+		order: 1;
+		padding: 0;
+
+		.editor-post-publish-panel__header-publish-button {
+			justify-content: flex-start;
+			text-align: left;
+		}
 	}
 
 	.hm-publication-checklist__panel {
-		order: 1;
+		order: 2;
 		border-top: none;
 
 		&--to-complete .components-panel__body-title .components-button {
@@ -81,4 +112,9 @@
 			background: #3fcf8e;
 		}
 	}
+}
+
+/* Hide built-in pre-publish sidebar header */
+.editor-post-publish-panel > .editor-post-publish-panel__header {
+	display: none;
 }

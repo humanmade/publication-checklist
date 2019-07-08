@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 
 import Checklist from './Checklist';
 import CompletionIndicator from './CompletionIndicator';
+import SidebarHeader from './SidebarHeader';
 
 import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
@@ -143,6 +144,11 @@ class ChecklistPanel extends Component {
 
 		return (
 			<Fragment>
+				<SidebarHeader
+					baseClassName={ baseClassName }
+					isCompleted={ isCompleted }
+					toComplete={ toComplete }
+				/>
 				{ shouldRenderInPublishSidebar && (
 					<PluginPrePublishPanel
 						className={ classNames( panelClassName, {
