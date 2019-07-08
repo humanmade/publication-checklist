@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 
-import { Button, IconButton, Popover } from '@wordpress/components';
+import { IconButton } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
 import { withDispatch, withSelect } from '@wordpress/data';
 import { PostPublishButton } from '@wordpress/editor';
-import { PluginPrePublishPanel } from '@wordpress/editPost';
+import { PluginPostPublishPanel, PluginPrePublishPanel } from '@wordpress/editPost';
 import { Component } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -22,8 +22,12 @@ class SidebarHeader extends Component {
 			baseClassName,
 			closePublishSidebar,
 			hasActiveMetaboxes,
-			isSaving,
+			isBeingScheduled,
 			isCompleted,
+			isPublished,
+			isScheduled,
+			isSaving,
+			isSavingMetaBoxes,
 			toComplete,
 		} = this.props;
 
@@ -34,26 +38,38 @@ class SidebarHeader extends Component {
 				focusOnMount={ true }
 				onSubmit={ this.onSubmit }
 				forceIsDirty={ hasActiveMetaboxes }
-				forceIsSaving={ isSaving }
+				forceIsSaving={ isSavingMetaBoxes }
 			/>
 		);
 
+		const isPublishedOrScheduled = isPublished || ( isScheduled && isBeingScheduled );
+		const isPrePublish = ! isPublishedOrScheduled && ! isSaving;
+		const isPostPublish = isPublishedOrScheduled && ! isSaving;
+
+		const Panel = isPrePublish ? PluginPrePublishPanel : PluginPostPublishPanel;
+
 		return (
-			<PluginPrePublishPanel
+			<Panel
 				className={ `${ baseClassName }__replacement-header`}
 				initialOpen
 			>
 				<div className="editor-post-publish-panel__header">
-					<div className="editor-post-publish-panel__header-publish-button">
-						<ConfirmPublish
-							baseClassName={ baseClassName }
-							canBePublished={ canBePublished }
-							toComplete={ toComplete }
-						>
-							{ publishButton }
-						</ConfirmPublish>
-						<span className="editor-post-publish-panel__spacer"></span>
-					</div>
+					{ isPostPublish ? (
+						<div className="editor-post-publish-panel__header-published">
+							{ isScheduled ? __( 'Scheduled' ) : __( 'Published' ) }
+						</div>
+					) : (
+						<div className="editor-post-publish-panel__header-publish-button">
+							<ConfirmPublish
+								baseClassName={ baseClassName }
+								canBePublished={ canBePublished }
+								toComplete={ toComplete }
+							>
+								{ publishButton }
+							</ConfirmPublish>
+							<span className="editor-post-publish-panel__spacer"></span>
+						</div>
+					) }
 					<IconButton
 						aria-expanded={ true }
 						onClick={ closePublishSidebar }
@@ -61,7 +77,7 @@ class SidebarHeader extends Component {
 						label={ __( 'Close panel' ) }
 					/>
 				</div>
-			</PluginPrePublishPanel>
+			</Panel>
 		);
 	}
 }
@@ -70,16 +86,38 @@ SidebarHeader.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
 	closePublishSidebar: PropTypes.func.isRequired,
 	hasActiveMetaboxes: PropTypes.bool.isRequired,
+	isBeingScheduled: PropTypes.bool.isRequired,
 	isCompleted: PropTypes.bool.isRequired,
+	isPublished: PropTypes.bool.isRequired,
 	isSaving: PropTypes.bool.isRequired,
+	isSavingMetaBoxes: PropTypes.bool.isRequired,
+	isScheduled: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
 };
 
 export default compose(
-	withSelect( ( select ) => ( {
-		hasActiveMetaboxes: select( 'core/edit-post' ).hasMetaBoxes(),
-		isSaving: select( 'core/edit-post' ).isSavingMetaBoxes(),
-	} ) ),
+	withSelect( ( select ) => {
+		const {
+			isEditedPostBeingScheduled,
+			isCurrentPostPublished,
+			isCurrentPostScheduled,
+			isSavingPost,
+		} = select( 'core/editor' );
+
+		const {
+			hasMetaBoxes,
+			isSavingMetaBoxes,
+		} = select( 'core/edit-post' );
+
+		return {
+			hasActiveMetaboxes: hasMetaBoxes(),
+			isBeingScheduled: isEditedPostBeingScheduled(),
+			isPublished: isCurrentPostPublished(),
+			isSaving: isSavingPost(),
+			isSavingMetaBoxes: isSavingMetaBoxes(),
+			isScheduled: isCurrentPostScheduled(),
+		};
+	} ),
 	withDispatch( ( dispatch ) => {
 		const { closePublishSidebar } = dispatch( 'core/edit-post' );
 		return {

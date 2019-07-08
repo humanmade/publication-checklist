@@ -55,7 +55,8 @@
 	}
 }
 
-.editor-post-publish-panel__prepublish {
+.editor-post-publish-panel__prepublish,
+.post-publish-panel__postpublish {
 	display: flex;
 	flex-direction: column;
 	padding-top: 1px !important;
