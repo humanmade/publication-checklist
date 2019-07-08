@@ -130,15 +130,19 @@ class ChecklistPanel extends Component {
 					items={ completableItems }
 				/>
 
-				<h3
-					className={ `${ baseClassName }__subtitle` }
-				>
-					{ __( 'Optional tasks:', 'hm-publication-checklist' ) }
-				</h3>
-				<Checklist
-					baseClassName={ baseClassName }
-					items={ otherItems }
-				/>
+				{ otherItems.length > 0 && (
+					<Fragment>
+						<h3
+							className={ `${ baseClassName }__subtitle` }
+						>
+							{ __( 'Optional tasks:', 'hm-publication-checklist' ) }
+						</h3>
+						<Checklist
+							baseClassName={ baseClassName }
+							items={ otherItems }
+						/>
+					</Fragment>
+				) }
 			</div>
 		);
 
