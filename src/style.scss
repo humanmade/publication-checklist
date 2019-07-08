@@ -15,6 +15,10 @@
 		}
 	}
 
+	&__item--status-complete .hm-publication-checklist__item-message {
+		text-decoration: line-through;
+	}
+
 	&__status-icon {
 		font-weight: bold;
 		margin-right: 0.5em;
