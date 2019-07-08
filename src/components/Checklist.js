@@ -33,10 +33,16 @@ class Checklist extends Component {
 
 		const itemClassName = `${ this.props.baseClassName }__item`;
 		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItem );
-		const renderStatusIcon = () => this.renderStatusIcon( name, status )
+		const renderStatusIcon = () => this.renderStatusIcon( name, status );
+
+		const classes = [
+			itemClassName,
+			`${ itemClassName }--${ name }`,
+			`${ itemClassName }--status-${ status }`,
+		];
 
 		return (
-			<li key={ name } className={ `${ itemClassName } ${ itemClassName }--${ name }` }>
+			<li key={ name } className={ classes.join( ' ' ) }>
 				<ItemElement
 					data={ data }
 					name={ name }
