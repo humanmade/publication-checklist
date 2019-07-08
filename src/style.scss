@@ -52,7 +52,7 @@
 			}
 
 			&::after {
-				background: orangered;
+				background: #e2192c;
 				border-radius: 100%;
 				content: '';
 				height: var( --indicator-size );
@@ -64,7 +64,7 @@
 		}
 
 		&--completed .components-panel__body-title .components-button::after {
-			background: yellowgreen;
+			background: #3fcf8e;
 		}
 	}
 }
