@@ -92,14 +92,15 @@ class ChecklistPanel extends Component {
 				completed,
 				toComplete,
 			},
-			sortedItems: [ ...incompleteItems, ...completedItems, ...otherItems ],
+			completableItems: [ ...incompleteItems, ...completedItems ],
+			otherItems,
 		};
 	}
 
 	render() {
-		const { sortedItems } = this.state;
+		const { completableItems, otherItems } = this.state;
 
-		if ( _isEmpty( sortedItems ) ) {
+		if ( _isEmpty( completableItems ) && _isEmpty( otherItems ) ) {
 			return null;
 		}
 
@@ -125,7 +126,17 @@ class ChecklistPanel extends Component {
 				/>
 				<Checklist
 					baseClassName={ baseClassName }
-					items={ sortedItems }
+					items={ completableItems }
+				/>
+
+				<h3
+					className={ `${ baseClassName }__subtitle` }
+				>
+					{ __( 'Optional tasks:', 'hm-publication-checklist' ) }
+				</h3>
+				<Checklist
+					baseClassName={ baseClassName }
+					items={ otherItems }
 				/>
 			</div>
 		);

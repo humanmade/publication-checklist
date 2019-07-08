@@ -25,6 +25,13 @@
 		text-align: center;
 		width: 1em;
 	}
+
+	/* Style subtitle using extra class to override Gutenberg specificity */
+	.hm-publication-checklist__subtitle {
+		font-size: inherit;
+		font-weight: inherit;
+		margin-top: 1em;
+	}
 }
 
 .editor-post-publish-panel__prepublish {
