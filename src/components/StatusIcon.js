@@ -15,7 +15,7 @@ export const mapStatusToIcon = ( status ) => {
 			return '✔';
 
 		case INCOMPLETE:
-			return '✘';
+			return '·';
 
 		case INFO:
 			return 'ℹ';
