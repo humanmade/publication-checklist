@@ -50,7 +50,7 @@ class SidebarHeader extends Component {
 
 		return (
 			<Panel
-				className={ `${ baseClassName }__replacement-header`}
+				className={ `${ baseClassName }__replacement-header` }
 				initialOpen
 			>
 				<div className="editor-post-publish-panel__header">

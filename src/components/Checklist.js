@@ -32,6 +32,7 @@ class Checklist extends Component {
 		const { data, name, message, status } = item;
 
 		const itemClassName = `${ this.props.baseClassName }__item`;
+		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItem );
 		const renderStatusIcon = () => this.renderStatusIcon( name, status );
 

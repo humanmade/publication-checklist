@@ -7,9 +7,7 @@ class ChecklistItem extends Component {
 		const {
 			baseClassName,
 			message,
-			name,
 			renderStatusIcon,
-			status,
 		} = this.props;
 
 		return (
