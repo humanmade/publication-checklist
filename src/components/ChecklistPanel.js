@@ -162,9 +162,6 @@ class ChecklistPanel extends Component {
 
 ChecklistPanel.propTypes = {
 	items: itemsMapPropType.isRequired,
-	registerItem: PropTypes.func.isRequired,
-	setItemStatus: PropTypes.func.isRequired,
-	setTimeout: PropTypes.func.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 };
 
