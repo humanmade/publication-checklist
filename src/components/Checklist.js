@@ -44,6 +44,7 @@ class Checklist extends Component {
 		return (
 			<li key={ name } className={ classes.join( ' ' ) }>
 				<ItemElement
+					baseClassName={ this.props.baseClassName }
 					data={ data }
 					name={ name }
 					message={ message }

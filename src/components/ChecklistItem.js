@@ -5,6 +5,7 @@ import { Component, Fragment } from '@wordpress/element';
 class ChecklistItem extends Component {
 	render() {
 		const {
+			baseClassName,
 			message,
 			name,
 			renderStatusIcon,
@@ -14,13 +15,16 @@ class ChecklistItem extends Component {
 		return (
 			<Fragment>
 				{ renderStatusIcon() }
-				{ message }
+				<span className={ `${ baseClassName }__item-message` }>
+					{ message }
+				</span>
 			</Fragment>
 		);
 	}
 }
 
 ChecklistItem.propTypes = {
+	baseClassName: PropTypes.string.isRequired,
 	data: PropTypes.any,
 	name: PropTypes.string.isRequired,
 	message: PropTypes.string.isRequired,
