@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import { COMPLETE, INCOMPLETE, INFO } from '../itemStatus';
@@ -25,11 +26,18 @@ export const mapStatusToIcon = ( status ) => {
 	}
 };
 
-const StatusIcon = ( { className, status } ) => {
+const StatusIcon = ( { baseClassName, name, status } ) => {
 	const icon = mapStatusToIcon( status );
 	if ( ! icon ) {
 		return null;
 	}
+
+	const iconClass = `${ baseClassName }__status-icon`;
+	const className = classNames( [
+		iconClass,
+		`${ iconClass }--${ name }`,
+		`${ iconClass }--${ status }`,
+	] );
 
 	return (
 		<span className={ className }>{ icon }</span>
@@ -37,8 +45,9 @@ const StatusIcon = ( { className, status } ) => {
 };
 
 StatusIcon.propTypes = {
-	className: PropTypes.string.isRequired,
-	status: PropTypes.string,
+	baseClassName: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+	status: PropTypes.string.isRequired,
 };
 
 StatusIcon.defaultProps = {

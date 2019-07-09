@@ -8,20 +8,14 @@ import StatusIcon from './StatusIcon';
 
 class ChecklistItem extends Component {
 	/**
-	 * Render the status icon for the checklist item with the given name.
-	 *
-	 * @param {string} name - Item name.
-	 * @param {string} status - Item status.
+	 * Render the status icon for the checklist item.
 	 */
-	renderStatusIcon = ( name, status ) => {
-		const { baseClassName } = this.props;
-
-		const className = `${ baseClassName }__status-icon`;
-
+	renderStatusIcon = () => {
 		return (
 			<StatusIcon
-				className={ `${ className } ${ className }--${ name } ${ className }--${ status }` }
-				status={ status }
+				baseClassName={ this.props.baseClassName }
+				name={ this.props.name }
+				status={ this.props.status }
 			/>
 		);
 	};
@@ -37,7 +31,6 @@ class ChecklistItem extends Component {
 		const itemClassName = `${ this.props.baseClassName }__item`;
 		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItemContent );
-		const renderStatusIcon = () => this.renderStatusIcon( name, status );
 
 		const classes = [
 			itemClassName,
@@ -52,7 +45,7 @@ class ChecklistItem extends Component {
 					data={ data }
 					name={ name }
 					message={ message }
-					renderStatusIcon={ renderStatusIcon }
+					renderStatusIcon={ this.renderStatusIcon }
 					status={ status }
 				/>
 			</li>
