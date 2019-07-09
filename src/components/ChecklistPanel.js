@@ -8,8 +8,7 @@ import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from 
 import { Component, Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import Checklist from './Checklist';
-import CompletionIndicator from './CompletionIndicator';
+import ChecklistPanelContent from './ChecklistPanelContent';
 import SidebarHeader from './SidebarHeader';
 
 import { COMPLETE, INCOMPLETE } from '../itemStatus';
@@ -116,34 +115,6 @@ class ChecklistPanel extends Component {
 
 		const title = __( 'Publication Checklist', 'hm-publication-checklist' );
 
-		const content = (
-			<div className={ baseClassName }>
-				<CompletionIndicator
-					baseClassName={ baseClassName }
-					completed={ completed }
-					toComplete={ toComplete }
-				/>
-				<Checklist
-					baseClassName={ baseClassName }
-					items={ completableItems }
-				/>
-
-				{ otherItems.length > 0 && (
-					<Fragment>
-						<h3
-							className={ `${ baseClassName }__subtitle` }
-						>
-							{ __( 'Optional tasks:', 'hm-publication-checklist' ) }
-						</h3>
-						<Checklist
-							baseClassName={ baseClassName }
-							items={ otherItems }
-						/>
-					</Fragment>
-				) }
-			</div>
-		);
-
 		return (
 			<Fragment>
 				<SidebarHeader
@@ -162,7 +133,13 @@ class ChecklistPanel extends Component {
 								initialOpen
 								title={ title }
 							>
-								{ content }
+								<ChecklistPanelContent
+									baseClassName={ baseClassName }
+									completed={ completed }
+									completableItems={ completableItems }
+									otherItems={ otherItems }
+									toComplete={ toComplete }
+								/>
 							</PluginPrePublishPanel>
 						) }
 						<PluginSidebarMoreMenuItem target={ sidebarName }>
@@ -173,7 +150,13 @@ class ChecklistPanel extends Component {
 							title={ title }
 						>
 							<PanelBody>
-								{ content }
+								<ChecklistPanelContent
+									baseClassName={ baseClassName }
+									completed={ completed }
+									completableItems={ completableItems }
+									otherItems={ otherItems }
+									toComplete={ toComplete }
+								/>
 							</PanelBody>
 						</PluginSidebar>
 					</Fragment>
