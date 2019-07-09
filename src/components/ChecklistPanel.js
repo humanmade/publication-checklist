@@ -4,8 +4,10 @@ import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
+import { compose } from '@wordpress/compose';
 import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editPost';
 import { Component, Fragment } from '@wordpress/element';
+import { withDispatch, withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 import ChecklistPanelContent from './ChecklistPanelContent';
@@ -69,6 +71,21 @@ class ChecklistPanel extends Component {
 			],
 			otherItems: other,
 		};
+	}
+
+	componentDidMount() {
+		// Force the publish sidebar to be enabled.
+		if ( ! this.props.isPublishSidebarEnabled ) {
+			this.props.onEnablePublishSidebar();
+		}
+	}
+
+	componentDidUpdate( prevProps ) {
+		// Force the publish sidebar to be enabled.
+		const current = this.props.isPublishSidebarEnabled;
+		if ( prevProps.isPublishSidebarEnabled !== current && ! current ) {
+			this.props.onEnablePublishSidebar();
+		}
 	}
 
 	render() {
@@ -141,8 +158,25 @@ class ChecklistPanel extends Component {
 }
 
 ChecklistPanel.propTypes = {
+	isPublishSidebarEnabled: PropTypes.bool.isRequired,
 	items: itemsMapPropType.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
+	onEnablePublishSidebar: PropTypes.func.isRequired,
 };
 
-export default ChecklistPanel;
+export default compose(
+	withSelect( ( select ) => {
+		const { isPublishSidebarEnabled } = select( 'core/editor' );
+
+		return {
+			isPublishSidebarEnabled: isPublishSidebarEnabled(),
+		};
+	} ),
+	withDispatch( ( dispatch ) => {
+		const { enablePublishSidebar } = dispatch( 'core/editor' );
+
+		return {
+			onEnablePublishSidebar: enablePublishSidebar,
+		};
+	} ),
+)( ChecklistPanel );
