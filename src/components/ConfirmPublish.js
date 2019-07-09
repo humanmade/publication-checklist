@@ -70,7 +70,7 @@ class ConfirmPublish extends Component {
 						onClose={ this.onCancelConfirm }
 					>
 						<div className={ `${ popoverClass }-content` }>
-							<h2>{ __( 'Are you sure?' ) }</h2>
+							<h2>{ __( 'Are you sure?', 'hm-publication-checklist' ) }</h2>
 							<p>{ label }</p>
 
 							{ children }
