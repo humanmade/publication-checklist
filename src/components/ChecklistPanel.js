@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import _isEmpty from 'lodash/isEmpty';
-import _reduce from 'lodash/reduce';
+import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
@@ -30,10 +30,15 @@ class ChecklistPanel extends Component {
 	static getDerivedStateFromProps( props ) {
 		const { items } = props;
 
-		const { completion, sortedItems } = _reduce( items, ( { completion, sortedItems }, status, name ) => {
-			const [ completed, toComplete ] = completion;
-			const [ incompleteItems, completedItems, otherItems ] = sortedItems;
+		const completion = {
+			completed: 0,
+			toComplete: 0,
+		};
+		const incomplete = [];
+		const completed = [];
+		const other = [];
 
+		forEach( items, ( status, name ) => {
 			const item = {
 				name,
 				...status,
@@ -41,59 +46,28 @@ class ChecklistPanel extends Component {
 
 			switch ( item.status ) {
 				case COMPLETE:
-					return {
-						completion: [
-							completed + 1,
-							toComplete + 1,
-						],
-						sortedItems: [
-							incompleteItems,
-							[ ...completedItems, item ],
-							otherItems,
-						],
-					};
+					completion.completed++;
+					completion.toComplete++;
+					completed.push( item );
+					return;
 
 				case INCOMPLETE:
-					return {
-						completion: [
-							completed,
-							toComplete + 1,
-						],
-						sortedItems: [
-							[ ...incompleteItems, item ],
-							completedItems,
-							otherItems,
-						],
-					};
+					completion.toComplete++;
+					incomplete.push( item );
+					return;
 
 				default:
-					return {
-						completion: [
-							completed,
-							toComplete,
-						],
-						sortedItems: [
-							incompleteItems,
-							completedItems,
-							[ ...otherItems, item ],
-						],
-					};
+					other.push( item );
 			}
-		}, {
-			completion: [ 0, 0 ],
-			sortedItems: [ [], [], [] ],
 		} );
 
-		const [ completed, toComplete ] = completion;
-		const [ incompleteItems, completedItems, otherItems ] = sortedItems;
-
 		return {
-			completion: {
-				completed,
-				toComplete,
-			},
-			completableItems: [ ...incompleteItems, ...completedItems ],
-			otherItems,
+			completion,
+			completableItems: [
+				...incomplete,
+				...completed,
+			],
+			otherItems: other,
 		};
 	}
 
