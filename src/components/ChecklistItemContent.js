@@ -11,7 +11,7 @@ const ChecklistItemContent = ( { baseClassName, message, renderStatusIcon } ) =>
 			</span>
 		</Fragment>
 	);
-}
+};
 
 ChecklistItemContent.propTypes = {
 	baseClassName: PropTypes.string.isRequired,

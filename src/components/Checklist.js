@@ -16,7 +16,7 @@ const Checklist = ( { baseClassName, items } ) => {
 			) ) }
 		</ul>
 	);
-}
+};
 
 Checklist.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
