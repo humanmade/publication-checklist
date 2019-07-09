@@ -6,6 +6,7 @@ use stdClass;
 use WP_REST_Request;
 
 const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
+const GLOBAL_NAME = 'hm_publication_checklist_checks';
 
 /**
  * Bootstrap.
@@ -83,7 +84,7 @@ function register_rest_fields() {
  * }
  */
 function register_prepublish_check( $id, $options ) {
-	$GLOBALS['workflow_checks'][ $id ] = $options;
+	$GLOBALS[ GLOBAL_NAME ][ $id ] = $options;
 }
 
 /**
@@ -120,7 +121,7 @@ function get_check_status_for_api( array $data ) : ?stdClass {
  * @return Status[] Map of check ID => status.
  */
 function get_check_status( array $data, array $meta ) : array {
-	$checks = $GLOBALS['workflow_checks'];
+	$checks = $GLOBALS[ GLOBAL_NAME ];
 	$status = [];
 	foreach ( $checks as $id => $options ) {
 		$status[ $id ] = call_user_func( $options['run_check'], $data, $meta );
