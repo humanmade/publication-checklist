@@ -17,7 +17,7 @@ const CompletionIndicator = ( { baseClassName, completed, toComplete } ) => {
 		toComplete,
 	);
 
-	const color = completed >= toComplete ? '#3fcf8e' : '#e2192c';
+	const color = completed >= toComplete ? '#3fcf8e' : '#f97a14';
 	const percent = 100 / toComplete * completed;
 
 	return (
