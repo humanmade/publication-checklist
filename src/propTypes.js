@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const itemPropType = PropTypes.shape( {
-	// name: PropTypes.string.isRequired,
-	// render: PropTypes.func.isRequired,
+	data: PropTypes.any,
 	message: PropTypes.string.isRequired,
 	status: PropTypes.string,
 } );
