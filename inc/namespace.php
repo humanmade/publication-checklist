@@ -57,6 +57,7 @@ function enqueue_assets() {
 		plugins_url( 'build/index.js', __DIR__ ),
 		[
 			'wp-block-editor',
+			'wp-edit-post',
 			'wp-plugins',
 		]
 	);
