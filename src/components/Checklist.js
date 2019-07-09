@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withFilters } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
-import ChecklistItem from './ChecklistItem';
+import ChecklistItemContent from './ChecklistItemContent';
 import StatusIcon from './StatusIcon';
 
 import { itemsCollectionPropType } from '../propTypes';
@@ -33,7 +33,7 @@ class Checklist extends Component {
 
 		const itemClassName = `${ this.props.baseClassName }__item`;
 		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
-		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItem );
+		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItemContent );
 		const renderStatusIcon = () => this.renderStatusIcon( name, status );
 
 		const classes = [

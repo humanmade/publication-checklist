@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import { Component, Fragment } from '@wordpress/element';
 
-class ChecklistItem extends Component {
+class ChecklistItemContent extends Component {
 	render() {
 		const {
 			baseClassName,
@@ -21,7 +21,7 @@ class ChecklistItem extends Component {
 	}
 }
 
-ChecklistItem.propTypes = {
+ChecklistItemContent.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
 	data: PropTypes.any,
 	name: PropTypes.string.isRequired,
@@ -30,4 +30,4 @@ ChecklistItem.propTypes = {
 	status: PropTypes.string.isRequired,
 };
 
-export default ChecklistItem;
+export default ChecklistItemContent;
