@@ -119,3 +119,8 @@
 .editor-post-publish-panel > .editor-post-publish-panel__header {
 	display: none;
 }
+
+/* Hide UI for disabling pre-publish checks */
+.editor-post-publish-panel__footer {
+	display: none;
+}
