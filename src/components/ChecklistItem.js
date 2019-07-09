@@ -29,6 +29,8 @@ class ChecklistItem extends Component {
 		} = this.props;
 
 		const itemClassName = `${ this.props.baseClassName }__item`;
+
+		// Ignore lint bug: https://github.com/WordPress/gutenberg/issues/16418
 		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItemContent );
 
