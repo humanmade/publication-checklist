@@ -89,7 +89,7 @@ SidebarHeader.propTypes = {
 	isBeingScheduled: PropTypes.bool.isRequired,
 	isCompleted: PropTypes.bool.isRequired,
 	isPublished: PropTypes.bool.isRequired,
-	isSaving: PropTypes.bool.isRequired,
+	isSaving: PropTypes.bool,
 	isSavingMetaBoxes: PropTypes.bool.isRequired,
 	isScheduled: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
