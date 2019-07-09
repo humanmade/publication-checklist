@@ -10,9 +10,14 @@ use stdClass;
 function bootstrap() {
 	add_action( 'wp_enqueue_editor', __NAMESPACE__ . '\\enqueue_assets' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_fields' );
-	add_action( 'plugins_loaded', function () {
-		do_action( 'hm.publication-checklist.register_prepublish_checks' );
-	} );
+	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_up_checks' );
+}
+
+/**
+ * Set up the prepublish checks.
+ */
+function set_up_checks() {
+	do_action( 'hm.publication-checklist.register_prepublish_checks' );
 }
 
 /**
