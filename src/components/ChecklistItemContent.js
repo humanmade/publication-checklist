@@ -1,24 +1,16 @@
 import PropTypes from 'prop-types';
 
-import { Component, Fragment } from '@wordpress/element';
+import { Fragment } from '@wordpress/element';
 
-class ChecklistItemContent extends Component {
-	render() {
-		const {
-			baseClassName,
-			message,
-			renderStatusIcon,
-		} = this.props;
-
-		return (
-			<Fragment>
-				{ renderStatusIcon() }
-				<span className={ `${ baseClassName }__item-message` }>
-					{ message }
-				</span>
-			</Fragment>
-		);
-	}
+const ChecklistItemContent = ( { baseClassName, message, renderStatusIcon } ) => {
+	return (
+		<Fragment>
+			{ renderStatusIcon() }
+			<span className={ `${ baseClassName }__item-message` }>
+				{ message }
+			</span>
+		</Fragment>
+	);
 }
 
 ChecklistItemContent.propTypes = {
