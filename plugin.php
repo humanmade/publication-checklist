@@ -1,6 +1,9 @@
 <?php
 /**
  * Plugin Name: Publication Checklist
+ * Description: Ensure authors meet requirements before publishing.
+ * Author: Human Made
+ * Author URI: https://humanmade.com/
  */
 
 namespace HM\PublicationChecklist;
