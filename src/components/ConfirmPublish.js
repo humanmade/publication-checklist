@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { Button, Popover } from '@wordpress/components';
+import { Button, Modal } from '@wordpress/components';
 import { Component, Fragment } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 
@@ -64,25 +64,26 @@ class ConfirmPublish extends Component {
 				{ __( 'Publish' ) }
 
 				{ showingConfirm && (
-					<Popover
+					<Modal
 						className={ popoverClass }
-						position="bottom left"
-						onClose={ this.onCancelConfirm }
+						overlayClassName={ `${ baseClassName }__confirm-overlay` }
+						title={ __( 'Ignore incomplete tasks?', 'hm-publication-checklist' ) }
+						onRequestClose={ this.onCancelConfirm }
 					>
-						<div className={ `${ popoverClass }-content` }>
-							<h2>{ __( 'Are you sure?', 'hm-publication-checklist' ) }</h2>
-							<p>{ label }</p>
+						<p>{ label }</p>
 
-							{ children }
-
+						<div className={ `${ popoverClass }-buttons` }>
 							<Button
-								isTertiary={ true }
+								isDefault={ true }
+								isLarge={ true }
 								onClick={ this.onCancelConfirm }
 							>
 								Cancel
 							</Button>
+
+							{ children }
 						</div>
-					</Popover>
+					</Modal>
 				) }
 			</Button>
 		);

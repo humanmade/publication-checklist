@@ -33,24 +33,17 @@
 		margin-top: 1em;
 	}
 
-	/* https://github.com/WordPress/gutenberg/issues/16462 */
-	&__confirm.components-popover:not(.is-mobile).is-bottom {
-		z-index: 1000000;
+	/* The prepublish sidebar sits higher than modal overlays, so bump the z-index */
+	&__confirm-overlay.components-modal__screen-overlay {
+		z-index: 100001;
 	}
 
-	&__confirm-content {
-		padding: 1em;
-
-		h2 {
-			margin: 0;
-			font: inherit;
-			font-weight: bold;
-		}
+	&__confirm-buttons {
+		display: flex;
+		justify-content: flex-end;
 
 		.components-button {
-			display: block;
-			text-align: center;
-			margin: 0 auto 0.5em;
+			margin-left: 1em;
 		}
 	}
 }
