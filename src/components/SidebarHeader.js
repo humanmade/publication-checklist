@@ -62,6 +62,7 @@ class SidebarHeader extends Component {
 							<ConfirmPublish
 								baseClassName={ baseClassName }
 								canBePublished={ canBePublished }
+								isBeingScheduled={ isBeingScheduled }
 								toComplete={ toComplete }
 							>
 								{ publishButton }

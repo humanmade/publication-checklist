@@ -26,6 +26,7 @@ class ConfirmPublish extends Component {
 			baseClassName,
 			canBePublished,
 			children,
+			isBeingScheduled,
 			toComplete,
 		} = this.props;
 
@@ -54,6 +55,11 @@ class ConfirmPublish extends Component {
 			toComplete,
 		);
 
+		const buttonLabel = ( isBeingScheduled
+			? __( 'Schedule…', 'hm-publication-checklist' )
+			: __( 'Publish…', 'hm-publication-checklist' )
+		);
+
 		return (
 			<Button
 				className="editor-post-publish-button"
@@ -61,7 +67,7 @@ class ConfirmPublish extends Component {
 				isPrimary={ true }
 				onClick={ this.onShowConfirm }
 			>
-				{ __( 'Publish' ) }
+				{ buttonLabel }
 
 				{ showingConfirm && (
 					<Modal
@@ -94,6 +100,7 @@ ConfirmPublish.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
 	canBePublished: PropTypes.bool.isRequired,
 	children: PropTypes.node,
+	isBeingScheduled: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
 };
 
