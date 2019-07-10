@@ -8,7 +8,6 @@ import { Component } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import ConfirmPublish from './ConfirmPublish';
-import ConfirmPublishButton from './ConfirmPublishButton';
 
 /**
  * Replacement sidebar header.
@@ -31,16 +30,6 @@ class SidebarHeader extends Component {
 			toComplete,
 		} = this.props;
 
-		const canBePublished = isCompleted;
-
-		const publishButton = (
-			<ConfirmPublishButton
-				focusOnMount={ true }
-				forceIsDirty={ hasActiveMetaboxes }
-				forceIsSaving={ isSavingMetaBoxes }
-			/>
-		);
-
 		const isPublishedOrScheduled = isPublished || ( isScheduled && isBeingScheduled );
 		const isPrePublish = ! isPublishedOrScheduled && ! isSaving;
 		const isPostPublish = isPublishedOrScheduled && ! isSaving;
@@ -61,12 +50,12 @@ class SidebarHeader extends Component {
 						<div className="editor-post-publish-panel__header-publish-button">
 							<ConfirmPublish
 								baseClassName={ baseClassName }
-								canBePublished={ canBePublished }
+								canBePublished={ isCompleted }
+								forceIsDirty={ hasActiveMetaboxes }
+								forceIsSaving={ isSavingMetaBoxes }
 								isBeingScheduled={ isBeingScheduled }
 								toComplete={ toComplete }
-							>
-								{ publishButton }
-							</ConfirmPublish>
+							/>
 							<span className="editor-post-publish-panel__spacer"></span>
 						</div>
 					) }

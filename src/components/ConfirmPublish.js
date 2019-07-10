@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 
 import { Button, Modal } from '@wordpress/components';
 import { Component, Fragment } from '@wordpress/element';
+import { PostPublishButton } from '@wordpress/editor';
 import { __, _n, sprintf } from '@wordpress/i18n';
+
+import ConfirmPublishButton from './ConfirmPublishButton';
 
 class ConfirmPublish extends Component {
 	state = {
@@ -25,7 +28,8 @@ class ConfirmPublish extends Component {
 		const {
 			baseClassName,
 			canBePublished,
-			children,
+			forceIsDirty,
+			forceIsSaving,
 			isBeingScheduled,
 			toComplete,
 		} = this.props;
@@ -37,7 +41,12 @@ class ConfirmPublish extends Component {
 		if ( canBePublished ) {
 			return (
 				<Fragment>
-					{ children }
+					<PostPublishButton
+						focusOnMount={ true }
+						onSubmit={ this.onSubmit }
+						forceIsDirty={ forceIsDirty }
+						forceIsSaving={ forceIsSaving }
+					/>
 				</Fragment>
 			);
 		}
@@ -87,7 +96,11 @@ class ConfirmPublish extends Component {
 								Cancel
 							</Button>
 
-							{ children }
+							<ConfirmPublishButton
+								focusOnMount={ true }
+								forceIsDirty={ forceIsDirty }
+								forceIsSaving={ forceIsSaving }
+							/>
 						</div>
 					</Modal>
 				) }
@@ -99,7 +112,8 @@ class ConfirmPublish extends Component {
 ConfirmPublish.propTypes = {
 	baseClassName: PropTypes.string.isRequired,
 	canBePublished: PropTypes.bool.isRequired,
-	children: PropTypes.node,
+	forceIsDirty: PropTypes.bool.isRequired,
+	forceIsSaving: PropTypes.bool.isRequired,
 	isBeingScheduled: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
 };
