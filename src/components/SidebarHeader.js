@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { IconButton } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
 import { withDispatch, withSelect } from '@wordpress/data';
-import { PostPublishButton } from '@wordpress/editor';
 import { PluginPostPublishPanel, PluginPrePublishPanel } from '@wordpress/editPost';
 import { Component } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import ConfirmPublish from './ConfirmPublish';
+import ConfirmPublishButton from './ConfirmPublishButton';
 
 /**
  * Replacement sidebar header.
@@ -34,9 +34,8 @@ class SidebarHeader extends Component {
 		const canBePublished = isCompleted;
 
 		const publishButton = (
-			<PostPublishButton
+			<ConfirmPublishButton
 				focusOnMount={ true }
-				onSubmit={ this.onSubmit }
 				forceIsDirty={ hasActiveMetaboxes }
 				forceIsSaving={ isSavingMetaBoxes }
 			/>
