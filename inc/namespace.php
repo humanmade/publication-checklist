@@ -5,6 +5,7 @@ namespace HM\PublicationChecklist;
 use stdClass;
 use WP_REST_Request;
 
+const POSTS_COLUMN = 'hm_publication_checklist_status';
 const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
 const GLOBAL_NAME = 'hm_publication_checklist_checks';
 
@@ -15,6 +16,8 @@ function bootstrap() {
 	add_action( 'wp_enqueue_editor', __NAMESPACE__ . '\\enqueue_assets' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_fields' );
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_up_checks' );
+	add_action( 'manage_posts_columns', __NAMESPACE__ . '\\register_column' );
+	add_action( 'manage_posts_custom_column',  __NAMESPACE__ . '\\render_column' );
 }
 
 /**
@@ -65,6 +68,65 @@ function enqueue_assets() {
 		'workflow-pub-checklist',
 		plugins_url( 'build/style.css', __DIR__ )
 	);
+}
+
+/**
+ * Register the Tasks column.
+ *
+ * @param array $columns Registered columns.
+ * @return array Columns with additional Tasks column added.
+ */
+function register_column( array $columns ) : array {
+	$new_columns = [];
+
+	// Loop over the columns until we find the "tags" column. This allows us
+	// to insert Tasks at the correct position.
+	foreach ( $columns as $key => $value ) {
+		$new_columns[ $key ] = $value;
+		if ( $key === 'tags' ) {
+			$new_columns[ POSTS_COLUMN ] = _x( 'Tasks', 'list table column header', 'hm-publication-checklist' );
+		}
+	}
+
+	return $new_columns;
+}
+
+/**
+ * Render the Tasks column.
+ *
+ * @param string $column_id Column being rendered.
+ * @return void Outputs directly.
+ */
+function render_column( string $column_id ) {
+	if ( $column_id !== POSTS_COLUMN ) {
+		return;
+	}
+
+	$post_data = get_post( null, ARRAY_A );
+	$meta = get_merged_meta( $post_data['ID'], [] );
+	$statuses = get_check_status( $post_data, $meta );
+
+	$incomplete = array_filter( $statuses, function ( Status $status ) {
+		return $status->get_status() === Status::INCOMPLETE;
+	} );
+	$to_complete = count( $incomplete );
+	if ( $to_complete === 0 ) {
+		$icon_color = '#3fcf8e';
+		$text = __( 'All done!', 'hm-publication-checklist' );
+	} else {
+		$icon_color = '#f97a14';
+		$text = sprintf(
+			_n( '%d left', '%d left', $to_complete, 'hm-publication-checklist' ),
+			$to_complete
+		);
+	}
+
+	printf(
+		'<svg style="width: 10px; height: 10px; margin-right: 0.7em" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" style="fill: %s" /></svg>',
+		esc_attr( $icon_color )
+	);
+
+	echo esc_html( $text );
 }
 
 /**
