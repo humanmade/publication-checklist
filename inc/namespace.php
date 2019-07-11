@@ -225,6 +225,11 @@ function get_combined_status( array $statuses ) : bool {
 /**
  * Get all meta values, including changes.
  *
+ * This fetches all metadata from the database, normalises it to the same format
+ * passed through to the REST API or wp_insert_post, and combines it with any
+ * pending changes. This is then passed through to checks, allowing meta to be
+ * checked before it is saved to the database.
+ *
  * @param int $id Post ID to get meta for.
  * @param array $meta Changed meta.
  */
