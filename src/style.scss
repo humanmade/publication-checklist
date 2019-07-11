@@ -31,6 +31,10 @@
 		width: 1em;
 	}
 
+	.hm-publication-checklist__toggle-completed.components-button {
+		margin-top: 0.5em;
+	}
+
 	/* Style subtitle using extra class to override Gutenberg specificity */
 	.hm-publication-checklist__subtitle {
 		font-size: inherit;

@@ -69,6 +69,7 @@ const ChecklistPanelContent = ( {
 
 			{ isComplete && (
 				<Button
+					className={ `${ baseClassName }__toggle-completed` }
 					isLink={ true }
 					type="button"
 					onClick={ () => setExpanded( ! isExpanded ) }
