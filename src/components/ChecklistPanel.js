@@ -93,7 +93,7 @@ class ChecklistPanel extends Component {
 
 		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
-		const { shouldRenderInPublishSidebar } = this.props;
+		const { shouldBlockPublish, shouldRenderInPublishSidebar } = this.props;
 
 		const { completion } = this.state;
 
@@ -111,6 +111,7 @@ class ChecklistPanel extends Component {
 				<SidebarHeader
 					baseClassName={ baseClassName }
 					isCompleted={ isCompleted }
+					shouldBlockPublish={ shouldBlockPublish }
 					toComplete={ toComplete }
 				/>
 				{ showChecklist && (
@@ -160,6 +161,7 @@ class ChecklistPanel extends Component {
 ChecklistPanel.propTypes = {
 	isPublishSidebarEnabled: PropTypes.bool.isRequired,
 	items: itemsMapPropType.isRequired,
+	shouldBlockPublish: PropTypes.bool.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 	onEnablePublishSidebar: PropTypes.func.isRequired,
 };

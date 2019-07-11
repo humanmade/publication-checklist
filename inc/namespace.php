@@ -8,6 +8,7 @@ use WP_REST_Request;
 const GLOBAL_NAME = 'hm_publication_checklist_checks';
 const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
 const POSTS_COLUMN = 'hm_publication_checklist_status';
+const SCRIPT_ID = 'hm_publication_checklist';
 
 /**
  * Bootstrap.
@@ -57,7 +58,7 @@ function should_block_publish() {
  */
 function enqueue_assets() {
 	wp_enqueue_script(
-		'workflow-pub-checklist',
+		SCRIPT_ID,
 		plugins_url( 'build/index.js', __DIR__ ),
 		[
 			'wp-block-editor',
@@ -69,6 +70,10 @@ function enqueue_assets() {
 		'workflow-pub-checklist',
 		plugins_url( 'build/style.css', __DIR__ )
 	);
+
+	wp_localize_script( SCRIPT_ID, 'hmPublicationChecklist', [
+		'block_publish' => should_block_publish(),
+	] );
 }
 
 /**

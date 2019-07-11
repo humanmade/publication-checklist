@@ -13,6 +13,10 @@ class ConfirmPublish extends Component {
 	}
 
 	onShowConfirm = () => {
+		if ( this.props.shouldBlockPublish ) {
+			return;
+		}
+
 		this.setState( { showingConfirm: true } );
 	}
 
@@ -31,6 +35,7 @@ class ConfirmPublish extends Component {
 			forceIsDirty,
 			forceIsSaving,
 			isBeingScheduled,
+			shouldBlockPublish,
 			toComplete,
 		} = this.props;
 
@@ -72,6 +77,7 @@ class ConfirmPublish extends Component {
 		return (
 			<Button
 				className="editor-post-publish-button"
+				disabled={ shouldBlockPublish }
 				isLarge={ true }
 				isPrimary={ true }
 				onClick={ this.onShowConfirm }
@@ -115,6 +121,7 @@ ConfirmPublish.propTypes = {
 	forceIsDirty: PropTypes.bool.isRequired,
 	forceIsSaving: PropTypes.bool.isRequired,
 	isBeingScheduled: PropTypes.bool.isRequired,
+	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
 };
 

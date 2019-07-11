@@ -27,6 +27,7 @@ class SidebarHeader extends Component {
 			isScheduled,
 			isSaving,
 			isSavingMetaBoxes,
+			shouldBlockPublish,
 			toComplete,
 		} = this.props;
 
@@ -54,6 +55,7 @@ class SidebarHeader extends Component {
 								forceIsDirty={ hasActiveMetaboxes }
 								forceIsSaving={ isSavingMetaBoxes }
 								isBeingScheduled={ isBeingScheduled }
+								shouldBlockPublish={ shouldBlockPublish }
 								toComplete={ toComplete }
 							/>
 							<span className="editor-post-publish-panel__spacer"></span>
@@ -81,6 +83,7 @@ SidebarHeader.propTypes = {
 	isSaving: PropTypes.bool,
 	isSavingMetaBoxes: PropTypes.bool.isRequired,
 	isScheduled: PropTypes.bool.isRequired,
+	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number.isRequired,
 };
 
