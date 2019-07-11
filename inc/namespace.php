@@ -89,6 +89,19 @@ function register_column( array $columns ) : array {
 		return $columns;
 	}
 
+	/**
+	 * Filter to control whether the Tasks column is shown.
+	 *
+	 * This can be set to false to hide the Tasks column from the posts
+	 * list table.
+	 *
+	 * @param bool $show_column Should we show the Tasks column?
+	 */
+	$show_column = apply_filters( 'altis.publication-checklist.show_tasks_column', true );
+	if ( ! $show_column ) {
+		return $columns;
+	}
+
 	$new_columns = [];
 
 	// Loop over the columns until we find the "tags" column. This allows us

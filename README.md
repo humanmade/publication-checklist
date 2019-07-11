@@ -98,6 +98,13 @@ By default, Publication Checklist will display a warning if some items are incom
 To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
 
 
+## Disabling the list view
+
+Publication Checklist will add a Tasks column to the Posts list screen showing the status of each post. This column is only shown if statuses have been registered.
+
+To hide this column, filter the `altis.publication-checklist.show_tasks_column` value and return false from your callback. This will hide the Tasks column.
+
+
 ## License
 
 Publication Checklist is licensed under the GPLv2 or later. Copyright 2019 Human Made and contributors.
