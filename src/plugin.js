@@ -6,7 +6,7 @@ export const settings = {
 	icon: 'yes',
 	render: () => (
 		<ChecklistPanel
-			shouldBlockPublish={ window.altisPublicationChecklist.block_publish }
+			shouldBlockPublish={ Boolean( window.altisPublicationChecklist.block_publish ) }
 		/>
 	),
 };
