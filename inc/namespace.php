@@ -5,9 +5,9 @@ namespace HM\PublicationChecklist;
 use stdClass;
 use WP_REST_Request;
 
-const POSTS_COLUMN = 'hm_publication_checklist_status';
-const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
 const GLOBAL_NAME = 'hm_publication_checklist_checks';
+const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
+const POSTS_COLUMN = 'hm_publication_checklist_status';
 
 /**
  * Bootstrap.
