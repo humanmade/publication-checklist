@@ -77,6 +77,12 @@ function enqueue_assets() {
  * @return array Columns with additional Tasks column added.
  */
 function register_column( array $columns ) : array {
+	// If no checks have been registered, don't show the column.
+	$registered = $GLOBALS[ GLOBAL_NAME ];
+	if ( empty( $registered ) ) {
+		return $columns;
+	}
+
 	$new_columns = [];
 
 	// Loop over the columns until we find the "tags" column. This allows us
