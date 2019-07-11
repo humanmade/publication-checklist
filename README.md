@@ -91,6 +91,13 @@ const propTypes = {
 To enable advanced functionality, you may want to wrap this component in [selectors which provide data about the post](https://developer.wordpress.org/block-editor/data/data-core-block-editor/). Note that the backend acts as the canonical source of all check data, so changes to check status will require saving to the backend to take effect.
 
 
+## Enforcing checks
+
+By default, Publication Checklist will display a warning if some items are incomplete, with a prompt to allow publishing anyway.
+
+To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
+
+
 ## License
 
 Publication Checklist is licensed under the GPLv2 or later. Copyright 2019 Human Made and contributors.
