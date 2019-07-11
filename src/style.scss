@@ -1,4 +1,4 @@
-.hm-publication-checklist {
+.altis-publication-checklist {
 	&__required {
 		margin-top: 0;
 		font-style: italic;
@@ -20,7 +20,7 @@
 		}
 	}
 
-	&__item--status-complete .hm-publication-checklist__item-message {
+	&__item--status-complete .altis-publication-checklist__item-message {
 		text-decoration: line-through;
 	}
 
@@ -31,12 +31,12 @@
 		width: 1em;
 	}
 
-	.hm-publication-checklist__toggle-completed.components-button {
+	.altis-publication-checklist__toggle-completed.components-button {
 		margin-top: 0.5em;
 	}
 
 	/* Style subtitle using extra class to override Gutenberg specificity */
-	.hm-publication-checklist__subtitle {
+	.altis-publication-checklist__subtitle {
 		font-size: inherit;
 		font-weight: inherit;
 		margin-top: 1em;
@@ -74,7 +74,7 @@
 		order: 3;
 	}
 
-	.components-panel__body.hm-publication-checklist__replacement-header {
+	.components-panel__body.altis-publication-checklist__replacement-header {
 		order: 1;
 		padding: 0;
 
@@ -84,7 +84,7 @@
 		}
 	}
 
-	.hm-publication-checklist__panel {
+	.altis-publication-checklist__panel {
 		order: 2;
 		border-top: none;
 

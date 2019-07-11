@@ -22,7 +22,7 @@ const ChecklistPanelContent = ( {
 	const isComplete = completed >= toComplete;
 	const requiredLabel = __(
 		'This post cannot be published until all required tasks are completed.',
-		'hm-publication-checklist'
+		'altis-publication-checklist'
 	);
 
 	const checklists = (
@@ -37,7 +37,7 @@ const ChecklistPanelContent = ( {
 					<h3
 						className={ `${ baseClassName }__subtitle` }
 					>
-						{ __( 'Optional tasks:', 'hm-publication-checklist' ) }
+						{ __( 'Optional tasks:', 'altis-publication-checklist' ) }
 					</h3>
 					<Checklist
 						baseClassName={ baseClassName }
@@ -76,9 +76,9 @@ const ChecklistPanelContent = ( {
 					aria-expanded={ isExpanded }
 				>
 					{ isExpanded ? (
-						__( 'Hide tasks', 'hm-publication-checklist' )
+						__( 'Hide tasks', 'altis-publication-checklist' )
 					) : (
-						__( 'Show tasks', 'hm-publication-checklist' )
+						__( 'Show tasks', 'altis-publication-checklist' )
 					) }
 				</Button>
 			) }

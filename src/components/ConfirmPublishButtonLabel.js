@@ -10,14 +10,14 @@ function ConfirmPublishButtonLabel( {
 	hasPublishAction,
 } ) {
 	if ( ! hasPublishAction ) {
-		return __( 'Ignore Checklist and Submit for Review', 'hm-publication-checklist' );
+		return __( 'Ignore Checklist and Submit for Review', 'altis-publication-checklist' );
 	} else if ( isPublished ) {
-		return __( 'Ignore Checklist and Update', 'hm-publication-checklist' );
+		return __( 'Ignore Checklist and Update', 'altis-publication-checklist' );
 	} else if ( isBeingScheduled ) {
-		return __( 'Ignore Checklist and Schedule', 'hm-publication-checklist' );
+		return __( 'Ignore Checklist and Schedule', 'altis-publication-checklist' );
 	}
 
-	return __( 'Ignore Checklist and Publish', 'hm-publication-checklist' );
+	return __( 'Ignore Checklist and Publish', 'altis-publication-checklist' );
 }
 
 export default compose( [

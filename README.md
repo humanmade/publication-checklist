@@ -12,10 +12,10 @@ The core of a check is a function that receives the post's data and meta, and re
 For example, to enforce setting a value for the "foo" meta key:
 
 ```php
-use function HM\PublicationChecklist\register_prepublish_check;
-use HM\PublicationChecklist\Status;
+use function Altis\Workflow\PublicationChecklist\register_prepublish_check;
+use Altis\Workflow\PublicationChecklist\Status;
 
-add_action( 'hm.publication-checklist.register_prepublish_checks', function () {
+add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 	register_prepublish_check( 'foo', [
 		'run_check' => function ( array $post, array $meta ) : Status {
 			if ( isset( $meta['foo'] ) ) {
@@ -28,7 +28,7 @@ add_action( 'hm.publication-checklist.register_prepublish_checks', function () {
 } );
 ```
 
-Checks are registered via the `HM\PublicationChecklist\register_prepublish_check` function with a unique ID. This function should be called on the `hm.publication-checklist.register_prepublish_checks` action.
+Checks are registered via the `Altis\Workflow\PublicationChecklist\register_prepublish_check` function with a unique ID. This function should be called on the `altis.publication-checklist.register_prepublish_checks` action.
 
 Your check function receives the post data as an array, and the post's meta data as an array. Your function should only use this data to run the check, as this may represent data before it is saved to the database. Specifically, your function's signature should be:
 
@@ -36,7 +36,7 @@ Your check function receives the post data as an array, and the post's meta data
 function ( array $post, array $meta ) : Status;
 ```
 
-Your function must return a `HM\PublicationChecklist\Status` object. This object is marked as either complete (allow publishing), incomplete (block publishing), or informational (show as failed, but allow publishing). This status object takes the status type (which should be either `Status::COMPLETE`, `Status::INCOMPLETE`, or `Status::INFO`) and a human-readable message.
+Your function must return a `Altis\Workflow\PublicationChecklist\Status` object. This object is marked as either complete (allow publishing), incomplete (block publishing), or informational (show as failed, but allow publishing). This status object takes the status type (which should be either `Status::COMPLETE`, `Status::INCOMPLETE`, or `Status::INFO`) and a human-readable message.
 
 You can additionally pass data with the status object, which can be used on the frontend to assist with rendering.
 
@@ -47,14 +47,14 @@ By default, Publication Checklist will render a simple checklist of all checks.
 
 You can override a specific item to render richer UI if needed. For example, you may wish to integrate deeply into the block editor, or allow users to correct failing checks inline. This UI is directly inserted into the React element tree and replaces the default output.
 
-Publication Checklist exposes a `hm-publishing-workflow.item.{check_id}` filter using [`withFilters`](https://github.com/WordPress/gutenberg/tree/master/packages/components/src/higher-order/with-filters) to allow overriding the list item component.
+Publication Checklist exposes a `altis-publishing-workflow.item.{check_id}` filter using [`withFilters`](https://github.com/WordPress/gutenberg/tree/master/packages/components/src/higher-order/with-filters) to allow overriding the list item component.
 
 For example, to wrap the default status message with a link to a documentation page for the `foo` check:
 
 ```jsx
 import { Fragment } from '@wordpress/element';
 
-addFilter( 'hm-publishing-workflow.item.image-texts', 'foo/link-message', () => {
+addFilter( 'altis-publishing-workflow.item.image-texts', 'foo/link-message', () => {
 	return props => {
 		return (
 			<Fragment>

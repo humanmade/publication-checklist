@@ -64,14 +64,14 @@ class ConfirmPublish extends Component {
 				'There is %s incomplete task in your Publication Checklist.',
 				'There are %s incomplete tasks in your Publication Checklist.',
 				toComplete,
-				'hm-publication-checklist'
+				'altis-publication-checklist'
 			),
 			toComplete,
 		);
 
 		const buttonLabel = ( isBeingScheduled
-			? __( 'Schedule…', 'hm-publication-checklist' )
-			: __( 'Publish…', 'hm-publication-checklist' )
+			? __( 'Schedule…', 'altis-publication-checklist' )
+			: __( 'Publish…', 'altis-publication-checklist' )
 		);
 
 		return (
@@ -88,7 +88,7 @@ class ConfirmPublish extends Component {
 					<Modal
 						className={ popoverClass }
 						overlayClassName={ `${ baseClassName }__confirm-overlay` }
-						title={ __( 'Ignore incomplete tasks?', 'hm-publication-checklist' ) }
+						title={ __( 'Ignore incomplete tasks?', 'altis-publication-checklist' ) }
 						onRequestClose={ this.onCancelConfirm }
 					>
 						<p>{ label }</p>

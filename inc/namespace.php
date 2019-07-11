@@ -1,14 +1,14 @@
 <?php
 
-namespace HM\PublicationChecklist;
+namespace Altis\Workflow\PublicationChecklist;
 
 use stdClass;
 use WP_REST_Request;
 
-const GLOBAL_NAME = 'hm_publication_checklist_checks';
-const INTERNAL_CHECKED_KEY = '__hm_publication_checklist_checked';
-const POSTS_COLUMN = 'hm_publication_checklist_status';
-const SCRIPT_ID = 'hm_publication_checklist';
+const GLOBAL_NAME = 'altis_publication_checklist_checks';
+const INTERNAL_CHECKED_KEY = '__altis_publication_checklist_checked';
+const POSTS_COLUMN = 'altis_publication_checklist_status';
+const SCRIPT_ID = 'altis_publication_checklist';
 
 /**
  * Bootstrap.
@@ -26,7 +26,7 @@ function bootstrap() {
  */
 function set_up_checks() {
 	$GLOBALS[ GLOBAL_NAME ] = [];
-	do_action( 'hm.publication-checklist.register_prepublish_checks' );
+	do_action( 'altis.publication-checklist.register_prepublish_checks' );
 
 	if ( ! should_block_publish() ) {
 		return;
@@ -50,7 +50,7 @@ function should_block_publish() {
 	 *
 	 * @param bool $block_publication Should we block publication on failing checks?
 	 */
-	return apply_filters( 'hm.publication-checklist.block_on_failing', false );
+	return apply_filters( 'altis.publication-checklist.block_on_failing', false );
 }
 
 /**
@@ -71,7 +71,7 @@ function enqueue_assets() {
 		plugins_url( 'build/style.css', __DIR__ )
 	);
 
-	wp_localize_script( SCRIPT_ID, 'hmPublicationChecklist', [
+	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
 		'block_publish' => should_block_publish(),
 	] );
 }
@@ -96,7 +96,7 @@ function register_column( array $columns ) : array {
 	foreach ( $columns as $key => $value ) {
 		$new_columns[ $key ] = $value;
 		if ( $key === 'tags' ) {
-			$new_columns[ POSTS_COLUMN ] = _x( 'Tasks', 'list table column header', 'hm-publication-checklist' );
+			$new_columns[ POSTS_COLUMN ] = _x( 'Tasks', 'list table column header', 'altis-publication-checklist' );
 		}
 	}
 
@@ -124,11 +124,11 @@ function render_column( string $column_id ) {
 	$to_complete = count( $incomplete );
 	if ( $to_complete === 0 ) {
 		$icon_color = '#3fcf8e';
-		$text = __( 'All done!', 'hm-publication-checklist' );
+		$text = __( 'All done!', 'altis-publication-checklist' );
 	} else {
 		$icon_color = '#f97a14';
 		$text = sprintf(
-			_n( '%d left', '%d left', $to_complete, 'hm-publication-checklist' ),
+			_n( '%d left', '%d left', $to_complete, 'altis-publication-checklist' ),
 			$to_complete
 		);
 	}
@@ -281,7 +281,7 @@ function is_publish_status( $status ) {
 	 * @param bool $is_publish_status Is the status a "published" status?
 	 * @param string $status Status to check.
 	 */
-	return apply_filters( 'hm-publication-checklist.is_publish_status', in_array( $status, $statuses, true ), $status );
+	return apply_filters( 'altis-publication-checklist.is_publish_status', in_array( $status, $statuses, true ), $status );
 }
 
 /**

@@ -6,7 +6,7 @@
  * Author URI: https://humanmade.com/
  */
 
-namespace HM\PublicationChecklist;
+namespace Altis\Workflow\PublicationChecklist;
 
 require __DIR__ . '/inc/class-status.php';
 require __DIR__ . '/inc/namespace.php';

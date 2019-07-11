@@ -32,7 +32,7 @@ class ChecklistItem extends Component {
 
 		// Ignore lint bug: https://github.com/WordPress/gutenberg/issues/16418
 		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
-		const ItemElement = withFilters( 'hm-publishing-workflow.item.' + name )( ChecklistItemContent );
+		const ItemElement = withFilters( 'altis-publishing-workflow.item.' + name )( ChecklistItemContent );
 
 		const classes = [
 			itemClassName,

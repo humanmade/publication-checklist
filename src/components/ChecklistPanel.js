@@ -16,9 +16,9 @@ import SidebarHeader from './SidebarHeader';
 import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
 
-const baseClassName = 'hm-publication-checklist';
+const baseClassName = 'altis-publication-checklist';
 const panelClassName = `${ baseClassName }__panel`;
-const sidebarName = 'hm-publication-checklist';
+const sidebarName = 'altis-publication-checklist';
 
 class ChecklistPanel extends Component {
 	state = {
@@ -104,7 +104,7 @@ class ChecklistPanel extends Component {
 		const isToComplete = toComplete > 0;
 		const isCompleted = completed >= toComplete;
 
-		const title = __( 'Publication Checklist', 'hm-publication-checklist' );
+		const title = __( 'Publication Checklist', 'altis-publication-checklist' );
 
 		return (
 			<Fragment>

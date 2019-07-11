@@ -1,6 +1,6 @@
 <?php
 
-namespace HM\PublicationChecklist;
+namespace Altis\Workflow\PublicationChecklist;
 
 /**
  * Status indicator.
