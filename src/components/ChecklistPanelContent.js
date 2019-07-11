@@ -63,7 +63,7 @@ const ChecklistPanelContent = ( {
 				toComplete={ toComplete }
 			/>
 
-			{ isComplete && isExpanded && (
+			{ ( ! isComplete || ( isComplete && isExpanded ) ) && (
 				checklists
 			) }
 
