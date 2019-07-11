@@ -13,10 +13,22 @@ const ChecklistPanelContent = ( {
 	completableItems,
 	completed,
 	otherItems,
+	shouldBlockPublish,
 	toComplete,
 } ) => {
+	const requiredLabel = __(
+		'This post cannot be published until all required tasks are completed.',
+		'hm-publication-checklist'
+	);
 	return (
 		<div className={ baseClassName }>
+			{ ( shouldBlockPublish && completed < toComplete ) && (
+				<p
+					className={ `${ baseClassName }__required` }
+				>
+					{ requiredLabel }
+				</p>
+			) }
 			<CompletionIndicator
 				baseClassName={ baseClassName }
 				completed={ completed }
@@ -49,6 +61,7 @@ ChecklistPanelContent.propTypes = {
 	completed: PropTypes.number,
 	completableItems: itemsCollectionPropType.isRequired,
 	otherItems: itemsCollectionPropType.isRequired,
+	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number,
 };
 

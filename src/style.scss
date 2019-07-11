@@ -1,4 +1,9 @@
 .hm-publication-checklist {
+	&__required {
+		margin-top: 0;
+		font-style: italic;
+	}
+
 	&__items {
 		margin: 0.5em 0;
 	}

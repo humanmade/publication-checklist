@@ -130,6 +130,7 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
+									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PluginPrePublishPanel>
@@ -147,6 +148,7 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
+									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PanelBody>
