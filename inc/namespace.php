@@ -212,7 +212,7 @@ function get_check_status( array $data, array $meta ) : array {
  * @return bool True if post passes checks, false otherwise.
  */
 function get_combined_status( array $statuses ) : bool {
-	foreacH ( $statuses as $status ) {
+	foreach ( $statuses as $status ) {
 		/** @var Status $status */
 		if ( $status->get_status() === Status::INCOMPLETE ) {
 			return false;
