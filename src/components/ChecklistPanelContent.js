@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
-import { Fragment } from '@wordpress/element';
+import { Button } from '@wordpress/components';
+import { Fragment, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import Checklist from './Checklist';
@@ -16,24 +17,16 @@ const ChecklistPanelContent = ( {
 	shouldBlockPublish,
 	toComplete,
 } ) => {
+	const [ isExpanded, setExpanded ] = useState( false );
+
+	const isComplete = completed >= toComplete;
 	const requiredLabel = __(
 		'This post cannot be published until all required tasks are completed.',
 		'hm-publication-checklist'
 	);
-	return (
-		<div className={ baseClassName }>
-			{ ( shouldBlockPublish && completed < toComplete ) && (
-				<p
-					className={ `${ baseClassName }__required` }
-				>
-					{ requiredLabel }
-				</p>
-			) }
-			<CompletionIndicator
-				baseClassName={ baseClassName }
-				completed={ completed }
-				toComplete={ toComplete }
-			/>
+
+	const checklists = (
+		<Fragment>
 			<Checklist
 				baseClassName={ baseClassName }
 				items={ completableItems }
@@ -51,6 +44,42 @@ const ChecklistPanelContent = ( {
 						items={ otherItems }
 					/>
 				</Fragment>
+			) }
+		</Fragment>
+	);
+
+	return (
+		<div className={ baseClassName }>
+			{ ( shouldBlockPublish && ! isComplete ) && (
+				<p
+					className={ `${ baseClassName }__required` }
+				>
+					{ requiredLabel }
+				</p>
+			) }
+			<CompletionIndicator
+				baseClassName={ baseClassName }
+				completed={ completed }
+				toComplete={ toComplete }
+			/>
+
+			{ isComplete && isExpanded && (
+				checklists
+			) }
+
+			{ isComplete && (
+				<Button
+					isLink={ true }
+					type="button"
+					onClick={ () => setExpanded( ! isExpanded ) }
+					aria-expanded={ isExpanded }
+				>
+					{ isExpanded ? (
+						__( 'Hide tasks', 'hm-publication-checklist' )
+					) : (
+						__( 'Show tasks', 'hm-publication-checklist' )
+					) }
+				</Button>
 			) }
 		</div>
 	);
