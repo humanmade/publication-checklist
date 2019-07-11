@@ -211,7 +211,7 @@ function get_check_status( array $data, array $meta ) : array {
  * @param Status[] $statuses All check statuses (from get_check_status())
  * @return bool True if post passes checks, false otherwise.
  */
-function get_combined_status( array $statuses ) {
+function get_combined_status( array $statuses ) : bool {
 	foreacH ( $statuses as $status ) {
 		/** @var Status $status */
 		if ( $status->get_status() === Status::INCOMPLETE ) {
@@ -265,7 +265,7 @@ function get_merged_meta( int $id, array $meta ) : array {
  *
  * @return bool True if the status counts as "published", false otherwise.
  */
-function is_publish_status( $status ) {
+function is_publish_status( string $status ) : bool {
 	$statuses = [
 		'publish',
 		'private',
@@ -294,7 +294,7 @@ function is_publish_status( $status ) {
  * @param WP_REST_Request $request Full request data.
  * @return stdClass Updated data.
  */
-function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) {
+function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : stdClass {
 	// Don't block if the status isn't changing.
 	if ( ! isset( $data->post_status ) ) {
 		return $data;
@@ -332,7 +332,7 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) {
  * @param array $postarr Raw data for the post.
  * @return array Post data to update in DB.
  */
-function block_publish_if_failing( array $data, array $postarr ) {
+function block_publish_if_failing( array $data, array $postarr ) : array {
 	// Skip checks if already checked.
 	if ( isset( $postarr[ INTERNAL_CHECKED_KEY ] ) ) {
 		return $data;
