@@ -24,6 +24,7 @@ function bootstrap() {
  * Set up the prepublish checks.
  */
 function set_up_checks() {
+	$GLOBALS[ GLOBAL_NAME ] = [];
 	do_action( 'hm.publication-checklist.register_prepublish_checks' );
 
 	if ( ! should_block_publish() ) {
