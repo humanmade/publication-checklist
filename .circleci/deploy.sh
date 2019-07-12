@@ -23,7 +23,7 @@ if [[ -d "$BUILD_DIR" ]]; then
 fi
 
 COMMIT=$(git rev-parse HEAD)
-VERSION=$(grep 'Version: ' gaussholder.php | grep -oEi '[0-9\.a-z\+-]+$')
+VERSION=$(grep 'Version: ' plugin.php | grep -oEi '[0-9\.a-z\+-]+$')
 
 if [[ $VERSION != "null" ]]; then
     DEPLOY_BRANCH="${VERSION}--branch"
