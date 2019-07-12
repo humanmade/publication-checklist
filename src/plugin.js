@@ -1,8 +1,12 @@
-import render from './containers/ChecklistPanel';
+import ChecklistPanel from './containers/ChecklistPanel';
 
-export const name = 'hm-publication-checklist';
+export const name = 'altis-publication-checklist';
 
 export const settings = {
 	icon: 'yes',
-	render,
+	render: () => (
+		<ChecklistPanel
+			shouldBlockPublish={ Boolean( window.altisPublicationChecklist.block_publish ) }
+		/>
+	),
 };

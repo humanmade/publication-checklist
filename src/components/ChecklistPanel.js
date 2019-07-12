@@ -1,25 +1,24 @@
 import classNames from 'classnames';
 import _isEmpty from 'lodash/isEmpty';
-import _isEqual from 'lodash/isEqual';
+import forEach from 'lodash/forEach';
 import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
+import { compose } from '@wordpress/compose';
 import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editPost';
 import { Component, Fragment } from '@wordpress/element';
-import { doAction } from '@wordpress/hooks';
+import { withDispatch, withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-import Checklist from './Checklist';
-import CompletionIndicator from './CompletionIndicator';
+import ChecklistPanelContent from './ChecklistPanelContent';
+import SidebarHeader from './SidebarHeader';
 
-import { COMPLETED, INCOMPLETE } from '../itemStatus';
+import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
 
-const baseClassName = 'hm-publication-checklist';
+const baseClassName = 'altis-publication-checklist';
 const panelClassName = `${ baseClassName }__panel`;
-const sidebarName = 'hm-publication-checklist';
-
-export const ACTION_REGISTER_ITEMS = 'hm-publication-checklist.registerItems';
+const sidebarName = 'altis-publication-checklist';
 
 class ChecklistPanel extends Component {
 	state = {
@@ -30,115 +29,71 @@ class ChecklistPanel extends Component {
 		sortedItems: [],
 	};
 
-	componentDidMount() {
-		const { registerItem } = this.props;
-
-		// The following action allows third parties to register custom items for the publication checklist.
-		doAction( ACTION_REGISTER_ITEMS, registerItem );
-	}
-
-	shouldComponentUpdate( nextProps ) {
-		const { items } = this.props;
-
-		// Only ever update if there are new items.
-		return ! _isEqual( items, nextProps.items );
-	}
-
 	static getDerivedStateFromProps( props ) {
 		const { items } = props;
 
-		// TODO: Split into two functions.
-		const { completion, sortedItems } = Object.values( items ).reduce( ( { completion, sortedItems }, item ) => {
-			const [ completed, toComplete ] = completion;
-			const [ incompleteItems, completedItems, otherItems ] = sortedItems;
+		const completion = {
+			completed: 0,
+			toComplete: 0,
+		};
+		const incomplete = [];
+		const completed = [];
+		const other = [];
+
+		forEach( items, ( status, name ) => {
+			const item = {
+				name,
+				...status,
+			};
 
 			switch ( item.status ) {
-				case COMPLETED:
-					return {
-						completion: [
-							completed + 1,
-							toComplete + 1,
-						],
-						sortedItems: [
-							incompleteItems,
-							[ ...completedItems, item ],
-							otherItems,
-						],
-					};
+				case COMPLETE:
+					completion.completed++;
+					completion.toComplete++;
+					completed.push( item );
+					return;
 
 				case INCOMPLETE:
-					return {
-						completion: [
-							completed,
-							toComplete + 1,
-						],
-						sortedItems: [
-							[ ...incompleteItems, item ],
-							completedItems,
-							otherItems,
-						],
-					};
+					completion.toComplete++;
+					incomplete.push( item );
+					return;
 
 				default:
-					return {
-						completion: [
-							completed,
-							toComplete,
-						],
-						sortedItems: [
-							incompleteItems,
-							completedItems,
-							[ ...otherItems, item ],
-						],
-					};
+					other.push( item );
 			}
-		}, {
-			completion: [ 0, 0 ],
-			sortedItems: [ [], [], [] ],
 		} );
 
-		const [ completed, toComplete ] = completion;
-		const [ incompleteItems, completedItems, otherItems ] = sortedItems;
-
 		return {
-			completion: {
-				completed,
-				toComplete,
-			},
-			sortedItems: [ ...incompleteItems, ...completedItems, ...otherItems ],
+			completion,
+			completableItems: [
+				...incomplete,
+				...completed,
+			],
+			otherItems: other,
 		};
 	}
 
-	/**
-	 * Set the status for the checklist item with the given name to the given value.
-	 *
-	 * @param {string} name - Item name.
-	 * @param {string} status - Item status.
-	 */
-	setStatus = ( name, status ) => {
-		const {
-			items,
-			setItemStatus,
-			setTimeout,
-		} = this.props;
-
-		const item = items[ name ];
-		if ( item && item.status !== status ) {
-			// Update the status as soon as possible.
-			setTimeout( () => {
-				setItemStatus( name, status );
-			} );
+	componentDidMount() {
+		// Force the publish sidebar to be enabled.
+		if ( ! this.props.isPublishSidebarEnabled ) {
+			this.props.onEnablePublishSidebar();
 		}
-	};
+	}
+
+	componentDidUpdate( prevProps ) {
+		// Force the publish sidebar to be enabled.
+		const current = this.props.isPublishSidebarEnabled;
+		if ( prevProps.isPublishSidebarEnabled !== current && ! current ) {
+			this.props.onEnablePublishSidebar();
+		}
+	}
 
 	render() {
-		const { sortedItems } = this.state;
+		const { completableItems, otherItems } = this.state;
 
-		if ( _isEmpty( sortedItems ) ) {
-			return null;
-		}
+		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
-		const { shouldRenderInPublishSidebar } = this.props;
+		const { shouldBlockPublish, shouldRenderInPublishSidebar } = this.props;
 
 		const { completion } = this.state;
 
@@ -147,61 +102,85 @@ class ChecklistPanel extends Component {
 			toComplete,
 		} = completion;
 		const isToComplete = toComplete > 0;
-		const isCompleted = isToComplete && completed >= toComplete;
+		const isCompleted = completed >= toComplete;
 
-		const title = __( 'Publication Checklist', 'hm-publication-checklist' );
-
-		const content = (
-			<div className={ baseClassName }>
-				<CompletionIndicator
-					baseClassName={ baseClassName }
-					completed={ completed }
-					toComplete={ toComplete }
-				/>
-				<Checklist
-					baseClassName={ baseClassName }
-					items={ sortedItems }
-					setStatus={ this.setStatus }
-				/>
-			</div>
-		);
+		const title = __( 'Publication Checklist', 'altis-publication-checklist' );
 
 		return (
 			<Fragment>
-				{ shouldRenderInPublishSidebar && (
-					<PluginPrePublishPanel
-						className={ classNames( panelClassName, {
-							[ `${ panelClassName }--to-complete` ]: isToComplete,
-							[ `${ panelClassName }--completed` ]: isCompleted,
-						} ) }
-						initialOpen
-						title={ title }
-					>
-						{ content }
-					</PluginPrePublishPanel>
+				<SidebarHeader
+					baseClassName={ baseClassName }
+					isCompleted={ isCompleted }
+					shouldBlockPublish={ shouldBlockPublish }
+					toComplete={ toComplete }
+				/>
+				{ showChecklist && (
+					<Fragment>
+						{ shouldRenderInPublishSidebar && (
+							<PluginPrePublishPanel
+								className={ classNames( panelClassName, {
+									[ `${ panelClassName }--to-complete` ]: isToComplete,
+									[ `${ panelClassName }--completed` ]: isCompleted,
+								} ) }
+								initialOpen
+								title={ title }
+							>
+								<ChecklistPanelContent
+									baseClassName={ baseClassName }
+									completed={ completed }
+									completableItems={ completableItems }
+									otherItems={ otherItems }
+									shouldBlockPublish={ shouldBlockPublish }
+									toComplete={ toComplete }
+								/>
+							</PluginPrePublishPanel>
+						) }
+						<PluginSidebarMoreMenuItem target={ sidebarName }>
+							{ title }
+						</PluginSidebarMoreMenuItem>
+						<PluginSidebar
+							name={ sidebarName }
+							title={ title }
+						>
+							<PanelBody>
+								<ChecklistPanelContent
+									baseClassName={ baseClassName }
+									completed={ completed }
+									completableItems={ completableItems }
+									otherItems={ otherItems }
+									shouldBlockPublish={ shouldBlockPublish }
+									toComplete={ toComplete }
+								/>
+							</PanelBody>
+						</PluginSidebar>
+					</Fragment>
 				) }
-				<PluginSidebarMoreMenuItem target={ sidebarName }>
-					{ title }
-				</PluginSidebarMoreMenuItem>
-				<PluginSidebar
-					name={ sidebarName }
-					title={ title }
-				>
-					<PanelBody>
-						{ content }
-					</PanelBody>
-				</PluginSidebar>
 			</Fragment>
 		);
 	}
 }
 
 ChecklistPanel.propTypes = {
+	isPublishSidebarEnabled: PropTypes.bool.isRequired,
 	items: itemsMapPropType.isRequired,
-	registerItem: PropTypes.func.isRequired,
-	setItemStatus: PropTypes.func.isRequired,
-	setTimeout: PropTypes.func.isRequired,
+	shouldBlockPublish: PropTypes.bool.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
+	onEnablePublishSidebar: PropTypes.func.isRequired,
 };
 
-export default ChecklistPanel;
+export default compose(
+	withSelect( ( select ) => {
+		const { isPublishSidebarEnabled } = select( 'core/editor' );
+
+		return {
+			isPublishSidebarEnabled: isPublishSidebarEnabled(),
+		};
+	} ),
+	withDispatch( ( dispatch ) => {
+		const { enablePublishSidebar } = dispatch( 'core/editor' );
+
+		return {
+			onEnablePublishSidebar: enablePublishSidebar,
+		};
+	} ),
+)( ChecklistPanel );

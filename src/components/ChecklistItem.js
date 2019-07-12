@@ -1,97 +1,65 @@
 import PropTypes from 'prop-types';
 
+import { withFilters } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 
-import { COMPLETED, INCOMPLETE, INFO } from '../itemStatus';
+import ChecklistItemContent from './ChecklistItemContent';
+import StatusIcon from './StatusIcon';
 
 class ChecklistItem extends Component {
 	/**
-	 * Mark the checklist item as completed.
+	 * Render the status icon for the checklist item.
 	 */
-	markCompleted = () => {
-		const {
-			name,
-			setStatus,
-		} = this.props;
-
-		setStatus( name, COMPLETED );
-	};
-
-	/**
-	 * Mark the checklist item as incomplete.
-	 */
-	markIncomplete = () => {
-		const {
-			name,
-			setStatus,
-		} = this.props;
-
-		setStatus( name, INCOMPLETE );
-	};
-
-	/**
-	 * Mark the checklist item as info.
-	 */
-	markInfo = () => {
-		const {
-			name,
-			setStatus,
-		} = this.props;
-
-		setStatus( name, INFO );
-	};
-
-	/**
-	 * Render the status icon for the given or current checklist item status.
-	 *
-	 * @param {string} [userStatus] - Optional custom checklist item status.
-	 */
-	renderStatusIcon = ( userStatus ) => {
-		const {
-			name,
-			renderStatusIcon,
-			status,
-		} = this.props;
-
-		return renderStatusIcon( name, userStatus || status );
-	};
-
-	/**
-	 * Set the checklist item status to the given value.
-	 *
-	 * @param {string} status - Checklist item status to set.
-	 */
-	setStatus = ( status ) => {
-		const {
-			name,
-			setStatus,
-		} = this.props;
-
-		setStatus( name, status );
+	renderStatusIcon = () => {
+		return (
+			<StatusIcon
+				baseClassName={ this.props.baseClassName }
+				name={ this.props.name }
+				status={ this.props.status }
+			/>
+		);
 	};
 
 	render() {
 		const {
-			render,
+			data,
+			name,
+			message,
 			status,
 		} = this.props;
 
-		return render( {
-			markCompleted: this.markCompleted,
-			markIncomplete: this.markIncomplete,
-			markInfo: this.markInfo,
-			renderStatusIcon: this.renderStatusIcon,
-			setStatus: this.setStatus,
-			status,
-		} );
+		const itemClassName = `${ this.props.baseClassName }__item`;
+
+		// Ignore lint bug: https://github.com/WordPress/gutenberg/issues/16418
+		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
+		const ItemElement = withFilters( 'altis-publishing-workflow.item.' + name )( ChecklistItemContent );
+
+		const classes = [
+			itemClassName,
+			`${ itemClassName }--${ name }`,
+			`${ itemClassName }--status-${ status }`,
+		];
+
+		return (
+			<li className={ classes.join( ' ' ) }>
+				<ItemElement
+					baseClassName={ this.props.baseClassName }
+					data={ data }
+					name={ name }
+					message={ message }
+					renderStatusIcon={ this.renderStatusIcon }
+					status={ status }
+				/>
+			</li>
+		);
 	}
 }
 
 ChecklistItem.propTypes = {
+	baseClassName: PropTypes.string.isRequired,
+	data: PropTypes.any,
 	name: PropTypes.string.isRequired,
-	render: PropTypes.func.isRequired,
-	renderStatusIcon: PropTypes.func.isRequired,
-	setStatus: PropTypes.func.isRequired,
+	message: PropTypes.string.isRequired,
 	status: PropTypes.string.isRequired,
 };
 

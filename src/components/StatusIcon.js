@@ -1,6 +1,7 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { COMPLETED, INCOMPLETE, INFO } from '../itemStatus';
+import { COMPLETE, INCOMPLETE, INFO } from '../itemStatus';
 
 /**
  * Map a given item status to the according unicode character.
@@ -11,11 +12,11 @@ import { COMPLETED, INCOMPLETE, INFO } from '../itemStatus';
  */
 export const mapStatusToIcon = ( status ) => {
 	switch ( status ) {
-		case COMPLETED:
+		case COMPLETE:
 			return '✔';
 
 		case INCOMPLETE:
-			return '✘';
+			return '·';
 
 		case INFO:
 			return 'ℹ';
@@ -25,11 +26,18 @@ export const mapStatusToIcon = ( status ) => {
 	}
 };
 
-const StatusIcon = ( { className, status } ) => {
+const StatusIcon = ( { baseClassName, name, status } ) => {
 	const icon = mapStatusToIcon( status );
 	if ( ! icon ) {
 		return null;
 	}
+
+	const iconClass = `${ baseClassName }__status-icon`;
+	const className = classNames( [
+		iconClass,
+		`${ iconClass }--${ name }`,
+		`${ iconClass }--${ status }`,
+	] );
 
 	return (
 		<span className={ className }>{ icon }</span>
@@ -37,8 +45,9 @@ const StatusIcon = ( { className, status } ) => {
 };
 
 StatusIcon.propTypes = {
-	className: PropTypes.string.isRequired,
-	status: PropTypes.string,
+	baseClassName: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+	status: PropTypes.string.isRequired,
 };
 
 StatusIcon.defaultProps = {

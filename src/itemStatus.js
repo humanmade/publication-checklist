@@ -1,3 +1,3 @@
-export const COMPLETED = 'COMPLETED';
-export const INCOMPLETE = 'INCOMPLETE';
-export const INFO = 'INFO';
+export const COMPLETE = 'complete';
+export const INCOMPLETE = 'incomplete';
+export const INFO = 'info';
