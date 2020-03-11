@@ -108,7 +108,7 @@ function register_column( array $columns ) : array {
 	// to insert Tasks at the correct position.
 	foreach ( $columns as $key => $value ) {
 		$new_columns[ $key ] = $value;
-		if ( $key === 'tags' ) {
+		if ( $key === apply_filters('altis.publication-checklist.show_tasks_column_after', 'tags' ) {
 			$new_columns[ POSTS_COLUMN ] = _x( 'Tasks', 'list table column header', 'altis-publication-checklist' );
 		}
 	}
