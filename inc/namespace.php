@@ -184,7 +184,7 @@ function register_prepublish_check( $id, $options ) {
  * @return stdClass Map of check ID => status.
  */
 function get_check_status_for_api( array $data ) : ?stdClass {
-	/** @var WP_Post */
+	/** @var array */
 	$post = get_post( $data['id'], ARRAY_A );
 	if ( empty( $post ) ) {
 		return null;
