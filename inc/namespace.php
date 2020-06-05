@@ -33,7 +33,6 @@ function set_up_checks() {
 	}
 
 	add_filter( 'wp_insert_post_data', __NAMESPACE__ . '\\block_publish_if_failing', 10, 2 );
-	add_filter( 'rest_pre_insert_post', __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
 }
 
 /**
@@ -160,9 +159,26 @@ function render_column( string $column_id ) {
  * Register REST fields for check status.
  */
 function register_rest_fields() {
-	register_rest_field( 'post', 'prepublish_checks', [
-		'get_callback' => __NAMESPACE__ . '\\get_check_status_for_api',
-	] );
+	/**
+	 * Filter which post types the Publication Checklist feature is enabled for.
+	 *
+	 * By default, the feature is enabled on every post type available via the
+	 * REST API (i.e. `show_in_rest => true`).
+	 *
+	 * Note that each check must be registered for the types as well.
+	 *
+	 * @param string[] List of post types.
+	 */
+	$types = apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) );
+	foreach ( $types as $type ) {
+		register_rest_field( $type, 'prepublish_checks', [
+			'get_callback' => __NAMESPACE__ . '\\get_check_status_for_api',
+		] );
+
+		if ( should_block_publish() ) {
+			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
+		}
+	}
 }
 
 /**
@@ -216,6 +232,11 @@ function get_check_status( array $data, array $meta, array $terms ) : array {
 	$checks = $GLOBALS[ GLOBAL_NAME ];
 	$status = [];
 	foreach ( $checks as $id => $options ) {
+		$valid_types = $options['type'] ?? 'post';
+		if ( ! in_array( $data['post_type'], (array) $valid_types, true ) ) {
+			continue;
+		}
+
 		$status[ $id ] = call_user_func( $options['run_check'], $data, $meta, $terms );
 	}
 
