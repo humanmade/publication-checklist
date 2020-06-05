@@ -17,7 +17,7 @@ use Altis\Workflow\PublicationChecklist\Status;
 
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 	register_prepublish_check( 'foo', [
-		'run_check' => function ( array $post, array $meta ) : Status {
+		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
 			if ( isset( $meta['foo'] ) ) {
 				return new Status( Status::COMPLETE, 'Foo completed' );
 			}
@@ -33,10 +33,12 @@ Checks are registered via the `Altis\Workflow\PublicationChecklist\register_prep
 Your check function receives the post data as an array, and the post's meta data as an array. Your function should only use this data to run the check, as this may represent data before it is saved to the database. Specifically, your function's signature should be:
 
 ```php
-function ( array $post, array $meta ) : Status;
+function ( array $post, array $meta, array $terms ) : Status;
 ```
 
-Your function must return a `Altis\Workflow\PublicationChecklist\Status` object. This object is marked as either complete (allow publishing), incomplete (block publishing), or informational (show as failed, but allow publishing). This status object takes the status type (which should be either `Status::COMPLETE`, `Status::INCOMPLETE`, or `Status::INFO`) and a human-readable message.
+Your function must return an `Altis\Workflow\PublicationChecklist\Status` object. This object is marked as either complete (allow publishing), incomplete (block publishing), or informational (show as failed, but allow publishing). This status object takes the status type (which should be either `Status::COMPLETE`, `Status::INCOMPLETE`, or `Status::INFO`) and a human-readable message.
+
+`$post` is an array of post data, matching the shape returned by `get_post( $id, ARRAY_A )`. `$meta` is an array of meta data, in the format `string $key => mixed|mixed[] $value`. `$terms` is an array of terms, in the format `string $taxonomy => int[] $terms`.
 
 You can additionally pass data with the status object, which can be used on the frontend to assist with rendering.
 
