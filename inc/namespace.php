@@ -129,7 +129,9 @@ function render_column( string $column_id ) {
 
 	$post_data = get_post( null, ARRAY_A );
 	$meta = get_merged_meta( $post_data['ID'], [] );
-	$statuses = get_check_status( $post_data, $meta );
+	$taxonomies = get_object_taxonomies( $post_data['post_type'] );
+	$terms = wp_get_post_terms( $post_data['ID'], $taxonomies );
+	$statuses = get_check_status( $post_data, $meta, $terms );
 
 	$incomplete = array_filter( $statuses, function ( Status $status ) {
 		return $status->get_status() === Status::INCOMPLETE;
@@ -182,14 +184,15 @@ function register_prepublish_check( $id, $options ) {
  * @return stdClass Map of check ID => status.
  */
 function get_check_status_for_api( array $data ) : ?stdClass {
-	/** @var WP_Post */
+	/** @var array */
 	$post = get_post( $data['id'], ARRAY_A );
 	if ( empty( $post ) ) {
 		return null;
 	}
 	$meta = get_post_meta( $data['id'] );
+	$terms = get_post_terms( $data['id'] );
 
-	$statuses = get_check_status( $post, $meta );
+	$statuses = get_check_status( $post, $meta, $terms );
 	$status_data = [];
 	foreach ( $statuses as $id => $status ) {
 		$status_data[ $id ] = [
@@ -206,13 +209,14 @@ function get_check_status_for_api( array $data ) : ?stdClass {
  *
  * @param array $data Post data (may not have been saved).
  * @param array $meta Post metadata (may not have been saved).
+ * @param array $terms Terms attached to the post (may not have been saved).
  * @return Status[] Map of check ID => status.
  */
-function get_check_status( array $data, array $meta ) : array {
+function get_check_status( array $data, array $meta, array $terms ) : array {
 	$checks = $GLOBALS[ GLOBAL_NAME ];
 	$status = [];
 	foreach ( $checks as $id => $options ) {
-		$status[ $id ] = call_user_func( $options['run_check'], $data, $meta );
+		$status[ $id ] = call_user_func( $options['run_check'], $data, $meta, $terms );
 	}
 
 	return $status;
@@ -279,6 +283,48 @@ function get_merged_meta( int $id, array $meta ) : array {
 }
 
 /**
+ * Get (saved) terms for a given post.
+ *
+ * @param int $id Post ID to get term for.
+ * @return array Map of taxonomy name => list of IDs (matches tax_input format)
+ */
+function get_post_terms( int $id ) : array {
+	/** @var \WP_Taxonomy[] */
+	$taxonomies = get_object_taxonomies( get_post_type( $id ) );
+
+	$terms = [];
+	foreach ( $taxonomies as $tax ) {
+		$tax_terms = get_the_terms( $id, $tax );
+		if ( $tax_terms !== false && ! is_wp_error( $tax_terms ) ) {
+			$terms[ $tax ] = wp_list_pluck( $tax_terms, 'term_id' );
+		}
+	}
+
+	return $terms;
+}
+
+/**
+ * Get all term values, including changes.
+ *
+ * This fetches all terms from the database, normalises the format, and
+ * combines with the insertable data. (See get_merged_meta for more details on
+ * the process.)
+ *
+ * @param int $id Post ID to get terms for.
+ * @param array $tax_input Taxonomy input (matches wp_insert_post()'s tax_input format)
+ */
+function get_merged_terms( int $id, array $tax_input ) : array {
+	$terms = get_post_terms( $id );
+
+	// Override any saved terms with the inputs.
+	foreach ( $tax_input as $tax => $tax_terms ) {
+		$terms[ $tax ] = (array) $tax_terms;
+	}
+
+	return $terms;
+}
+
+/**
  * Is the status a "published" status?
  *
  * @return bool True if the status counts as "published", false otherwise.
@@ -327,7 +373,19 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 	$post = array_merge( $existing_post, (array) $data );
 	$meta = get_merged_meta( $data->ID, $request['meta'] ?? [] );
 
-	$checks = get_check_status( $post, $meta );
+	/** @var \WP_Taxonomy[] */
+	$taxonomies = wp_list_filter( get_object_taxonomies( $post['post_type'], 'objects' ), array( 'show_in_rest' => true ) );
+	$tax_input = [];
+	foreach ( $taxonomies as $taxonomy ) {
+		$base = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+
+		if ( isset( $request[ $base ] ) ) {
+			$tax_input[ $taxonomy->name ] = $request[ $base ];
+		}
+	}
+	$all_terms = get_merged_terms( $data->ID, $tax_input );
+
+	$checks = get_check_status( $post, $meta, $all_terms );
 	$check_success = get_combined_status( $checks );
 	if ( ! $check_success ) {
 		// Don't allow status to be changed.
@@ -372,11 +430,13 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 	// Block if it fails.
 	if ( isset( $postarr['ID'] ) ) {
 		$meta = get_merged_meta( $postarr['ID'], $data['meta_input'] ?? [] );
+		$terms = get_merged_terms( $postarr['ID'], $data['tax_input'] ?? [] );
 	} else {
 		$meta = $data['meta_input'] ?? [];
+		$terms = $data['tax_input'] ?? [];
 	}
 
-	$checks = get_check_status( $data, $meta );
+	$checks = get_check_status( $data, $meta, $terms );
 	$check_success = get_combined_status( $checks );
 	if ( ! $check_success ) {
 		// Don't allow status to be changed.
