@@ -40,6 +40,26 @@ Your function must return a `Altis\Workflow\PublicationChecklist\Status` object.
 
 You can additionally pass data with the status object, which can be used on the frontend to assist with rendering.
 
+By default, checks will only run against the `post` post type. You can pass the relevant type(s) as a `type` option:
+
+```php
+add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
+	// Pass a single type:
+	register_prepublish_check( 'foo', [
+		'type' => 'page',
+		// ...
+	] );
+
+	// Or multiple:
+	register_prepublish_check( 'foo', [
+		'type' => [
+			'post',
+			'page',
+		],
+		// ...
+	] );
+```
+
 
 ## Displaying check status
 
