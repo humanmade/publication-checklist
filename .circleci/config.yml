@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.3-node
+      - image: humanmade/ci-php:7.3-node
 
     branches:
       only:
