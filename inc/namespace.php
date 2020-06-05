@@ -169,10 +169,13 @@ function register_rest_fields() {
 	 */
 	$types = apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) );
 	foreach ( $types as $type ) {
-		add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
 		register_rest_field( $type, 'prepublish_checks', [
 			'get_callback' => __NAMESPACE__ . '\\get_check_status_for_api',
 		] );
+
+		if ( should_block_publish() ) {
+			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
+		}
 	}
 }
 
