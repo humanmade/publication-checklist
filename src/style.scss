@@ -1,0 +1,128 @@
+.altis-publication-checklist {
+	&__required {
+		margin-top: 0;
+		font-style: italic;
+	}
+
+	&__items {
+		margin: 0.5em 0;
+	}
+
+	&__item {
+		display: flex;
+		line-height: 2;
+		margin: 0;
+		padding: 0;
+
+		> .components-button {
+			display: inline;
+			font-size: inherit;
+		}
+	}
+
+	&__item--status-complete .altis-publication-checklist__item-message {
+		text-decoration: line-through;
+	}
+
+	&__status-icon {
+		font-weight: bold;
+		margin-right: 0.5em;
+		text-align: center;
+		width: 1em;
+	}
+
+	.altis-publication-checklist__toggle-completed.components-button {
+		margin-top: 0.5em;
+	}
+
+	/* Style subtitle using extra class to override Gutenberg specificity */
+	.altis-publication-checklist__subtitle {
+		font-size: inherit;
+		font-weight: inherit;
+		margin-top: 1em;
+	}
+
+	/* The prepublish sidebar sits higher than modal overlays, so bump the z-index */
+	&__confirm-overlay.components-modal__screen-overlay {
+		z-index: 100001;
+	}
+
+	&__confirm-buttons {
+		display: flex;
+		justify-content: flex-end;
+
+		.components-button {
+			margin-left: 1em;
+		}
+	}
+}
+
+.editor-post-publish-panel__prepublish,
+.post-publish-panel__postpublish {
+	display: flex;
+	flex-direction: column;
+	padding-top: 1px !important;
+
+	/* Hide built-in summary. */
+	> div:first-child,
+	> p {
+		display: none;
+	}
+
+	.components-panel__body {
+		margin-top: -1px;
+		order: 3;
+	}
+
+	.components-panel__body.altis-publication-checklist__replacement-header {
+		order: 1;
+		padding: 0;
+
+		.editor-post-publish-panel__header-publish-button {
+			justify-content: flex-start;
+			text-align: left;
+		}
+	}
+
+	.altis-publication-checklist__panel {
+		order: 2;
+		border-top: none;
+
+		&--to-complete .components-panel__body-title .components-button {
+			--indicator-size: 0.8em;
+
+			position: relative;
+
+			&::before {
+				content: '';
+				display: inline-block;
+				width: calc( var( --indicator-size ) + 0.5em );
+			}
+
+			&::after {
+				background: #f97a14;
+				border-radius: 100%;
+				content: '';
+				height: var( --indicator-size );
+				margin-top: calc( -1 * var( --indicator-size ) / 2 );
+				position: absolute;
+				top: 50%;
+				width: var( --indicator-size );
+			}
+		}
+
+		&--completed .components-panel__body-title .components-button::after {
+			background: #3fcf8e;
+		}
+	}
+}
+
+/* Hide built-in pre-publish sidebar header */
+.editor-post-publish-panel > .editor-post-publish-panel__header {
+	display: none;
+}
+
+/* Hide UI for disabling pre-publish checks */
+.editor-post-publish-panel__footer {
+	display: none;
+}

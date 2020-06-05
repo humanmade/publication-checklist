@@ -1,0 +1,94 @@
+.altis-publication-checklist {
+  /* Style subtitle using extra class to override Gutenberg specificity */
+  /* The prepublish sidebar sits higher than modal overlays, so bump the z-index */ }
+  .altis-publication-checklist__required {
+    margin-top: 0;
+    font-style: italic; }
+  .altis-publication-checklist__items {
+    margin: 0.5em 0; }
+  .altis-publication-checklist__item {
+    display: flex;
+    line-height: 2;
+    margin: 0;
+    padding: 0; }
+    .altis-publication-checklist__item > .components-button {
+      display: inline;
+      font-size: inherit; }
+  .altis-publication-checklist__item--status-complete .altis-publication-checklist__item-message {
+    text-decoration: line-through; }
+  .altis-publication-checklist__status-icon {
+    font-weight: bold;
+    margin-right: 0.5em;
+    text-align: center;
+    width: 1em; }
+  .altis-publication-checklist .altis-publication-checklist__toggle-completed.components-button {
+    margin-top: 0.5em; }
+  .altis-publication-checklist .altis-publication-checklist__subtitle {
+    font-size: inherit;
+    font-weight: inherit;
+    margin-top: 1em; }
+  .altis-publication-checklist__confirm-overlay.components-modal__screen-overlay {
+    z-index: 100001; }
+  .altis-publication-checklist__confirm-buttons {
+    display: flex;
+    justify-content: flex-end; }
+    .altis-publication-checklist__confirm-buttons .components-button {
+      margin-left: 1em; }
+
+.editor-post-publish-panel__prepublish,
+.post-publish-panel__postpublish {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1px !important;
+  /* Hide built-in summary. */ }
+  .editor-post-publish-panel__prepublish > div:first-child,
+  .editor-post-publish-panel__prepublish > p,
+  .post-publish-panel__postpublish > div:first-child,
+  .post-publish-panel__postpublish > p {
+    display: none; }
+  .editor-post-publish-panel__prepublish .components-panel__body,
+  .post-publish-panel__postpublish .components-panel__body {
+    margin-top: -1px;
+    order: 3; }
+  .editor-post-publish-panel__prepublish .components-panel__body.altis-publication-checklist__replacement-header,
+  .post-publish-panel__postpublish .components-panel__body.altis-publication-checklist__replacement-header {
+    order: 1;
+    padding: 0; }
+    .editor-post-publish-panel__prepublish .components-panel__body.altis-publication-checklist__replacement-header .editor-post-publish-panel__header-publish-button,
+    .post-publish-panel__postpublish .components-panel__body.altis-publication-checklist__replacement-header .editor-post-publish-panel__header-publish-button {
+      justify-content: flex-start;
+      text-align: left; }
+  .editor-post-publish-panel__prepublish .altis-publication-checklist__panel,
+  .post-publish-panel__postpublish .altis-publication-checklist__panel {
+    order: 2;
+    border-top: none; }
+    .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button,
+    .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button {
+      --indicator-size: 0.8em;
+      position: relative; }
+      .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::before,
+      .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::before {
+        content: '';
+        display: inline-block;
+        width: calc( var( --indicator-size ) + 0.5em); }
+      .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::after,
+      .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::after {
+        background: #f97a14;
+        border-radius: 100%;
+        content: '';
+        height: var(--indicator-size);
+        margin-top: calc( -1 * var( --indicator-size ) / 2);
+        position: absolute;
+        top: 50%;
+        width: var(--indicator-size); }
+    .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after,
+    .post-publish-panel__postpublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after {
+      background: #3fcf8e; }
+
+/* Hide built-in pre-publish sidebar header */
+.editor-post-publish-panel > .editor-post-publish-panel__header {
+  display: none; }
+
+/* Hide UI for disabling pre-publish checks */
+.editor-post-publish-panel__footer {
+  display: none; }
