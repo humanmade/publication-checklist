@@ -436,7 +436,7 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 		$terms = $data['tax_input'] ?? [];
 	}
 
-	$checks = get_check_status( $data, $meta );
+	$checks = get_check_status( $data, $meta, $terms );
 	$check_success = get_combined_status( $checks );
 	if ( ! $check_success ) {
 		// Don't allow status to be changed.
