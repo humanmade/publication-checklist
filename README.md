@@ -17,7 +17,7 @@ use Altis\Workflow\PublicationChecklist\Status;
 
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 	register_prepublish_check( 'foo', [
-		'run_check' => function ( array $post, array $meta ) : Status {
+		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
 			if ( isset( $meta['foo'] ) ) {
 				return new Status( Status::COMPLETE, 'Foo completed' );
 			}
