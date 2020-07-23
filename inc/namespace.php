@@ -279,6 +279,10 @@ function get_merged_meta( int $id, array $meta ) : array {
 
 	// Fetch existing meta.
 	$existing_meta = get_post_meta( $id );
+	if ( ! is_array( $existing_meta ) ) {
+		$existing_meta = [];
+	}
+
 	foreach ( $existing_meta as $key => $values ) {
 		$options = $registered[ $key ] ?? null;
 		$single = $options && $options['single'];
