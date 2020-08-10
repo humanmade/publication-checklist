@@ -56,6 +56,13 @@ function should_block_publish() {
  * Enqueue browser assets for the editor.
  */
 function enqueue_assets() {
+	global $pagenow;
+
+	// Ensure this is an edit post page.
+	if ( empty( $pagenow ) || ! in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+		return;
+	}
+
 	wp_enqueue_script(
 		SCRIPT_ID,
 		plugins_url( 'build/index.js', __DIR__ ),
