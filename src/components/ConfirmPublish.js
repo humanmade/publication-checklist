@@ -48,7 +48,6 @@ class ConfirmPublish extends Component {
 				<Fragment>
 					<PostPublishButton
 						focusOnMount={ true }
-						onSubmit={ this.onSubmit }
 						forceIsDirty={ forceIsDirty }
 						forceIsSaving={ forceIsSaving }
 					/>
