@@ -104,11 +104,22 @@ function register_column( array $columns ) : array {
 
 	$new_columns = [];
 
+	// Get the post type for this page.
+	$post_type = get_current_screen()->post_type ?? null;
+
+	/**
+	 * The column to show the tasks after.
+	 *
+	 * @param string $column The column slug.
+	 * @param string $post_type The current post type.
+	 */
+	$show_after_column = apply_filters( 'altis.publication-checklist.show_tasks_after_column', 'title', $post_type );
+
 	// Loop over the columns until we find the "tags" column. This allows us
 	// to insert Tasks at the correct position.
 	foreach ( $columns as $key => $value ) {
 		$new_columns[ $key ] = $value;
-		if ( $key === apply_filters('altis.publication-checklist.show_tasks_column_after', 'tags' ) {
+		if ( $key === $show_after_column ) {
 			$new_columns[ POSTS_COLUMN ] = _x( 'Tasks', 'list table column header', 'altis-publication-checklist' );
 		}
 	}
