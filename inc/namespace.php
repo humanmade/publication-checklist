@@ -56,6 +56,11 @@ function should_block_publish() {
  * Enqueue browser assets for the editor.
  */
 function enqueue_assets() {
+	// Ensure this screen is using the block editor.
+	if ( ! wp_script_is( 'wp-block-editor', 'enqueued' ) ) {
+		return;
+	}
+
 	wp_enqueue_script(
 		SCRIPT_ID,
 		plugins_url( 'build/index.js', __DIR__ ),
