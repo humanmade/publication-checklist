@@ -132,7 +132,7 @@ To hide this column, filter the `altis.publication-checklist.show_tasks_column` 
 
 The tasks column appears after the title column by default on supported post types.
 
-To change which column the tasks column appears after use the `altis.publication-checklist.show_tasks_after_column` filter. The first parameter is the column slug such as `title` or `author` and the second parameter is the current post type name.
+To change which column the tasks column appears after use the `altis.publication-checklist.show_tasks_after_column` filter and return the desired column slug such as `title`, `author` or `tags` for example.
 
 
 ## License
