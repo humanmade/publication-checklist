@@ -5,6 +5,13 @@ Run checks and enforce conditions before posts are published. Built and designed
 Publication Checklist provides a framework for building out prepublish checks, with flexibility to fit your workflows.
 
 
+## Demo Plugin
+
+If you prefer to get a boilerplate plugin to add checks and start playing with existing code directly you can download, install and activate the demo plugin available here:
+
+https://github.com/humanmade/demo-publication-checklist
+
+
 ## Creating checks
 
 The core of a check is a function that receives the post's data and meta, and returns a `Status` object. This status object indicates whether publish should be blocked or not.
@@ -29,6 +36,8 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 ```
 
 Checks are registered via the `Altis\Workflow\PublicationChecklist\register_prepublish_check` function with a unique ID. This function should be called on the `altis.publication-checklist.register_prepublish_checks` action.
+
+**Note:** the `altis.publication-checklist.register_prepublish_checks` action runs on the `plugins_loaded` hook so you should make sure your `add_action()` call is run as soon as your custom plugin file is included or in your theme `functions.php`. Do not wrap it in a hook such as `init` or `after_setup_theme`.
 
 Your check function receives the post data as an array, and the post's meta data as an array. Your function should only use this data to run the check, as this may represent data before it is saved to the database. Specifically, your function's signature should be:
 
