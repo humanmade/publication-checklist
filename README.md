@@ -11,6 +11,7 @@ If you prefer to get a boilerplate plugin to add checks and start playing with e
 
 https://github.com/humanmade/demo-publication-checklist
 
+
 ## Creating checks
 
 The core of a check is a function that receives the post's data and meta, and returns a `Status` object. This status object indicates whether publish should be blocked or not.
