@@ -11,7 +11,6 @@ import { withDispatch, withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 import ChecklistPanelContent from './ChecklistPanelContent';
-import SidebarHeader from './SidebarHeader';
 
 import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
@@ -78,6 +77,8 @@ class ChecklistPanel extends Component {
 		if ( ! this.props.isPublishSidebarEnabled ) {
 			this.props.onEnablePublishSidebar();
 		}
+		// Toggle the post saving lock.
+		this.toggleSavingLock();
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -85,6 +86,33 @@ class ChecklistPanel extends Component {
 		const current = this.props.isPublishSidebarEnabled;
 		if ( prevProps.isPublishSidebarEnabled !== current && ! current ) {
 			this.props.onEnablePublishSidebar();
+		}
+		// Toggle the post saving lock.
+		this.toggleSavingLock();
+	}
+
+	toggleSavingLock() {
+		const {
+			onLockPostSaving,
+			onUnlockPostSaving,
+			shouldBlockPublish,
+		} = this.props;
+
+		if ( ! shouldBlockPublish ) {
+			return;
+		}
+
+		const { completion } = this.state;
+		const {
+			completed,
+			toComplete,
+		} = completion;
+		const isCompleted = completed >= toComplete;
+
+		if ( isCompleted ) {
+			onUnlockPostSaving( 'publication-checklist' );
+		} else {
+			onLockPostSaving( 'publication-checklist' );
 		}
 	}
 
@@ -108,12 +136,6 @@ class ChecklistPanel extends Component {
 
 		return (
 			<Fragment>
-				<SidebarHeader
-					baseClassName={ baseClassName }
-					isCompleted={ isCompleted }
-					shouldBlockPublish={ shouldBlockPublish }
-					toComplete={ toComplete }
-				/>
 				{ showChecklist && (
 					<Fragment>
 						{ shouldRenderInPublishSidebar && (
@@ -166,6 +188,8 @@ ChecklistPanel.propTypes = {
 	shouldBlockPublish: PropTypes.bool.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 	onEnablePublishSidebar: PropTypes.func.isRequired,
+	onLockPostSaving: PropTypes.func.isRequired,
+	onUnlockPostSaving: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -177,10 +201,16 @@ export default compose(
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
-		const { enablePublishSidebar } = dispatch( 'core/editor' );
+		const {
+			enablePublishSidebar,
+			lockPostSaving,
+			unlockPostSaving,
+		} = dispatch( 'core/editor' );
 
 		return {
 			onEnablePublishSidebar: enablePublishSidebar,
+			onLockPostSaving: lockPostSaving,
+			onUnlockPostSaving: unlockPostSaving,
 		};
 	} ),
 )( ChecklistPanel );
