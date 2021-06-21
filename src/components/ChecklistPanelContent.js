@@ -68,7 +68,7 @@ const ChecklistPanelContent = ( {
 			) }
 			{ ( ! shouldBlockPublish && ! isComplete ) && (
 				<ToggleControl
-					label={ __( 'Override checks', 'altis-publication-checklist' ) }
+					label={ __( 'Skip checks', 'altis-publication-checklist' ) }
 					help={ <ConfirmOverrideHelpText /> }
 					checked={ confirmedReady }
 					onChange={ setConfirmedReady }
