@@ -103,11 +103,7 @@ class ChecklistPanel extends Component {
 		}
 
 		const { completion } = this.state;
-		const {
-			completed,
-			toComplete,
-		} = completion;
-		const isCompleted = completed >= toComplete;
+		const isCompleted = completion.completed >= completion.toComplete;
 
 		if ( isCompleted ) {
 			onUnlockPostSaving( 'publication-checklist' );

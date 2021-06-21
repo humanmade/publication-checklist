@@ -67,12 +67,10 @@ const ChecklistPanelContent = ( {
 			) }
 			{ ( ! shouldBlockPublish && ! isComplete ) && (
 				<ToggleControl
-					label={ __( 'This post is ready to publish', 'altis-publication-checklist' ) }
-					help={ __( 'You have incomplete tasks remaining, please confirm that you are ready to publish this post.', 'altis-publication-checklist' ) }
+					label={ __( 'Override checks', 'altis-publication-checklist' ) }
+					help={ __( 'You have incomplete tasks remaining. Confirm that you wish to ignore these tasks and publish anyway.', 'altis-publication-checklist' ) }
 					checked={ confirmedReady }
-					onChange={ checked => {
-						setConfirmedReady( checked );
-					} }
+					onChange={ setConfirmedReady }
 				/>
 			) }
 			<CompletionIndicator
