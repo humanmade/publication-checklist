@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 
-import { Button } from '@wordpress/components';
-import { Fragment, useState } from '@wordpress/element';
+import { Button, ToggleControl } from '@wordpress/components';
+import { compose } from '@wordpress/compose';
+import { withDispatch } from '@wordpress/data';
+import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import Checklist from './Checklist';
@@ -16,8 +18,14 @@ const ChecklistPanelContent = ( {
 	otherItems,
 	shouldBlockPublish,
 	toComplete,
+	onConfirmedReady,
 } ) => {
 	const [ isExpanded, setExpanded ] = useState( false );
+	const [ confirmedReady, setConfirmedReady ] = useState( false );
+
+	useEffect( () => {
+		onConfirmedReady( confirmedReady );
+	}, [ confirmedReady ] );
 
 	const isComplete = completed >= toComplete;
 	const requiredLabel = __(
@@ -57,6 +65,16 @@ const ChecklistPanelContent = ( {
 					{ requiredLabel }
 				</p>
 			) }
+			{ ( ! shouldBlockPublish && ! isComplete ) && (
+				<ToggleControl
+					label={ __( 'This post is ready to publish', 'altis-publication-checklist' ) }
+					help={ __( 'You have incomplete tasks remaining, please confirm that you are ready to publish this post.', 'altis-publication-checklist' ) }
+					checked={ confirmedReady }
+					onChange={ checked => {
+						setConfirmedReady( checked );
+					} }
+				/>
+			) }
 			<CompletionIndicator
 				baseClassName={ baseClassName }
 				completed={ completed }
@@ -93,6 +111,20 @@ ChecklistPanelContent.propTypes = {
 	otherItems: itemsCollectionPropType.isRequired,
 	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number,
+	onConfirmedReady: PropTypes.func.isRequired,
 };
 
-export default ChecklistPanelContent;
+export default compose( [
+	withDispatch( ( dispatch ) => {
+		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
+		return {
+			onConfirmedReady: confirmed => {
+				if ( confirmed ) {
+					unlockPostSaving( 'publication-checklist-confirmed-ready' );
+				} else {
+					lockPostSaving( 'publication-checklist-confirmed-ready' );
+				}
+			},
+		};
+	} ),
+] )( ChecklistPanelContent );
