@@ -406,9 +406,14 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 		return $data;
 	}
 
-	$existing_post = get_post( $data->ID, ARRAY_A );
-	$post = array_merge( $existing_post, (array) $data );
-	$meta = get_merged_meta( $data->ID, $request['meta'] ?? [] );
+	$meta = $request['meta'] ?? [];
+	$post = (array) $data;
+
+	if ( property_exists( $data, 'ID' ) ) {
+		$existing_post = get_post( $data->ID, ARRAY_A );
+		$post = array_merge( $existing_post, $post );
+		$meta = get_merged_meta( $data->ID, $meta );
+	}
 
 	/** @var \WP_Taxonomy[] */
 	$taxonomies = wp_list_filter( get_object_taxonomies( $post['post_type'], 'objects' ), array( 'show_in_rest' => true ) );
@@ -420,7 +425,11 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 			$tax_input[ $taxonomy->name ] = $request[ $base ];
 		}
 	}
-	$all_terms = get_merged_terms( $data->ID, $tax_input );
+
+	$all_terms = $tax_input;
+	if ( property_exists( $data, 'ID' ) ) {
+		$all_terms = get_merged_terms( $data->ID, $all_terms );
+	}
 
 	$checks = get_check_status( $post, $meta, $all_terms );
 	$check_success = get_combined_status( $checks );
