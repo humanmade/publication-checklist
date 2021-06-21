@@ -39,13 +39,7 @@
 .post-publish-panel__postpublish {
   display: flex;
   flex-direction: column;
-  padding-top: 1px !important;
-  /* Hide built-in summary. */ }
-  .editor-post-publish-panel__prepublish > div:first-child,
-  .editor-post-publish-panel__prepublish > p,
-  .post-publish-panel__postpublish > div:first-child,
-  .post-publish-panel__postpublish > p {
-    display: none; }
+  padding-top: 1px !important; }
   .editor-post-publish-panel__prepublish .components-panel__body,
   .post-publish-panel__postpublish .components-panel__body {
     margin-top: -1px;
@@ -84,10 +78,6 @@
     .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after,
     .post-publish-panel__postpublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after {
       background: #3fcf8e; }
-
-/* Hide built-in pre-publish sidebar header */
-.editor-post-publish-panel > .editor-post-publish-panel__header {
-  display: none; }
 
 /* Hide UI for disabling pre-publish checks */
 .editor-post-publish-panel__footer {

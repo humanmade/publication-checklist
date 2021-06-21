@@ -3,21 +3,30 @@ import { get } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { compose } from '@wordpress/compose';
 import { withSelect } from '@wordpress/data';
+import { Fragment } from '@wordpress/element';
 
-function ConfirmPublishButtonLabel( {
+function ConfirmOverrideHelpText( {
 	isPublished,
 	isBeingScheduled,
 	hasPublishAction,
 } ) {
+	let message = __( 'Confirm that you wish to ignore these tasks and publish anyway.' );
+
 	if ( ! hasPublishAction ) {
-		return __( 'Ignore Checklist and Submit for Review', 'altis-publication-checklist' );
+		message = __( 'Confirm that you wish to ignore these tasks and submit for review anyway.', 'altis-publication-checklist' );
 	} else if ( isPublished ) {
-		return __( 'Ignore Checklist and Update', 'altis-publication-checklist' );
+		message = __( 'Confirm that you wish to ignore these tasks and update anyway.', 'altis-publication-checklist' );
 	} else if ( isBeingScheduled ) {
-		return __( 'Ignore Checklist and Schedule', 'altis-publication-checklist' );
+		message = __( 'Confirm that you wish to ignore these tasks and schedule anyway.', 'altis-publication-checklist' );
 	}
 
-	return __( 'Ignore Checklist and Publish', 'altis-publication-checklist' );
+	return (
+		<Fragment>
+			{ __( 'You have incomplete tasks remaining.', 'altis-publication-checklist' ) }
+			{ ' ' }
+			{ message }
+		</Fragment>
+	);
 }
 
 export default compose( [
@@ -35,4 +44,4 @@ export default compose( [
 			postType: getCurrentPostType(),
 		};
 	} ),
-] )( ConfirmPublishButtonLabel );
+] )( ConfirmOverrideHelpText );

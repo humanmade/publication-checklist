@@ -63,12 +63,6 @@
 	flex-direction: column;
 	padding-top: 1px !important;
 
-	/* Hide built-in summary. */
-	> div:first-child,
-	> p {
-		display: none;
-	}
-
 	.components-panel__body {
 		margin-top: -1px;
 		order: 3;
@@ -115,11 +109,6 @@
 			background: #3fcf8e;
 		}
 	}
-}
-
-/* Hide built-in pre-publish sidebar header */
-.editor-post-publish-panel > .editor-post-publish-panel__header {
-	display: none;
 }
 
 /* Hide UI for disabling pre-publish checks */
