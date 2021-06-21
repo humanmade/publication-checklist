@@ -24,8 +24,8 @@ const ChecklistPanelContent = ( {
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
 	useEffect( () => {
-		onConfirmedReady( confirmedReady );
-	}, [ confirmedReady ] );
+		onConfirmedReady( completed >= toComplete || confirmedReady );
+	}, [ completed, confirmedReady, toComplete ] );
 
 	const isComplete = completed >= toComplete;
 	const requiredLabel = __(
