@@ -8,6 +8,7 @@ import { __ } from '@wordpress/i18n';
 
 import Checklist from './Checklist';
 import CompletionIndicator from './CompletionIndicator';
+import ConfirmOverrideHelpText from './ConfirmOverrideHelpText';
 
 import { itemsCollectionPropType } from '../propTypes';
 
@@ -68,7 +69,7 @@ const ChecklistPanelContent = ( {
 			{ ( ! shouldBlockPublish && ! isComplete ) && (
 				<ToggleControl
 					label={ __( 'Override checks', 'altis-publication-checklist' ) }
-					help={ __( 'You have incomplete tasks remaining. Confirm that you wish to ignore these tasks and publish anyway.', 'altis-publication-checklist' ) }
+					help={ <ConfirmOverrideHelpText /> }
 					checked={ confirmedReady }
 					onChange={ setConfirmedReady }
 				/>
