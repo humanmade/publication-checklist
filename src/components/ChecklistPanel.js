@@ -78,7 +78,7 @@ class ChecklistPanel extends Component {
 			this.props.onEnablePublishSidebar();
 		}
 		// Toggle the post saving lock.
-		this.toggleSavingLock();
+		this.maybeUpdateSavingLock();
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -88,10 +88,10 @@ class ChecklistPanel extends Component {
 			this.props.onEnablePublishSidebar();
 		}
 		// Toggle the post saving lock.
-		this.toggleSavingLock();
+		this.maybeUpdateSavingLock();
 	}
 
-	toggleSavingLock() {
+	maybeUpdateSavingLock() {
 		const {
 			onLockPostSaving,
 			onUnlockPostSaving,
