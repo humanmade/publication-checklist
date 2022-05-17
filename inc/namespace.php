@@ -141,7 +141,7 @@ function render_column( string $column_id ) {
 	$post_data = get_post( null, ARRAY_A );
 	$meta = get_merged_meta( $post_data['ID'], [] );
 	$taxonomies = get_object_taxonomies( $post_data['post_type'] );
-	$terms = wp_get_post_terms( $post_data['ID'], $taxonomies );
+	$terms = get_post_terms( $post_data['ID'], $taxonomies );
 	$statuses = get_check_status( $post_data, $meta, $terms );
 
 	$incomplete = array_filter( $statuses, function ( Status $status ) {
