@@ -464,7 +464,7 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 	if ( isset( $postarr['ID'] ) ) {
 		$existing = get_post( $postarr['ID'], ARRAY_A );
 
-		if ( isset( $existing['post_status'] ) && $existing['post_status'] === $data['post_status'] ) {
+		if ( ! empty( $existing ) && isset( $existing['post_status'] ) && $existing['post_status'] === $data['post_status'] ) {
 			return $data;
 		}
 	}
