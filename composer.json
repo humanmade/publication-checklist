@@ -1,0 +1,15 @@
+{
+    "name": "humanmade/publication-checklist",
+    "description": "Run checks and enforce conditions before posts are published.",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Human Made",
+            "email": "hello@humanmade.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    }
+}
