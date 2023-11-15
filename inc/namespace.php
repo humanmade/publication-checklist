@@ -68,6 +68,7 @@ function enqueue_assets() {
 			'wp-block-editor',
 			'wp-edit-post',
 			'wp-plugins',
+			'lodash',
 		]
 	);
 	wp_enqueue_style(
