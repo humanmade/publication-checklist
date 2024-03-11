@@ -1,0 +1,31 @@
+on:
+  push:
+    tags:
+      - '*'
+
+name: Create Release
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Create Release
+        uses: technote-space/release-github-actions@v7
+        with:
+          CLEAN_TEST_TAG: true
+          CLEAN_TARGETS: .[!.]*,__tests__,package.json,yarn.lock,node_modules,tests,*.xml.dist
+          COMMIT_MESSAGE: "Built release for ${{ steps.get_version.outputs.VERSION }}. For a full change log look at the notes within the original/${{ steps.get_version.outputs.VERSION }} release."
+          CREATE_MAJOR_VERSION_TAG: false
+          CREATE_MINOR_VERSION_TAG: false
+          CREATE_PATCH_VERSION_TAG: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORIGINAL_TAG_PREFIX: original/
+          OUTPUT_BUILD_INFO_FILENAME: build.json
+          TEST_TAG_PREFIX: test/
