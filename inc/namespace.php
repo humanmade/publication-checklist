@@ -215,9 +215,12 @@ function register_prepublish_check( $id, $options ) {
 function get_check_status_for_api( array $data ) : ?stdClass {
 	/** @var array */
 	$post = get_post( $data['id'], ARRAY_A );
-	if ( empty( $post ) ) {
+
+	// Bail early if post or data ID is empty
+	if ( empty( $post ) || empty( $data['id'] ) ) {
 		return null;
 	}
+
 	$meta = get_post_meta( $data['id'] );
 	$terms = get_post_terms( $data['id'] );
 
