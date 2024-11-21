@@ -213,11 +213,16 @@ function register_prepublish_check( $id, $options ) {
  * @return stdClass Map of check ID => status.
  */
 function get_check_status_for_api( array $data ) : ?stdClass {
+	// Bail early if data ID is empty
+	if ( empty( $data['id'] ) ) {
+		return null;
+	}
+
 	/** @var array */
 	$post = get_post( $data['id'], ARRAY_A );
 
-	// Bail early if post or data ID is empty
-	if ( empty( $post ) || empty( $data['id'] ) ) {
+	// Bail early if post is empty
+	if ( empty( $post ) ) {
 		return null;
 	}
 
