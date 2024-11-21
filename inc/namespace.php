@@ -213,23 +213,16 @@ function register_prepublish_check( $id, $options ) {
  * @return stdClass Map of check ID => status.
  */
 function get_check_status_for_api( array $data ) : ?stdClass {
-	$id = $data['id'] ?? null;
-
-	// Bail early if no ID is set.
-	if ( ! isset( $id ) ) {
-		return null;
-	}
-
 	/** @var array */
-	$post = get_post( $id, ARRAY_A );
+	$post = get_post( $data['id'], ARRAY_A );
 
 	// Bail early if post or data ID is empty
-	if ( empty( $post ) ) {
+	if ( empty( $post ) || empty( $data['id'] ) ) {
 		return null;
 	}
 
-	$meta = get_post_meta( $id );
-	$terms = get_post_terms( $id );
+	$meta = get_post_meta( $data['id'] );
+	$terms = get_post_terms( $data['id'] );
 
 	$statuses = get_check_status( $post, $meta, $terms );
 	$status_data = [];
