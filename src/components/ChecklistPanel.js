@@ -101,6 +101,14 @@ class ChecklistPanel extends Component {
 		if ( ! shouldBlockPublish ) {
 			return;
 		}
+		
+		const postStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+		const isPublishStatus = [ 'publish', 'private', 'future' ].includes( postStatus );
+		
+		if ( !isPublishStatus ) {
+			onUnlockPostSaving( 'publication-checklist' );
+			return;
+		}
 
 		const { completion } = this.state;
 		const isCompleted = completion.completed >= completion.toComplete;
