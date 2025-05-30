@@ -163,11 +163,10 @@ ChecklistPanel.propTypes = {
 
 export default compose(
 	withSelect( ( select ) => {
-		const { getEditedPostAttribute, isPublishSidebarEnabled } = select( 'core/editor' );
+		const { isPublishSidebarEnabled } = select( 'core/editor' );
 
 		return {
 			isPublishSidebarEnabled: isPublishSidebarEnabled(),
-			postStatus: getEditedPostAttribute( 'status' ),
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
