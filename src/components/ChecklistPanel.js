@@ -77,8 +77,6 @@ class ChecklistPanel extends Component {
 		if ( ! this.props.isPublishSidebarEnabled ) {
 			this.props.onEnablePublishSidebar();
 		}
-		// Toggle the post saving lock.
-		this.maybeUpdateSavingLock();
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -87,45 +85,15 @@ class ChecklistPanel extends Component {
 		if ( prevProps.isPublishSidebarEnabled !== current && ! current ) {
 			this.props.onEnablePublishSidebar();
 		}
-		// Toggle the post saving lock.
-		this.maybeUpdateSavingLock();
 	}
 
-	maybeUpdateSavingLock() {
-		const {
-			onLockPostSaving,
-			onUnlockPostSaving,
-			shouldBlockPublish,
-		} = this.props;
-
-		if ( ! shouldBlockPublish ) {
-			return;
-		}
-		
-		const postStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
-		const isPublishStatus = [ 'publish', 'private', 'future' ].includes( postStatus );
-		
-		if ( !isPublishStatus ) {
-			onUnlockPostSaving( 'publication-checklist' );
-			return;
-		}
-
-		const { completion } = this.state;
-		const isCompleted = completion.completed >= completion.toComplete;
-
-		if ( isCompleted ) {
-			onUnlockPostSaving( 'publication-checklist' );
-		} else {
-			onLockPostSaving( 'publication-checklist' );
-		}
-	}
 
 	render() {
 		const { completableItems, otherItems } = this.state;
 
 		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
-		const { shouldBlockPublish, shouldRenderInPublishSidebar } = this.props;
+		const { shouldRenderInPublishSidebar } = this.props;
 
 		const { completion } = this.state;
 
@@ -156,7 +124,6 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
-									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PluginPrePublishPanel>
@@ -174,7 +141,6 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
-									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PanelBody>
@@ -189,7 +155,6 @@ class ChecklistPanel extends Component {
 ChecklistPanel.propTypes = {
 	isPublishSidebarEnabled: PropTypes.bool.isRequired,
 	items: itemsMapPropType.isRequired,
-	shouldBlockPublish: PropTypes.bool.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 	onEnablePublishSidebar: PropTypes.func.isRequired,
 	onLockPostSaving: PropTypes.func.isRequired,
@@ -198,23 +163,18 @@ ChecklistPanel.propTypes = {
 
 export default compose(
 	withSelect( ( select ) => {
-		const { isPublishSidebarEnabled } = select( 'core/editor' );
+		const { getEditedPostAttribute, isPublishSidebarEnabled } = select( 'core/editor' );
 
 		return {
 			isPublishSidebarEnabled: isPublishSidebarEnabled(),
+			postStatus: getEditedPostAttribute( 'status' ),
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
-		const {
-			enablePublishSidebar,
-			lockPostSaving,
-			unlockPostSaving,
-		} = dispatch( 'core/editor' );
+		const { enablePublishSidebar } = dispatch( 'core/editor' );
 
 		return {
 			onEnablePublishSidebar: enablePublishSidebar,
-			onLockPostSaving: lockPostSaving,
-			onUnlockPostSaving: unlockPostSaving,
 		};
 	} ),
 )( ChecklistPanel );
