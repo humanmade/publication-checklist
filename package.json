@@ -8,7 +8,6 @@
   "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@wordpress/icons": "^10.24.0",
     "@wordpress/scripts": "^3.2.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
@@ -26,11 +25,11 @@
     "eslint-plugin-jsdoc": "^8.0.1"
   },
   "scripts": {
-    "build": "wp-scripts build --config webpack.config.js && node-sass -o build src",
+    "build": "wp-scripts build && node-sass -o build src",
     "lint:js": "wp-scripts lint-js src",
     "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
-    "start": "wp-scripts start --config webpack.config.js",
+    "start": "wp-scripts start",
     "test:unit": "wp-scripts test-unit-js"
   }
 }
