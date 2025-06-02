@@ -1,12 +1,9 @@
 import ChecklistPanel from './containers/ChecklistPanel';
+import PluginStatusIndicator from './containers/PluginStatusIndicator';
 
 export const name = 'altis-publication-checklist';
 
 export const settings = {
-	icon: 'yes',
-	render: () => (
-		<ChecklistPanel
-			shouldBlockPublish={ Boolean( window.altisPublicationChecklist.block_publish ) }
-		/>
-	),
+	icon: PluginStatusIndicator,
+	render: ChecklistPanel,
 };

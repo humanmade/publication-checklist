@@ -77,8 +77,6 @@ class ChecklistPanel extends Component {
 		if ( ! this.props.isPublishSidebarEnabled ) {
 			this.props.onEnablePublishSidebar();
 		}
-		// Toggle the post saving lock.
-		this.maybeUpdateSavingLock();
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -87,37 +85,15 @@ class ChecklistPanel extends Component {
 		if ( prevProps.isPublishSidebarEnabled !== current && ! current ) {
 			this.props.onEnablePublishSidebar();
 		}
-		// Toggle the post saving lock.
-		this.maybeUpdateSavingLock();
 	}
 
-	maybeUpdateSavingLock() {
-		const {
-			onLockPostSaving,
-			onUnlockPostSaving,
-			shouldBlockPublish,
-		} = this.props;
-
-		if ( ! shouldBlockPublish ) {
-			return;
-		}
-
-		const { completion } = this.state;
-		const isCompleted = completion.completed >= completion.toComplete;
-
-		if ( isCompleted ) {
-			onUnlockPostSaving( 'publication-checklist' );
-		} else {
-			onLockPostSaving( 'publication-checklist' );
-		}
-	}
 
 	render() {
 		const { completableItems, otherItems } = this.state;
 
 		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
-		const { shouldBlockPublish, shouldRenderInPublishSidebar } = this.props;
+		const { shouldRenderInPublishSidebar } = this.props;
 
 		const { completion } = this.state;
 
@@ -148,7 +124,6 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
-									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PluginPrePublishPanel>
@@ -166,7 +141,6 @@ class ChecklistPanel extends Component {
 									completed={ completed }
 									completableItems={ completableItems }
 									otherItems={ otherItems }
-									shouldBlockPublish={ shouldBlockPublish }
 									toComplete={ toComplete }
 								/>
 							</PanelBody>
@@ -181,7 +155,6 @@ class ChecklistPanel extends Component {
 ChecklistPanel.propTypes = {
 	isPublishSidebarEnabled: PropTypes.bool.isRequired,
 	items: itemsMapPropType.isRequired,
-	shouldBlockPublish: PropTypes.bool.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 	onEnablePublishSidebar: PropTypes.func.isRequired,
 	onLockPostSaving: PropTypes.func.isRequired,
@@ -197,16 +170,10 @@ export default compose(
 		};
 	} ),
 	withDispatch( ( dispatch ) => {
-		const {
-			enablePublishSidebar,
-			lockPostSaving,
-			unlockPostSaving,
-		} = dispatch( 'core/editor' );
+		const { enablePublishSidebar } = dispatch( 'core/editor' );
 
 		return {
 			onEnablePublishSidebar: enablePublishSidebar,
-			onLockPostSaving: lockPostSaving,
-			onUnlockPostSaving: unlockPostSaving,
 		};
 	} ),
 )( ChecklistPanel );
