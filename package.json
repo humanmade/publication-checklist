@@ -11,7 +11,7 @@
     "@wordpress/scripts": "^3.2.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
-    "node-sass": "^4.12.0",
+    "node-sass": "^9.0.0",
     "prop-types": "^15.7.2",
     "rc-progress": "^2.3.0",
     "react": "^16.8.6",
