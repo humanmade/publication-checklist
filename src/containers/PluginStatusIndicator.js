@@ -1,6 +1,7 @@
 import _get from 'lodash/get';
 
-import { Icon, check, error } from '@wordpress/icons';
+import { Check, Error } from '../icons';
+
 import { useDispatch, useSelect } from '@wordpress/data';
 
 const PluginStatusIndicator = () => {
@@ -26,9 +27,7 @@ const PluginStatusIndicator = () => {
 		}
 	}
 
-	return isIncomplete ?
-		<Icon icon={ error } color="red" /> :
-		<Icon icon={ check } />;
+	return isIncomplete ? <Error /> : <Check />;
 };
 
 export default PluginStatusIndicator;
