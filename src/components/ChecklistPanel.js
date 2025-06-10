@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
-import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editPost';
+import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { Component, Fragment } from '@wordpress/element';
 import { withDispatch, withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
