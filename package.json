@@ -11,9 +11,10 @@
     "rc-progress": "^2.3.0"
   },
   "devDependencies": {
+    "@wordpress/scripts": "^30.18.0"
   },
   "scripts": {
-    "build": "wp-scripts build && node-sass -o build src",
+    "build": "wp-scripts build",
     "lint:js": "wp-scripts lint-js src",
     "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
