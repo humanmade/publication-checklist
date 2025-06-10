@@ -9,7 +9,6 @@ const GLOBAL_NAME = 'altis_publication_checklist_checks';
 const INTERNAL_CHECKED_KEY = '__altis_publication_checklist_checked';
 const POSTS_COLUMN = 'altis_publication_checklist_status';
 const SCRIPT_ID = 'altis_publication_checklist';
-const VERSION = '0.4.1';
 
 /**
  * Bootstrap.
@@ -62,22 +61,19 @@ function enqueue_assets() {
 		return;
 	}
 
+	$asset_file = include plugin_dir_path( __DIR__ ) . 'build/index.asset.php';
+
 	wp_enqueue_script(
 		SCRIPT_ID,
 		plugins_url( 'build/index.js', __DIR__ ),
-		[
-			'wp-block-editor',
-			'wp-edit-post',
-			'wp-plugins',
-			'lodash',
-		],
-		VERSION
+		$asset_file['dependencies'],
+		$asset_file['version']
 	);
 	wp_enqueue_style(
 		'workflow-pub-checklist',
 		plugins_url( 'build/style-index.css', __DIR__ ),
 		[],
-		VERSION
+		$asset_file['version']
 	);
 
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
