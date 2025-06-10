@@ -1,6 +1,6 @@
 import { Check, Error } from '../icons';
-
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
+import { dispatch, useSelect } from '@wordpress/data';
 
 const PluginStatusIndicator = () => {
 
@@ -14,17 +14,19 @@ const PluginStatusIndicator = () => {
 		return false;
 	} );
 
-	const { lockPostSaving, unlockPostSaving } = useDispatch( 'core/editor' );
-
 	const shouldBlockPublish = Boolean( window.altisPublicationChecklist.block_publish );
 
-	if ( shouldBlockPublish ) {
+	useEffect( () => {
+		if ( ! shouldBlockPublish ) {
+			return;
+		}
+		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
 		if ( isIncomplete ) {
 			lockPostSaving( 'publication-checklist' );
 		} else {
 			unlockPostSaving( 'publication-checklist' );
 		}
-	}
+	}, [ shouldBlockPublish, isIncomplete ] );
 
 	return isIncomplete ? <Error /> : <Check />;
 };
