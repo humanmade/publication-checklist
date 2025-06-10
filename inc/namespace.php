@@ -75,7 +75,7 @@ function enqueue_assets() {
 	);
 	wp_enqueue_style(
 		'workflow-pub-checklist',
-		plugins_url( 'build/style.css', __DIR__ ),
+		plugins_url( 'build/style-index.css', __DIR__ ),
 		[],
 		VERSION
 	);
