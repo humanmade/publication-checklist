@@ -14,7 +14,7 @@ const SCRIPT_ID = 'altis_publication_checklist';
  * Bootstrap.
  */
 function bootstrap() {
-	add_action( 'wp_enqueue_editor', __NAMESPACE__ . '\\enqueue_assets' );
+	add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_assets' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_fields' );
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_up_checks' );
 	add_action( 'manage_posts_columns', __NAMESPACE__ . '\\register_column' );
@@ -56,11 +56,6 @@ function should_block_publish() {
  * Enqueue browser assets for the editor.
  */
 function enqueue_assets() {
-	// Ensure this screen is using the block editor.
-	if ( ! wp_script_is( 'wp-block-editor', 'enqueued' ) ) {
-		return;
-	}
-
 	$asset_file = include plugin_dir_path( __DIR__ ) . 'build/index.asset.php';
 
 	wp_enqueue_script(
