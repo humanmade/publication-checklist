@@ -14,6 +14,7 @@ import ChecklistPanelContent from './ChecklistPanelContent';
 
 import { COMPLETE, INCOMPLETE } from '../itemStatus';
 import { itemsMapPropType } from '../propTypes';
+import PluginStatusIndicator from '../containers/PluginStatusIndicator';
 
 const baseClassName = 'altis-publication-checklist';
 const panelClassName = `${ baseClassName }__panel`;
@@ -128,7 +129,10 @@ class ChecklistPanel extends Component {
 								/>
 							</PluginPrePublishPanel>
 						) }
-						<PluginSidebarMoreMenuItem target={ sidebarName }>
+						<PluginSidebarMoreMenuItem
+							target={ sidebarName }
+							icon={ PluginStatusIndicator }
+						>
 							{ title }
 						</PluginSidebarMoreMenuItem>
 						<PluginSidebar
