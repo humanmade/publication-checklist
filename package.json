@@ -1,28 +1,16 @@
 {
   "name": "@humanmade/publication-checklist",
-  "version": "1.0.0",
   "description": "A simple, yet flexible publication checklist for WordPress.",
   "author": "Human Made",
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@wordpress/scripts": "^3.2.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
-    "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
-    "rc-progress": "^2.3.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "rememo": "^3.0.0"
+    "rc-progress": "^2.3.0"
   },
   "devDependencies": {
-    "@wordpress/eslint-plugin": "^2.2.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jsdoc": "^8.0.1"
   },
   "scripts": {
     "build": "wp-scripts build && node-sass -o build src",
