@@ -141,6 +141,14 @@ The tasks column appears after the title column by default on supported post typ
 
 To change which column the tasks column appears after use the `altis.publication-checklist.show_tasks_after_column` filter and return the desired column slug such as `title`, `author` or `tags` for example.
 
+## Release Process
+
+Merges to `main` will automatically build to the `release` branch.
+
+Commits in the `release` branch may be tagged by [running the Tag and Release workflow with the desired tag value](https://github.com/humanmade/publication-checklist/actions/workflows/tag-and-release.yml), then marked as releases in GitHub for download.
+
+Tagging releases allows for installation via [packagist](https://packagist.org/packages/humanmade/hm-mega-menu-block) and [composer](http://getcomposer.org/). A project may also be set up to track the `dev-release` branch to use the latest built beta versions in between tagged releases.
+
 
 ## License
 
