@@ -12,17 +12,19 @@ import ConfirmOverrideHelpText from './ConfirmOverrideHelpText';
 
 import { itemsCollectionPropType } from '../propTypes';
 
+
 const ChecklistPanelContent = ( {
 	baseClassName,
 	completableItems,
 	completed,
 	otherItems,
-	shouldBlockPublish,
 	toComplete,
 	onConfirmedReady,
 } ) => {
 	const [ isExpanded, setExpanded ] = useState( false );
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
+
+	const shouldBlockPublish = !! window.altisPublicationChecklist.block_publish ?? false;
 
 	useEffect( () => {
 		onConfirmedReady( completed >= toComplete || confirmedReady );
