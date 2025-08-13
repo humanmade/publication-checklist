@@ -85,11 +85,18 @@
 		&--to-complete .components-panel__body-title .components-button {
 			--indicator-size: 0.8em;
 
+			align-items: center;
 			position: relative;
+
+			svg {
+				fill: #f97a14;
+				height: 30px;
+				margin-left: auto;
+				width: 30px;
+			}
 
 			&::before {
 				content: '';
-				display: inline-block;
 				width: calc( var( --indicator-size ) + 0.5em );
 			}
 
@@ -107,6 +114,10 @@
 
 		&--completed .components-panel__body-title .components-button::after {
 			background: #3fcf8e;
+		}
+
+		&--completed .components-panel__body-title .components-button svg {
+			fill: #3fcf8e;
 		}
 	}
 }

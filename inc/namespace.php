@@ -9,7 +9,7 @@ const GLOBAL_NAME = 'altis_publication_checklist_checks';
 const INTERNAL_CHECKED_KEY = '__altis_publication_checklist_checked';
 const POSTS_COLUMN = 'altis_publication_checklist_status';
 const SCRIPT_ID = 'altis_publication_checklist';
-const VERSION = '0.4.5';
+const VERSION = '0.4.6';
 
 /**
  * Bootstrap.

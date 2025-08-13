@@ -4,7 +4,7 @@
  * Description: Ensure authors meet requirements before publishing.
  * Author: Human Made
  * Author URI: https://humanmade.com/
- * Version: 0.4.5
+ * Version: 0.4.6
  */
 
 namespace Altis\Workflow\PublicationChecklist;
