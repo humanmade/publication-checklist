@@ -59,11 +59,17 @@
     .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button,
     .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button {
       --indicator-size: 0.8em;
+      align-items: center;
       position: relative; }
+      .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button svg,
+      .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button svg {
+        fill: #f97a14;
+        height: 30px;
+        margin-left: auto;
+        width: 30px; }
       .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::before,
       .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::before {
         content: '';
-        display: inline-block;
         width: calc( var( --indicator-size ) + 0.5em); }
       .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::after,
       .post-publish-panel__postpublish .altis-publication-checklist__panel--to-complete .components-panel__body-title .components-button::after {
@@ -78,6 +84,9 @@
     .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after,
     .post-publish-panel__postpublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button::after {
       background: #3fcf8e; }
+    .editor-post-publish-panel__prepublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button svg,
+    .post-publish-panel__postpublish .altis-publication-checklist__panel--completed .components-panel__body-title .components-button svg {
+      fill: #3fcf8e; }
 
 /* Hide UI for disabling pre-publish checks */
 .editor-post-publish-panel__footer {
