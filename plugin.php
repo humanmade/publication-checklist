@@ -9,6 +9,8 @@
 
 namespace Altis\Workflow\PublicationChecklist;
 
+const VERSION = '0.4.6';
+
 require __DIR__ . '/inc/class-status.php';
 require __DIR__ . '/inc/namespace.php';
 
