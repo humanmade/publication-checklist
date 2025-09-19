@@ -12,7 +12,7 @@
     "rc-progress": "^2.3.0"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^30.18.0"
+    "@wordpress/scripts": "^30.24.0"
   },
   "scripts": {
     "build": "wp-scripts build",
