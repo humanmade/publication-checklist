@@ -14,7 +14,7 @@ jobs:
     name: "Update release branch"
     uses: humanmade/hm-github-actions/.github/workflows/build-and-release-node.yml@bbe801d037b61dd0fa0fcd7d208f6bf54d7ca1fd # v0.1.1
     with:
-      node_version: 22
+      node_version: 24
       source_branch: main
       release_branch: release
       built_asset_paths: build
