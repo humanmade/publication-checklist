@@ -9,13 +9,13 @@ const GLOBAL_NAME = 'altis_publication_checklist_checks';
 const INTERNAL_CHECKED_KEY = '__altis_publication_checklist_checked';
 const POSTS_COLUMN = 'altis_publication_checklist_status';
 const SCRIPT_ID = 'altis_publication_checklist';
-const VERSION = '0.4.1';
+const VERSION = '0.4.6';
 
 /**
  * Bootstrap.
  */
 function bootstrap() {
-	add_action( 'wp_enqueue_editor', __NAMESPACE__ . '\\enqueue_assets' );
+	add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_assets' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_fields' );
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_up_checks' );
 	add_action( 'manage_posts_columns', __NAMESPACE__ . '\\register_column' );
@@ -57,27 +57,19 @@ function should_block_publish() {
  * Enqueue browser assets for the editor.
  */
 function enqueue_assets() {
-	// Ensure this screen is using the block editor.
-	if ( ! wp_script_is( 'wp-block-editor', 'enqueued' ) ) {
-		return;
-	}
+	$asset_file = include plugin_dir_path( __DIR__ ) . 'build/index.asset.php';
 
 	wp_enqueue_script(
 		SCRIPT_ID,
 		plugins_url( 'build/index.js', __DIR__ ),
-		[
-			'wp-block-editor',
-			'wp-edit-post',
-			'wp-plugins',
-			'lodash',
-		],
-		VERSION
+		$asset_file['dependencies'],
+		$asset_file['version']
 	);
 	wp_enqueue_style(
 		'workflow-pub-checklist',
-		plugins_url( 'build/style.css', __DIR__ ),
+		plugins_url( 'build/style-index.css', __DIR__ ),
 		[],
-		VERSION
+		$asset_file['version']
 	);
 
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
@@ -217,11 +209,16 @@ function register_prepublish_check( $id, $options ) {
  * @return stdClass Map of check ID => status.
  */
 function get_check_status_for_api( array $data ) : ?stdClass {
+	// Bail early if data ID is empty
+	if ( empty( $data['id'] ) ) {
+		return null;
+	}
+
 	/** @var array */
 	$post = get_post( $data['id'], ARRAY_A );
 
-	// Bail early if post or data ID is empty
-	if ( empty( $post ) || empty( $data['id'] ) ) {
+	// Bail early if post is empty
+	if ( empty( $post ) ) {
 		return null;
 	}
 

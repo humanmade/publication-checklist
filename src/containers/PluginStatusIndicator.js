@@ -1,31 +1,32 @@
-import _get from 'lodash/get';
-
 import { Check, Error } from '../icons';
-
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect } from '@wordpress/element';
+import { dispatch, useSelect } from '@wordpress/data';
 
 const PluginStatusIndicator = () => {
 
-	const items = useSelect( select => _get(
-		select( 'core/editor' ).getCurrentPost(),
-		'prepublish_checks'
-	) );
-
-	const { lockPostSaving, unlockPostSaving } = useDispatch( 'core/editor' );
-
-	const isIncomplete = Object.values( items )
-		.map( ( { status } ) => status )
-		.includes( 'incomplete' );
+	const isIncomplete = useSelect( select => {
+		const currentPost = select( 'core/editor' ).getCurrentPost();
+		if ( currentPost && currentPost.prepublish_checks ) {
+			return Object.values( currentPost.prepublish_checks )
+				.map( ( { status } ) => status )
+				.includes( 'incomplete' );
+		}
+		return false;
+	} );
 
 	const shouldBlockPublish = Boolean( window.altisPublicationChecklist.block_publish );
 
-	if ( shouldBlockPublish ) {
+	useEffect( () => {
+		if ( ! shouldBlockPublish ) {
+			return;
+		}
+		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
 		if ( isIncomplete ) {
 			lockPostSaving( 'publication-checklist' );
 		} else {
 			unlockPostSaving( 'publication-checklist' );
 		}
-	}
+	}, [ shouldBlockPublish, isIncomplete ] );
 
 	return isIncomplete ? <Error /> : <Check />;
 };
