@@ -4,12 +4,12 @@
  * Description: Ensure authors meet requirements before publishing.
  * Author: Human Made
  * Author URI: https://humanmade.com/
- * Version: 0.4.6
+ * Version: 0.4.8
  */
 
 namespace Altis\Workflow\PublicationChecklist;
 
-const VERSION = '0.4.6';
+const VERSION = '0.4.8';
 
 require __DIR__ . '/inc/class-status.php';
 require __DIR__ . '/inc/namespace.php';
