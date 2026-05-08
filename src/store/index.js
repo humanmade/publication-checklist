@@ -9,9 +9,9 @@ const DEFAULT_STATE = {
 /**
  * Reducer for the publication checklist store.
  *
- * @param {Object} state - Current state
- * @param {Object} action - Action object
- * @return {Object} Updated state
+ * @param {Object} state  - Current state.
+ * @param {Object} action - Action object.
+ * @return {Object} Updated state.
  */
 const reducer = ( state = DEFAULT_STATE, action ) => {
 	switch ( action.type ) {
@@ -42,17 +42,17 @@ const selectors = {
 	/**
 	 * Get live results from the store.
 	 *
-	 * @param {Object} state - Store state
-	 * @return {Object} Live results object
+	 * @param {Object} state - Store state.
+	 * @return {Object} Live results object.
 	 */
 	getLiveResults: ( state ) => state.live,
 
 	/**
 	 * Merge live results with REST results, with priority JS > PHP-live > PHP-static.
 	 *
-	 * @param {Object} state - Store state
-	 * @param {Object} restResults - REST prepublish_checks object from core/editor
-	 * @return {Object} Merged results without source field
+	 * @param {Object} state       - Store state.
+	 * @param {Object} restResults - REST prepublish_checks object from core/editor.
+	 * @return {Object} Merged results without source field.
 	 */
 	getMergedResults: ( state, restResults ) => {
 		const merged = {};
@@ -97,8 +97,8 @@ const actions = {
 	/**
 	 * Set live results, replacing the entire live object.
 	 *
-	 * @param {Object} map - Live results map keyed by check id
-	 * @return {Object} Action object
+	 * @param {Object} map - Live results map keyed by check id.
+	 * @return {Object} Action object.
 	 */
 	setLiveResults: ( map ) => ( {
 		type: 'SET_LIVE_RESULTS',
@@ -108,8 +108,8 @@ const actions = {
 	/**
 	 * Clear a single live result by id.
 	 *
-	 * @param {string} id - Check id to clear
-	 * @return {Object} Action object
+	 * @param {string} id - Check id to clear.
+	 * @return {Object} Action object.
 	 */
 	clearLiveResult: ( id ) => ( {
 		type: 'CLEAR_LIVE_RESULT',
