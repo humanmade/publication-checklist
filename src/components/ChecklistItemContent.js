@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 
 import { Fragment } from '@wordpress/element';
 
-const ChecklistItemContent = ( { baseClassName, message, renderStatusIcon } ) => {
+const ChecklistItemContent = ( {
+	baseClassName,
+	message,
+	renderStatusIcon,
+} ) => {
 	return (
 		<Fragment>
 			{ renderStatusIcon() }

@@ -8,7 +8,7 @@ import { COMPLETE, INCOMPLETE, INFO } from '../itemStatus';
  *
  * @param {string} status - Item status.
  *
- * @returns {string} Icon.
+ * @return {string} Icon.
  */
 export const mapStatusToIcon = ( status ) => {
 	switch ( status ) {
@@ -39,9 +39,7 @@ const StatusIcon = ( { baseClassName, name, status } ) => {
 		`${ iconClass }--${ status }`,
 	] );
 
-	return (
-		<span className={ className }>{ icon }</span>
-	);
+	return <span className={ className }>{ icon }</span>;
 };
 
 StatusIcon.propTypes = {

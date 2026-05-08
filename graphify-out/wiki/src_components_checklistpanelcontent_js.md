@@ -1,0 +1,24 @@
+# ChecklistPanelContent
+
+- **ID:** `src_components_checklistpanelcontent_js`
+- **Type:** File
+- **File:** `./src/components/ChecklistPanelContent.js`
+- **Community:** 2 (ChecklistPanelContent())
+
+## Relationships
+
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_prop_types_proptypes (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_components_button (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_components_togglecontrol (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_compose_compose (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_data_withdispatch (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_element_fragment (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_element_useeffect (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_element_usestate (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_wordpress_i18n (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_checklist_checklist (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_completionindicator_completionindicator (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_confirmoverridehelptext_confirmoverridehelptext (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_import_proptypes_itemscollectionproptype (imports, Extracted)
+- src_components_checklistpanelcontent_js → src_components_checklistpanelcontent_js_checklistpanelcontent (defines, Extracted)
+

@@ -1,0 +1,24 @@
+{
+  "files": {
+    "inc/class-status.php": "code",
+    "README.md": "document",
+    "src/index.js": "code",
+    ".eslintrc.js": "code",
+    "inc/namespace.php": "code",
+    "src/components/ChecklistPanel.js": "code",
+    "plugin.php": "code",
+    "src/components/ChecklistPanelContent.js": "code",
+    "src/components/ConfirmOverrideHelpText.js": "code",
+    "src/icons/index.js": "code",
+    "src/components/CompletionIndicator.js": "code",
+    "src/containers/PluginStatusIndicator.js": "code",
+    "src/components/ChecklistItemContent.js": "code",
+    "src/components/Checklist.js": "code",
+    "src/containers/ChecklistPanel.js": "code",
+    "src/components/StatusIcon.js": "code",
+    "src/plugin.js": "code",
+    "src/propTypes.js": "code",
+    "src/components/ChecklistItem.js": "code",
+    "src/itemStatus.js": "code"
+  }
+}

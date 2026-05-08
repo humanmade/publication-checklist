@@ -1,0 +1,2376 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "inc_class_status_php",
+      "label": "class-status",
+      "source_file": "./inc/class-status.php",
+      "node_type": "file",
+      "community": 9
+    },
+    {
+      "id": "inc_class_status_php_status",
+      "label": "Status",
+      "source_file": "./inc/class-status.php",
+      "source_location": "L12",
+      "node_type": "class",
+      "community": 9
+    },
+    {
+      "id": "inc_class_status_php_construct",
+      "label": "__construct",
+      "source_file": "./inc/class-status.php",
+      "source_location": "L50",
+      "node_type": "function",
+      "community": 9
+    },
+    {
+      "id": "inc_class_status_php_get_status",
+      "label": "get_status",
+      "source_file": "./inc/class-status.php",
+      "source_location": "L61",
+      "node_type": "function",
+      "community": 9
+    },
+    {
+      "id": "inc_class_status_php_get_message",
+      "label": "get_message",
+      "source_file": "./inc/class-status.php",
+      "source_location": "L70",
+      "node_type": "function",
+      "community": 9
+    },
+    {
+      "id": "inc_class_status_php_get_data",
+      "label": "get_data",
+      "source_file": "./inc/class-status.php",
+      "source_location": "L79",
+      "node_type": "function",
+      "community": 9
+    },
+    {
+      "id": "inc_namespace_php",
+      "label": "namespace",
+      "source_file": "./inc/namespace.php",
+      "node_type": "file",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_bootstrap",
+      "label": "bootstrap",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L16",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_set_up_checks",
+      "label": "set_up_checks",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L27",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_should_block_publish",
+      "label": "should_block_publish",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L43",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_enqueue_assets",
+      "label": "enqueue_assets",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L58",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_register_column",
+      "label": "register_column",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L85",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_render_column",
+      "label": "render_column",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L132",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_register_rest_fields",
+      "label": "register_rest_fields",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L169",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_register_prepublish_check",
+      "label": "register_prepublish_check",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L200",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_check_status_for_api",
+      "label": "get_check_status_for_api",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L210",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_check_status",
+      "label": "get_check_status",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L247",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_combined_status",
+      "label": "get_combined_status",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L268",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_merged_meta",
+      "label": "get_merged_meta",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L290",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_post_terms",
+      "label": "get_post_terms",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L332",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_get_merged_terms",
+      "label": "get_merged_terms",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L357",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_is_publish_status",
+      "label": "is_publish_status",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L373",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_block_publish_for_rest",
+      "label": "block_publish_for_rest",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L402",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_block_publish_if_failing",
+      "label": "block_publish_if_failing",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L461",
+      "node_type": "function",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_import_stdclass",
+      "label": "stdClass",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 0
+    },
+    {
+      "id": "inc_namespace_php_import_wp_rest_request",
+      "label": "WP_REST_Request",
+      "source_file": "./inc/namespace.php",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 0
+    },
+    {
+      "id": "plugin_php",
+      "label": "plugin",
+      "source_file": "./plugin.php",
+      "node_type": "file",
+      "community": 16
+    },
+    {
+      "id": "plugin_php_import_dir",
+      "label": "__DIR__",
+      "source_file": "./plugin.php",
+      "source_location": "L13",
+      "node_type": "module",
+      "community": 16
+    },
+    {
+      "id": "eslintrc_js",
+      "label": ".eslintrc",
+      "source_file": "./.eslintrc.js",
+      "node_type": "file",
+      "community": 18
+    },
+    {
+      "id": "src_itemstatus_js",
+      "label": "itemStatus",
+      "source_file": "./src/itemStatus.js",
+      "node_type": "file",
+      "community": 19
+    },
+    {
+      "id": "src_index_js",
+      "label": "index",
+      "source_file": "./src/index.js",
+      "node_type": "file",
+      "community": 13
+    },
+    {
+      "id": "src_index_js_import_wordpress_plugins_registerplugin",
+      "label": "@wordpress/plugins/registerPlugin",
+      "source_file": "./src/index.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 13
+    },
+    {
+      "id": "src_index_js_import_plugin",
+      "label": "./plugin",
+      "source_file": "./src/index.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 13
+    },
+    {
+      "id": "src_index_js_import_style_scss",
+      "label": "./style.scss",
+      "source_file": "./src/index.js",
+      "source_location": "L5",
+      "node_type": "module",
+      "community": 13
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js",
+      "label": "ChecklistPanelContent",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "node_type": "file",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_components_button",
+      "label": "@wordpress/components/Button",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_components_togglecontrol",
+      "label": "@wordpress/components/ToggleControl",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_compose_compose",
+      "label": "@wordpress/compose/compose",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_data_withdispatch",
+      "label": "@wordpress/data/withDispatch",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L5",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_element_fragment",
+      "label": "@wordpress/element/Fragment",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_element_useeffect",
+      "label": "@wordpress/element/useEffect",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_element_usestate",
+      "label": "@wordpress/element/useState",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_wordpress_i18n",
+      "label": "@wordpress/i18n/__",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L7",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_checklist_checklist",
+      "label": "./Checklist/Checklist",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L9",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_completionindicator_completionindicator",
+      "label": "./CompletionIndicator/CompletionIndicator",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L10",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_confirmoverridehelptext_confirmoverridehelptext",
+      "label": "./ConfirmOverrideHelpText/ConfirmOverrideHelpText",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L11",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_import_proptypes_itemscollectionproptype",
+      "label": "../propTypes/itemsCollectionPropType",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L13",
+      "node_type": "module",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistpanelcontent_js_checklistpanelcontent",
+      "label": "ChecklistPanelContent()",
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L16",
+      "node_type": "function",
+      "community": 2
+    },
+    {
+      "id": "src_components_checklistitemcontent_js",
+      "label": "ChecklistItemContent",
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "node_type": "file",
+      "community": 12
+    },
+    {
+      "id": "src_components_checklistitemcontent_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 12
+    },
+    {
+      "id": "src_components_checklistitemcontent_js_import_wordpress_element_fragment",
+      "label": "@wordpress/element/Fragment",
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 12
+    },
+    {
+      "id": "src_components_checklistitemcontent_js_checklistitemcontent",
+      "label": "ChecklistItemContent()",
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L5",
+      "node_type": "function",
+      "community": 12
+    },
+    {
+      "id": "src_components_checklistpanel_js",
+      "label": "ChecklistPanel",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "node_type": "file",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_classnames_classnames",
+      "label": "classnames/classNames",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_lodash_isempty_isempty",
+      "label": "lodash/isEmpty/_isEmpty",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L2",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_lodash_foreach_foreach",
+      "label": "lodash/forEach/forEach",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_components_panelbody",
+      "label": "@wordpress/components/PanelBody",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_compose_compose",
+      "label": "@wordpress/compose/compose",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L7",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_editor_pluginprepublishpanel",
+      "label": "@wordpress/editor/PluginPrePublishPanel",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_editor_pluginsidebar",
+      "label": "@wordpress/editor/PluginSidebar",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_editor_pluginsidebarmoremenuitem",
+      "label": "@wordpress/editor/PluginSidebarMoreMenuItem",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_element_component",
+      "label": "@wordpress/element/Component",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L9",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_element_fragment",
+      "label": "@wordpress/element/Fragment",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L9",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_data_withdispatch",
+      "label": "@wordpress/data/withDispatch",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L10",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_data_withselect",
+      "label": "@wordpress/data/withSelect",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L10",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_wordpress_i18n",
+      "label": "@wordpress/i18n/__",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L11",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_checklistpanelcontent_checklistpanelcontent",
+      "label": "./ChecklistPanelContent/ChecklistPanelContent",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L13",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_itemstatus_complete",
+      "label": "../itemStatus/COMPLETE",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L15",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_itemstatus_incomplete",
+      "label": "../itemStatus/INCOMPLETE",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L15",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_import_proptypes_itemsmapproptype",
+      "label": "../propTypes/itemsMapPropType",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L16",
+      "node_type": "module",
+      "community": 1
+    },
+    {
+      "id": "src_components_checklistpanel_js_checklistpanel",
+      "label": "ChecklistPanel",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L22",
+      "node_type": "class",
+      "community": 11
+    },
+    {
+      "id": "src_components_checklistpanel_js_checklistpanel_getderivedstatefromprops",
+      "label": ".getDerivedStateFromProps()",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L31",
+      "node_type": "method",
+      "community": 11
+    },
+    {
+      "id": "src_components_checklistpanel_js_checklistpanel_componentdidmount",
+      "label": ".componentDidMount()",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L75",
+      "node_type": "method",
+      "community": 11
+    },
+    {
+      "id": "src_components_checklistpanel_js_checklistpanel_componentdidupdate",
+      "label": ".componentDidUpdate()",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L82",
+      "node_type": "method",
+      "community": 11
+    },
+    {
+      "id": "src_components_checklistpanel_js_checklistpanel_render",
+      "label": ".render()",
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L91",
+      "node_type": "method",
+      "community": 11
+    },
+    {
+      "id": "src_components_statusicon_js",
+      "label": "StatusIcon",
+      "source_file": "./src/components/StatusIcon.js",
+      "node_type": "file",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_import_classnames_classnames",
+      "label": "classnames/classNames",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L2",
+      "node_type": "module",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_import_itemstatus_complete",
+      "label": "../itemStatus/COMPLETE",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_import_itemstatus_incomplete",
+      "label": "../itemStatus/INCOMPLETE",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_import_itemstatus_info",
+      "label": "../itemStatus/INFO",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_mapstatustoicon",
+      "label": "mapStatusToIcon()",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L13",
+      "node_type": "function",
+      "community": 4
+    },
+    {
+      "id": "src_components_statusicon_js_statusicon",
+      "label": "StatusIcon()",
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L29",
+      "node_type": "function",
+      "community": 4
+    },
+    {
+      "id": "src_components_checklist_js",
+      "label": "Checklist",
+      "source_file": "./src/components/Checklist.js",
+      "node_type": "file",
+      "community": 10
+    },
+    {
+      "id": "src_components_checklist_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 10
+    },
+    {
+      "id": "src_components_checklist_js_import_checklistitem_checklistitem",
+      "label": "./ChecklistItem/ChecklistItem",
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 10
+    },
+    {
+      "id": "src_components_checklist_js_import_proptypes_itemscollectionproptype",
+      "label": "../propTypes/itemsCollectionPropType",
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L5",
+      "node_type": "module",
+      "community": 10
+    },
+    {
+      "id": "src_components_checklist_js_checklist",
+      "label": "Checklist()",
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L7",
+      "node_type": "function",
+      "community": 10
+    },
+    {
+      "id": "src_components_completionindicator_js",
+      "label": "CompletionIndicator",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "node_type": "file",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_import_rc_progress_line",
+      "label": "rc-progress/Line",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L2",
+      "node_type": "module",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_import_wordpress_i18n_n",
+      "label": "@wordpress/i18n/_n",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_import_wordpress_i18n_sprintf",
+      "label": "@wordpress/i18n/sprintf",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_import_rc_progress_assets_index_css",
+      "label": "rc-progress/assets/index.css",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 5
+    },
+    {
+      "id": "src_components_completionindicator_js_completionindicator",
+      "label": "CompletionIndicator()",
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L8",
+      "node_type": "function",
+      "community": 5
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js",
+      "label": "ConfirmOverrideHelpText",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "node_type": "file",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_import_lodash_get",
+      "label": "lodash/get",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_import_wordpress_i18n",
+      "label": "@wordpress/i18n/__",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_import_wordpress_compose_compose",
+      "label": "@wordpress/compose/compose",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_import_wordpress_data_withselect",
+      "label": "@wordpress/data/withSelect",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L5",
+      "node_type": "module",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_import_wordpress_element_fragment",
+      "label": "@wordpress/element/Fragment",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 6
+    },
+    {
+      "id": "src_components_confirmoverridehelptext_js_confirmoverridehelptext",
+      "label": "ConfirmOverrideHelpText()",
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L8",
+      "node_type": "function",
+      "community": 6
+    },
+    {
+      "id": "src_components_checklistitem_js",
+      "label": "ChecklistItem",
+      "source_file": "./src/components/ChecklistItem.js",
+      "node_type": "file",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_import_wordpress_components_withfilters",
+      "label": "@wordpress/components/withFilters",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_import_wordpress_element_component",
+      "label": "@wordpress/element/Component",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_import_checklistitemcontent_checklistitemcontent",
+      "label": "./ChecklistItemContent/ChecklistItemContent",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_import_statusicon_statusicon",
+      "label": "./StatusIcon/StatusIcon",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L7",
+      "node_type": "module",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_checklistitem",
+      "label": "ChecklistItem",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L9",
+      "node_type": "class",
+      "community": 3
+    },
+    {
+      "id": "src_components_checklistitem_js_checklistitem_render",
+      "label": ".render()",
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L23",
+      "node_type": "method",
+      "community": 3
+    },
+    {
+      "id": "src_icons_index_js",
+      "label": "index",
+      "source_file": "./src/icons/index.js",
+      "node_type": "file",
+      "community": 14
+    },
+    {
+      "id": "src_icons_index_js_check",
+      "label": "Check()",
+      "source_file": "./src/icons/index.js",
+      "source_location": "L1",
+      "node_type": "function",
+      "community": 14
+    },
+    {
+      "id": "src_icons_index_js_error",
+      "label": "Error()",
+      "source_file": "./src/icons/index.js",
+      "source_location": "L7",
+      "node_type": "function",
+      "community": 14
+    },
+    {
+      "id": "src_proptypes_js",
+      "label": "propTypes",
+      "source_file": "./src/propTypes.js",
+      "node_type": "file",
+      "community": 17
+    },
+    {
+      "id": "src_proptypes_js_import_prop_types_proptypes",
+      "label": "prop-types/PropTypes",
+      "source_file": "./src/propTypes.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 17
+    },
+    {
+      "id": "src_containers_checklistpanel_js",
+      "label": "ChecklistPanel",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "node_type": "file",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_import_lodash_get_get",
+      "label": "lodash/get/_get",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_import_wordpress_compose_compose",
+      "label": "@wordpress/compose/compose",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_import_wordpress_compose_withsafetimeout",
+      "label": "@wordpress/compose/withSafeTimeout",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_import_wordpress_data_withselect",
+      "label": "@wordpress/data/withSelect",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L4",
+      "node_type": "module",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_import_components_checklistpanel_checklistpanel",
+      "label": "../components/ChecklistPanel/ChecklistPanel",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L6",
+      "node_type": "module",
+      "community": 8
+    },
+    {
+      "id": "src_containers_checklistpanel_js_mapselecttoprops",
+      "label": "mapSelectToProps()",
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L8",
+      "node_type": "function",
+      "community": 8
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js",
+      "label": "PluginStatusIndicator",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "node_type": "file",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_import_icons_check",
+      "label": "../icons/Check",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_import_icons_error",
+      "label": "../icons/Error",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_import_wordpress_element_useeffect",
+      "label": "@wordpress/element/useEffect",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L2",
+      "node_type": "module",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_import_wordpress_data_dispatch",
+      "label": "@wordpress/data/dispatch",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_import_wordpress_data_useselect",
+      "label": "@wordpress/data/useSelect",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L3",
+      "node_type": "module",
+      "community": 7
+    },
+    {
+      "id": "src_containers_pluginstatusindicator_js_pluginstatusindicator",
+      "label": "PluginStatusIndicator()",
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L5",
+      "node_type": "function",
+      "community": 7
+    },
+    {
+      "id": "src_plugin_js",
+      "label": "plugin",
+      "source_file": "./src/plugin.js",
+      "node_type": "file",
+      "community": 15
+    },
+    {
+      "id": "src_plugin_js_import_containers_checklistpanel_checklistpanel",
+      "label": "./containers/ChecklistPanel/ChecklistPanel",
+      "source_file": "./src/plugin.js",
+      "source_location": "L1",
+      "node_type": "module",
+      "community": 15
+    },
+    {
+      "id": "src_plugin_js_import_containers_pluginstatusindicator_pluginstatusindicator",
+      "label": "./containers/PluginStatusIndicator/PluginStatusIndicator",
+      "source_file": "./src/plugin.js",
+      "source_location": "L2",
+      "node_type": "module",
+      "community": 15
+    }
+  ],
+  "links": [
+    {
+      "source": "inc_class_status_php",
+      "target": "inc_class_status_php_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/class-status.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_class_status_php",
+      "target": "inc_class_status_php_construct",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/class-status.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_class_status_php",
+      "target": "inc_class_status_php_get_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/class-status.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_class_status_php",
+      "target": "inc_class_status_php_get_message",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/class-status.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_class_status_php",
+      "target": "inc_class_status_php_get_data",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/class-status.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_bootstrap",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_set_up_checks",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_should_block_publish",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_enqueue_assets",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_register_column",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_render_column",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_register_rest_fields",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_register_prepublish_check",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_check_status_for_api",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_check_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_combined_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_merged_meta",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_post_terms",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_get_merged_terms",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_is_publish_status",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_block_publish_for_rest",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_block_publish_if_failing",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_import_stdclass",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php",
+      "target": "inc_namespace_php_import_wp_rest_request",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_set_up_checks",
+      "target": "inc_namespace_php_should_block_publish",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_enqueue_assets",
+      "target": "inc_namespace_php_should_block_publish",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_render_column",
+      "target": "inc_namespace_php_get_check_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_render_column",
+      "target": "inc_namespace_php_get_merged_meta",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_render_column",
+      "target": "inc_namespace_php_get_post_terms",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_register_rest_fields",
+      "target": "inc_namespace_php_should_block_publish",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_get_check_status_for_api",
+      "target": "inc_namespace_php_get_check_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_get_check_status_for_api",
+      "target": "inc_namespace_php_get_post_terms",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_get_merged_terms",
+      "target": "inc_namespace_php_get_post_terms",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_is_publish_status",
+      "target": "inc_namespace_php_should_block_publish",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_for_rest",
+      "target": "inc_namespace_php_get_check_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_for_rest",
+      "target": "inc_namespace_php_get_combined_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_for_rest",
+      "target": "inc_namespace_php_get_merged_meta",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_for_rest",
+      "target": "inc_namespace_php_get_merged_terms",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_for_rest",
+      "target": "inc_namespace_php_is_publish_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_if_failing",
+      "target": "inc_namespace_php_get_check_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_if_failing",
+      "target": "inc_namespace_php_get_combined_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_if_failing",
+      "target": "inc_namespace_php_get_merged_meta",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_if_failing",
+      "target": "inc_namespace_php_get_merged_terms",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "inc_namespace_php_block_publish_if_failing",
+      "target": "inc_namespace_php_is_publish_status",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./inc/namespace.php",
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_php",
+      "target": "plugin_php_import_dir",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./plugin.php",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index_js",
+      "target": "src_index_js_import_wordpress_plugins_registerplugin",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/index.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index_js",
+      "target": "src_index_js_import_plugin",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/index.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index_js",
+      "target": "src_index_js_import_style_scss",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/index.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_components_button",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_components_togglecontrol",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_compose_compose",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_data_withdispatch",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_element_fragment",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_element_useeffect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_element_usestate",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_wordpress_i18n",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_checklist_checklist",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_completionindicator_completionindicator",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_confirmoverridehelptext_confirmoverridehelptext",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_import_proptypes_itemscollectionproptype",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanelcontent_js",
+      "target": "src_components_checklistpanelcontent_js_checklistpanelcontent",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanelContent.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitemcontent_js",
+      "target": "src_components_checklistitemcontent_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitemcontent_js",
+      "target": "src_components_checklistitemcontent_js_import_wordpress_element_fragment",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitemcontent_js",
+      "target": "src_components_checklistitemcontent_js_checklistitemcontent",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItemContent.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_classnames_classnames",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_lodash_isempty_isempty",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_lodash_foreach_foreach",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_components_panelbody",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_compose_compose",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_editor_pluginprepublishpanel",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_editor_pluginsidebar",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_editor_pluginsidebarmoremenuitem",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_element_component",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_element_fragment",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_data_withdispatch",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_data_withselect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_wordpress_i18n",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_checklistpanelcontent_checklistpanelcontent",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_itemstatus_complete",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_itemstatus_incomplete",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_import_proptypes_itemsmapproptype",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js",
+      "target": "src_components_checklistpanel_js_checklistpanel",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js_checklistpanel",
+      "target": "src_components_checklistpanel_js_checklistpanel_getderivedstatefromprops",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js_checklistpanel",
+      "target": "src_components_checklistpanel_js_checklistpanel_componentdidmount",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js_checklistpanel",
+      "target": "src_components_checklistpanel_js_checklistpanel_componentdidupdate",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistpanel_js_checklistpanel",
+      "target": "src_components_checklistpanel_js_checklistpanel_render",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistPanel.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_import_classnames_classnames",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_import_itemstatus_complete",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_import_itemstatus_incomplete",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_import_itemstatus_info",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_mapstatustoicon",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js",
+      "target": "src_components_statusicon_js_statusicon",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/StatusIcon.js",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_statusicon_js_statusicon",
+      "target": "src_components_statusicon_js_mapstatustoicon",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "./src/components/StatusIcon.js",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklist_js",
+      "target": "src_components_checklist_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklist_js",
+      "target": "src_components_checklist_js_import_checklistitem_checklistitem",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklist_js",
+      "target": "src_components_checklist_js_import_proptypes_itemscollectionproptype",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklist_js",
+      "target": "src_components_checklist_js_checklist",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/Checklist.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_import_rc_progress_line",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_import_wordpress_i18n_n",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_import_wordpress_i18n_sprintf",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_import_rc_progress_assets_index_css",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_completionindicator_js",
+      "target": "src_components_completionindicator_js_completionindicator",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/CompletionIndicator.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_import_lodash_get",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_import_wordpress_i18n",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_import_wordpress_compose_compose",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_import_wordpress_data_withselect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_import_wordpress_element_fragment",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_confirmoverridehelptext_js",
+      "target": "src_components_confirmoverridehelptext_js_confirmoverridehelptext",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ConfirmOverrideHelpText.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_import_wordpress_components_withfilters",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_import_wordpress_element_component",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_import_checklistitemcontent_checklistitemcontent",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_import_statusicon_statusicon",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js",
+      "target": "src_components_checklistitem_js_checklistitem",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_checklistitem_js_checklistitem",
+      "target": "src_components_checklistitem_js_checklistitem_render",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/components/ChecklistItem.js",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_icons_index_js",
+      "target": "src_icons_index_js_check",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/icons/index.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_icons_index_js",
+      "target": "src_icons_index_js_error",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/icons/index.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_proptypes_js",
+      "target": "src_proptypes_js_import_prop_types_proptypes",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/propTypes.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_import_lodash_get_get",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_import_wordpress_compose_compose",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_import_wordpress_compose_withsafetimeout",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_import_wordpress_data_withselect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_import_components_checklistpanel_checklistpanel",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_checklistpanel_js",
+      "target": "src_containers_checklistpanel_js_mapselecttoprops",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/ChecklistPanel.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_import_icons_check",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_import_icons_error",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_import_wordpress_element_useeffect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_import_wordpress_data_dispatch",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_import_wordpress_data_useselect",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_containers_pluginstatusindicator_js",
+      "target": "src_containers_pluginstatusindicator_js_pluginstatusindicator",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/containers/PluginStatusIndicator.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_plugin_js",
+      "target": "src_plugin_js_import_containers_checklistpanel_checklistpanel",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/plugin.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_plugin_js",
+      "target": "src_plugin_js_import_containers_pluginstatusindicator_pluginstatusindicator",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "./src/plugin.js",
+      "source_location": "L2",
+      "weight": 1.0
+    }
+  ]
+}

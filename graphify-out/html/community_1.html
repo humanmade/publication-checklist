@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@wordpress/i18n/__ — Community 1</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; height: 100vh; overflow: hidden; }
+#sidebar { width: 320px; min-width: 320px; background: #1a1a2e; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border-right: 1px solid #2a2a4a; }
+#sidebar h2 { font-size: 18px; color: #F28E2B; margin-bottom: 4px; }
+#sidebar h3 { font-size: 14px; color: #9ca3af; margin-bottom: 8px; }
+.nav-link { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 8px; border-radius: 4px; color: #e0e0e0; text-decoration: none; }
+.nav-link:hover { background: #2a2a4a; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+#graph-container { flex: 1; position: relative; }
+#search { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid #3a3a5a; background: #0f0f1a; color: #e0e0e0; font-size: 14px; }
+#search:focus { outline: none; border-color: #F28E2B; }
+#info-panel { background: #0f0f1a; border-radius: 8px; padding: 12px; font-size: 13px; line-height: 1.6; min-height: 100px; }
+#info-panel .prop { color: #9ca3af; }
+#info-panel .val { color: #e0e0e0; }
+</style>
+</head>
+<body>
+<div id="sidebar">
+    <div>
+        <h2>@wordpress/i18n/__</h2>
+        <p style="font-size:12px;color:#666;">19 nodes · Community 1</p>
+    </div>
+    <input id="search" type="text" placeholder="Search nodes…" />
+    <div>
+        <h3>Node Info</h3>
+        <div id="info-panel"><i style="color:#666">Click a node to see details</i></div>
+    </div>
+    <div>
+        <h3>Navigation</h3>
+        <a href="index.html" class="nav-link" style="font-weight:bold;">← Overview</a><a href="community_11.html" class="nav-link"><span class="legend-dot" style="background:#F28E2B"></span>ChecklistPanel (1 links)</a>
+    </div>
+</div>
+<div id="graph-container"></div>
+<script>
+(function() {
+    var nodesData = [{id:"src_components_checklistpanel_js",label:"ChecklistPanel",title:"ChecklistPanel\nType: File\nFile: ./src/components/ChecklistPanel.js\nDegree: 19",color:"#F28E2B",size:25.4},{id:"src_components_checklistpanel_js_import_classnames_classnames",label:"classnames/classNames",title:"classnames/classNames\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_lodash_isempty_isempty",label:"lodash/isEmpty/_isEmpty",title:"lodash/isEmpty/_isEmpty\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_lodash_foreach_foreach",label:"lodash/forEach/forEach",title:"lodash/forEach/forEach\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_prop_types_proptypes",label:"prop-types/PropTypes",title:"prop-types/PropTypes\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_components_panelbody",label:"@wordpress/components/PanelBody",title:"@wordpress/components/PanelBody\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_compose_compose",label:"@wordpress/compose/compose",title:"@wordpress/compose/compose\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_editor_pluginprepublishpanel",label:"@wordpress/editor/PluginPrePublishPanel",title:"@wordpress/editor/PluginPrePublishPanel\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_editor_pluginsidebar",label:"@wordpress/editor/PluginSidebar",title:"@wordpress/editor/PluginSidebar\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_editor_pluginsidebarmoremenuitem",label:"@wordpress/editor/PluginSidebarMoreMenuItem",title:"@wordpress/editor/PluginSidebarMoreMenuItem\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_element_component",label:"@wordpress/element/Component",title:"@wordpress/element/Component\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_element_fragment",label:"@wordpress/element/Fragment",title:"@wordpress/element/Fragment\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_data_withdispatch",label:"@wordpress/data/withDispatch",title:"@wordpress/data/withDispatch\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_data_withselect",label:"@wordpress/data/withSelect",title:"@wordpress/data/withSelect\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_wordpress_i18n",label:"@wordpress/i18n/__",title:"@wordpress/i18n/__\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_checklistpanelcontent_checklistpanelcontent",label:"./ChecklistPanelContent/ChecklistPanelContent",title:"./ChecklistPanelContent/ChecklistPanelContent\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_itemstatus_complete",label:"../itemStatus/COMPLETE",title:"../itemStatus/COMPLETE\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_itemstatus_incomplete",label:"../itemStatus/INCOMPLETE",title:"../itemStatus/INCOMPLETE\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0},{id:"src_components_checklistpanel_js_import_proptypes_itemsmapproptype",label:"../propTypes/itemsMapPropType",title:"../propTypes/itemsMapPropType\nType: Module\nFile: ./src/components/ChecklistPanel.js\nDegree: 1",color:"#F28E2B",size:12.0}];
+    var edgesData = [{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_classnames_classnames",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_classnames_classnames\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_lodash_isempty_isempty",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_lodash_isempty_isempty\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_lodash_foreach_foreach",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_lodash_foreach_foreach\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_prop_types_proptypes",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_prop_types_proptypes\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_components_panelbody",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_components_panelbody\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_compose_compose",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_compose_compose\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_editor_pluginprepublishpanel",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_editor_pluginprepublishpanel\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_editor_pluginsidebar",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_editor_pluginsidebar\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_editor_pluginsidebarmoremenuitem",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_editor_pluginsidebarmoremenuitem\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_element_component",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_element_component\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_element_fragment",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_element_fragment\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_data_withdispatch",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_data_withdispatch\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_data_withselect",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_data_withselect\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_wordpress_i18n",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_wordpress_i18n\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_checklistpanelcontent_checklistpanelcontent",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_checklistpanelcontent_checklistpanelcontent\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_itemstatus_complete",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_itemstatus_complete\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_itemstatus_incomplete",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_itemstatus_incomplete\nConfidence: Extracted"},{from:"src_components_checklistpanel_js",to:"src_components_checklistpanel_js_import_proptypes_itemsmapproptype",label:"imports",dashes:false,title:"imports: src_components_checklistpanel_js → src_components_checklistpanel_js_import_proptypes_itemsmapproptype\nConfidence: Extracted"}];
+    var container = document.getElementById('graph-container');
+    var nodes = new vis.DataSet(nodesData);
+    var edges = new vis.DataSet(edgesData);
+    var options = {
+        physics: {solver:'forceAtlas2Based',forceAtlas2Based:{gravitationalConstant:-50,centralGravity:0.01,springLength:120,springConstant:0.08,damping:0.4,avoidOverlap:0.5},stabilization:{iterations:200}},
+        nodes: { shape: 'dot', font: { color: '#e0e0e0', size: 12 }, borderWidth: 2 },
+        edges: { color: { color: '#4a4a6a', highlight: '#F28E2B', hover: '#F28E2B' }, font: { color: '#888', size: 10 }, arrows: { to: { enabled: false } }, smooth: { type: 'continuous' } },
+        interaction: { hover: true, tooltipDelay: 200, zoomView: true, dragView: true }
+    };
+    var network = new vis.Network(container, { nodes: nodes, edges: edges }, options);
+    network.on('stabilizationIterationsDone', function() { network.setOptions({ physics: { enabled: false } }); });
+    network.on('click', function(params) {
+        var panel = document.getElementById('info-panel');
+        if (params.nodes.length > 0) {
+            var node = nodes.get(params.nodes[0]);
+            if (node) {
+                panel.innerHTML = '<div><span class="prop">Label:</span> <span class="val">' + node.label + '</span></div><div><span class="prop">ID:</span> <span class="val">' + node.id + '</span></div>';
+                network.focus(params.nodes[0], { scale: 1.2, animation: true });
+            }
+        }
+    });
+    var searchEl = document.getElementById('search');
+    var sTimer = null;
+    searchEl.addEventListener('input', function() {
+        clearTimeout(sTimer);
+        sTimer = setTimeout(function() {
+            var term = searchEl.value.toLowerCase();
+            var updates = [];
+            nodes.forEach(function(n) {
+                var h = term && !n.label.toLowerCase().includes(term);
+                if (n.hidden !== h) { updates.push({ id: n.id, hidden: h }); }
+            });
+            if (updates.length > 0) { nodes.update(updates); }
+        }, 200);
+    });
+})();
+</script>
+</body>
+</html>

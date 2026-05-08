@@ -10,20 +10,33 @@ function ConfirmOverrideHelpText( {
 	isBeingScheduled,
 	hasPublishAction,
 } ) {
-	let message = __( 'Confirm that you wish to ignore these tasks and publish anyway.' );
+	let message = __(
+		'Confirm that you wish to ignore these tasks and publish anyway.'
+	);
 
 	if ( ! hasPublishAction ) {
-		message = __( 'Confirm that you wish to ignore these tasks and submit for review anyway.', 'altis-publication-checklist' );
+		message = __(
+			'Confirm that you wish to ignore these tasks and submit for review anyway.',
+			'altis-publication-checklist'
+		);
 	} else if ( isPublished ) {
-		message = __( 'Confirm that you wish to ignore these tasks and update anyway.', 'altis-publication-checklist' );
+		message = __(
+			'Confirm that you wish to ignore these tasks and update anyway.',
+			'altis-publication-checklist'
+		);
 	} else if ( isBeingScheduled ) {
-		message = __( 'Confirm that you wish to ignore these tasks and schedule anyway.', 'altis-publication-checklist' );
+		message = __(
+			'Confirm that you wish to ignore these tasks and schedule anyway.',
+			'altis-publication-checklist'
+		);
 	}
 
 	return (
 		<Fragment>
-			{ __( 'You have incomplete tasks remaining.', 'altis-publication-checklist' ) }
-			{ ' ' }
+			{ __(
+				'You have incomplete tasks remaining.',
+				'altis-publication-checklist'
+			) }{ ' ' }
 			{ message }
 		</Fragment>
 	);
@@ -40,7 +53,11 @@ export default compose( [
 		return {
 			isPublished: isCurrentPostPublished(),
 			isBeingScheduled: isEditedPostBeingScheduled(),
-			hasPublishAction: get( getCurrentPost(), [ '_links', 'wp:action-publish' ], false ),
+			hasPublishAction: get(
+				getCurrentPost(),
+				[ '_links', 'wp:action-publish' ],
+				false
+			),
 			postType: getCurrentPostType(),
 		};
 	} ),

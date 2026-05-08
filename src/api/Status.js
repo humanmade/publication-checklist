@@ -12,11 +12,20 @@ export default class Status {
 	/**
 	 * Create a new Status.
 	 *
-	 * @param {string} status - One of the status constants (complete, incomplete, info).
+	 * @param {string} status  - One of the status constants (complete, incomplete, info).
 	 * @param {string} message - Human-readable message explaining the status.
-	 * @param {*} data - Additional data about the check. Defaults to null.
+	 * @param {*}      data    - Additional data about the check. Defaults to null.
 	 */
-	constructor(status, message, data = null) {
+	constructor( status, message, data = null ) {
+		const valid = [ Status.COMPLETE, Status.INCOMPLETE, Status.INFO ];
+		if ( ! valid.includes( status ) ) {
+			throw new TypeError(
+				`Invalid status "${ status }". Must be one of: ${ valid.join(
+					', '
+				) }`
+			);
+		}
+
 		this.status = status;
 		this.message = message;
 		this.data = data;
