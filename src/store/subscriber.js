@@ -3,11 +3,8 @@ import { getRegistered } from '../api';
 import { runServerChecks } from '../api/rest';
 import { STORE_NAME } from './index';
 
-// The localized data from PHP: window.altisPublicationChecklist.checks
-// Shape: Array<{ id, type, source: 'php'|'php-live', fields: string[]|null }>
-function getPhpChecks() {
-	return window.altisPublicationChecklist?.checks ?? [];
-}
+// Cache PHP check metadata once — it is set at page load and never changes.
+const phpChecks = window.altisPublicationChecklist?.checks ?? [];
 
 // Build a snapshot of the currently-edited post attributes.
 function buildSnapshot() {
@@ -101,31 +98,37 @@ export function startSubscriber() {
 	// so we only re-fetch when something the check actually cares about has changed.
 	const prevFieldValues = {};
 
+	// Generation counter — incremented each debounce tick. If a tick resolves
+	// after a newer tick has already dispatched, its results are discarded.
+	let generation = 0;
+
+	const phpLiveChecks = phpChecks.filter( ( c ) => c.source === 'php-live' );
+
 	const runChecks = debounce( async () => {
-		// 1. Get live-registered JS checks
+		const thisGeneration = ++generation;
+
+		// 1. Get live-registered JS checks.
 		const jsChecks = getRegistered(); // { id, type, runCheck }
 
-		// 2. Get PHP-live checks from localized data
-		const phpLiveChecks = getPhpChecks().filter(
-			( c ) => c.source === 'php-live'
-		);
-
-		// 3. Build a full snapshot
+		// 2. Build a full snapshot.
 		const { postType, post, meta, terms } = buildSnapshot();
 
-		// 4. Run JS checks inline
+		// 3. Run JS checks inline.
 		const liveResults = {};
 		for ( const { id, type, runCheck } of jsChecks ) {
 			if ( ! matchesType( type, postType ) ) {
 				continue;
 			}
 			try {
-				const result = runCheck( {
-					post,
-					meta,
-					terms,
-					select,
-				} );
+				const result = runCheck( { post, meta, terms, select } );
+				if ( result && typeof result.then === 'function' ) {
+					// eslint-disable-next-line no-console
+					console.warn(
+						// eslint-disable-next-line max-len
+						`Publication checklist: check "${ id }" returned a Promise — only synchronous runCheck is supported.`
+					);
+					continue;
+				}
 				if ( result ) {
 					liveResults[ id ] = {
 						status: result.getStatus
@@ -149,7 +152,7 @@ export function startSubscriber() {
 			}
 		}
 
-		// 5. Determine which PHP-live checks need a server round-trip
+		// 4. Determine which PHP-live checks need a server round-trip.
 		const pendingPhpIds = [];
 		for ( const check of phpLiveChecks ) {
 			if ( ! matchesType( check.type, postType ) ) {
@@ -162,7 +165,7 @@ export function startSubscriber() {
 			}
 		}
 
-		// 6. Fetch PHP-live results (one batched request)
+		// 5. Fetch PHP-live results (one batched request).
 		if ( pendingPhpIds.length > 0 ) {
 			try {
 				const phpResults = await runServerChecks(
@@ -172,10 +175,13 @@ export function startSubscriber() {
 					terms,
 					pendingPhpIds
 				);
+				// Discard if a newer tick has already resolved.
+				if ( thisGeneration !== generation ) {
+					return;
+				}
 				Object.entries( phpResults ).forEach( ( [ id, result ] ) => {
 					liveResults[ id ] = { ...result, source: 'php-live' };
 				} );
-				// Update prev snapshot for changed checks
 				updatePrevFieldValues(
 					phpLiveChecks,
 					post,
@@ -192,7 +198,10 @@ export function startSubscriber() {
 			}
 		}
 
-		// 7. Update store
+		// 6. Update store — skip if a newer tick already dispatched.
+		if ( thisGeneration !== generation ) {
+			return;
+		}
 		dispatch( STORE_NAME ).setLiveResults( liveResults );
 	}, 250 );
 
