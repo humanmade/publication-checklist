@@ -16,6 +16,7 @@ const SCRIPT_ID = 'altis_publication_checklist';
 function bootstrap() {
 	add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\\enqueue_assets' );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_fields' );
+	add_action( 'rest_api_init', __NAMESPACE__ . '\\register_rest_routes' );
 	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_up_checks' );
 	add_action( 'manage_posts_columns', __NAMESPACE__ . '\\register_column' );
 	add_action( 'manage_posts_custom_column',  __NAMESPACE__ . '\\render_column' );
@@ -71,8 +72,19 @@ function enqueue_assets() {
 		$asset_file['version']
 	);
 
+	$checks = [];
+	foreach ( $GLOBALS[ GLOBAL_NAME ] as $id => $options ) {
+		$checks[] = [
+			'id'     => $id,
+			'type'   => $options['type'] ?? 'post',
+			'source' => isset( $options['live'] ) && $options['live'] === true ? 'php-live' : 'php',
+			'fields' => $options['fields'] ?? null,
+		];
+	}
+
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
 		'block_publish' => should_block_publish(),
+		'checks'        => $checks,
 	] );
 }
 
@@ -187,6 +199,97 @@ function register_rest_fields() {
 			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
 		}
 	}
+}
+
+/**
+ * Register REST routes for publication checklist.
+ */
+function register_rest_routes() : void {
+	register_rest_route( 'altis/publication-checklist/v1', '/check', [
+		'methods'             => 'POST',
+		'callback'            => __NAMESPACE__ . '\\rest_run_checks',
+		'permission_callback' => function () {
+			return current_user_can( 'edit_posts' );
+		},
+		'args'                => [
+			'post_type' => [
+				'type'              => 'string',
+				'required'          => true,
+				'sanitize_callback' => 'sanitize_key',
+				'validate_callback' => function ( $value ) {
+					return array_key_exists( $value, get_post_types( [ 'show_in_rest' => true ] ) );
+				},
+			],
+			'post'      => [
+				'type'    => 'object',
+				'default' => [],
+			],
+			'meta'      => [
+				'type'    => 'object',
+				'default' => [],
+			],
+			'terms'     => [
+				'type'    => 'object',
+				'default' => [],
+			],
+			'ids'       => [
+				'type'  => 'array',
+				'items' => [
+					'type' => 'string',
+				],
+			],
+		],
+	] );
+}
+
+/**
+ * REST handler: run checks against unsaved post data.
+ *
+ * @param WP_REST_Request $request Full request data.
+ * @return \WP_REST_Response Map of check ID => { status, message, data }.
+ */
+function rest_run_checks( WP_REST_Request $request ) : \WP_REST_Response {
+	$post_type  = $request['post_type'];
+	$post_data  = (array) ( $request['post'] ?? [] );
+	$meta_data  = (array) ( $request['meta'] ?? [] );
+	$terms_data = (array) ( $request['terms'] ?? [] );
+	$ids        = $request['ids'] ?? [];
+
+	// Ensure post_type is set in the post array so type-matching works.
+	if ( empty( $post_data['post_type'] ) ) {
+		$post_data['post_type'] = $post_type;
+	}
+
+	$result = [];
+
+	foreach ( $GLOBALS[ GLOBAL_NAME ] as $id => $options ) {
+		// Only run live checks via this endpoint.
+		if ( ! isset( $options['live'] ) || $options['live'] !== true ) {
+			continue;
+		}
+
+		// Filter by post type using the same logic as get_check_status().
+		$valid_types = $options['type'] ?? 'post';
+		if ( ! in_array( $post_type, (array) $valid_types, true ) ) {
+			continue;
+		}
+
+		// If a specific list of check IDs was requested, honour it.
+		if ( ! empty( $ids ) && ! in_array( $id, $ids, true ) ) {
+			continue;
+		}
+
+		/** @var Status $status */
+		$status = call_user_func( $options['run_check'], $post_data, $meta_data, $terms_data );
+
+		$result[ $id ] = [
+			'status'  => $status->get_status(),
+			'message' => $status->get_message(),
+			'data'    => $status->get_data(),
+		];
+	}
+
+	return new \WP_REST_Response( (object) $result );
 }
 
 /**
