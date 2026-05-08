@@ -11,6 +11,8 @@
     "rc-progress": "^2.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@wordpress/e2e-test-utils-playwright": "^1.15.0",
     "@wordpress/scripts": "^30.24.0"
   },
   "scripts": {
@@ -19,7 +21,11 @@
     "lint:js": "wp-scripts lint-js src",
     "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
+    "playground:start": "npx @wp-playground/cli server --blueprint=blueprint.json --auto-mount",
     "start": "wp-scripts start",
+    "test:e2e": "playwright test",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:watch": "playwright test --ui",
     "test:unit": "wp-scripts test-unit-js"
   }
 }

@@ -20,6 +20,10 @@
 # Webpack
 /build/
 
+# Playwright
+/test-results/
+/playwright-report/
+/.auth/
 
 # Git
 !.gitkeep

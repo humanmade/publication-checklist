@@ -180,6 +180,10 @@ export function startSubscriber() {
 					return;
 				}
 				Object.entries( phpResults ).forEach( ( [ id, result ] ) => {
+					// JS results have higher priority — skip if already set by a JS check.
+					if ( liveResults[ id ]?.source === 'js' ) {
+						return;
+					}
 					liveResults[ id ] = { ...result, source: 'php-live' };
 				} );
 				updatePrevFieldValues(

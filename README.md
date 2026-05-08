@@ -209,6 +209,32 @@ The tasks column appears after the title column by default on supported post typ
 
 To change which column the tasks column appears after use the `altis.publication-checklist.show_tasks_after_column` filter and return the desired column slug such as `title`, `author` or `tags` for example.
 
+## Local development
+
+A WordPress Playground environment is included for local development and running the e2e test suite.
+
+**Requirements:** Node.js 20+, npm.
+
+```bash
+# Install dependencies (first time only)
+npm install
+npx playwright install --with-deps chromium
+
+# Build the plugin assets
+npm run build          # one-off build
+npm run start          # watch mode
+
+# Start the Playground environment
+npm run playground:start
+
+# Run the e2e test suite
+npm run test:e2e       # headless
+npm run test:e2e:watch # Playwright UI (interactive)
+npm run test:e2e:debug # pause on first failure
+```
+
+The Playground starts WordPress with the plugin pre-activated and a small test-fixture mu-plugin (`tests/fixtures/mu-plugin-live-checks.php`) that registers the checks used by the e2e suite. The JS counterpart (`tests/fixtures/live-checks.js`) is automatically enqueued by the mu-plugin.
+
 ## Release Process
 
 Merges to `main` will automatically build to the `release` branch.
