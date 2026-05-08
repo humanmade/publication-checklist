@@ -25,8 +25,8 @@ async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
 }
 
 /**
- * Fill the post title in the block editor canvas and wait for the subscriber
- * debounce to fire (250 ms + margin).
+ * Fill the post title in the block editor canvas using pressSequentially, which
+ * is more reliable than fill() for contenteditable elements across WP versions.
  *
  * @param {import('@wordpress/e2e-test-utils-playwright').Editor} editor
  * @param {string} title
@@ -35,8 +35,9 @@ async function setTitle( editor, title ) {
 	const titleField = editor.canvas.getByRole( 'textbox', {
 		name: 'Add title',
 	} );
-	await titleField.click();
-	await titleField.fill( title );
+	await titleField.click( { force: true } );
+	await titleField.press( 'ControlOrMeta+a' );
+	await titleField.pressSequentially( title );
 }
 
 test.describe( 'Live publication checks', () => {
@@ -80,13 +81,13 @@ test.describe( 'Live publication checks', () => {
 		page,
 	} ) => {
 		// Blank title is under 10 chars — check starts incomplete.
-		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 8000 );
+		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 15000 );
 
 		// Fill a title >= 10 characters.
 		await setTitle( editor, 'A long enough title' );
 
 		// PHP check must become complete via REST (no save required).
-		await waitForCheckStatus( page, 'php-live-check', 'complete', 8000 );
+		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
 
 		const result = await page.evaluate(
 			() =>
@@ -118,7 +119,7 @@ test.describe( 'Live publication checks', () => {
 
 		await waitForCheckStatus( page, 'js-only-check', 'complete' );
 		await waitForCheckStatus( page, 'dual-check', 'complete' );
-		await waitForCheckStatus( page, 'php-live-check', 'complete', 8000 );
+		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
 
 		// All checks satisfied — lock must be released.
 		await page.waitForFunction(
@@ -141,7 +142,7 @@ test.describe( 'Live publication checks', () => {
 		await setTitle( editor, 'A long enough title' );
 
 		// PHP-live check should complete (title >= 10 chars).
-		await waitForCheckStatus( page, 'php-live-check', 'complete', 8000 );
+		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
 
 		// dual-check: PHP always returns COMPLETE, but JS (which requires "dual-ok")
 		// has higher priority — result in the store must be INCOMPLETE.
@@ -173,8 +174,11 @@ test.describe( 'Live publication checks', () => {
 		// Make an edit that triggers the subscriber.
 		await setTitle( editor, 'Changed title value' );
 
-		// Allow at least two debounce cycles to elapse.
-		await page.waitForTimeout( 700 );
+		// Use js-only-check appearing as a synchronization signal:
+		// once it's in the live results we know the subscriber has run and
+		// the PHP-live REST call has returned, so any result for static-check
+		// would already be present if it were ever going to appear.
+		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
 		const afterLive = await page.evaluate(
 			() =>

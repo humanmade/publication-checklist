@@ -114,6 +114,8 @@ export function startSubscriber() {
 		const { postType, post, meta, terms } = buildSnapshot();
 
 		// 3. Run JS checks inline.
+		// liveResults is a fresh local object per tick; it is never a reference
+		// to store state, so mutations here are safe before dispatch.
 		const liveResults = {};
 		for ( const { id, type, runCheck } of jsChecks ) {
 			if ( ! matchesType( type, postType ) ) {
