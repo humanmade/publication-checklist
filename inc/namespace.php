@@ -4,6 +4,7 @@ namespace Altis\Workflow\PublicationChecklist;
 
 use stdClass;
 use WP_REST_Request;
+use WP_REST_Response;
 
 const GLOBAL_NAME = 'altis_publication_checklist_checks';
 const INTERNAL_CHECKED_KEY = '__altis_publication_checklist_checked';
@@ -217,7 +218,7 @@ function register_rest_routes() : void {
 				'required'          => true,
 				'sanitize_callback' => 'sanitize_key',
 				'validate_callback' => function ( $value ) {
-					return array_key_exists( $value, get_post_types( [ 'show_in_rest' => true ] ) );
+					return array_key_exists( $value, apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) ) );
 				},
 			],
 			'post'      => [
@@ -233,8 +234,9 @@ function register_rest_routes() : void {
 				'default' => [],
 			],
 			'ids'       => [
-				'type'  => 'array',
-				'items' => [
+				'type'    => 'array',
+				'default' => [],
+				'items'   => [
 					'type' => 'string',
 				],
 			],
@@ -246,9 +248,9 @@ function register_rest_routes() : void {
  * REST handler: run checks against unsaved post data.
  *
  * @param WP_REST_Request $request Full request data.
- * @return \WP_REST_Response Map of check ID => { status, message, data }.
+ * @return WP_REST_Response Map of check ID => { status, message, data }.
  */
-function rest_run_checks( WP_REST_Request $request ) : \WP_REST_Response {
+function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 	$post_type  = $request['post_type'];
 	$post_data  = (array) ( $request['post'] ?? [] );
 	$meta_data  = (array) ( $request['meta'] ?? [] );
@@ -280,7 +282,15 @@ function rest_run_checks( WP_REST_Request $request ) : \WP_REST_Response {
 		}
 
 		/** @var Status $status */
-		$status = call_user_func( $options['run_check'], $post_data, $meta_data, $terms_data );
+		try {
+			$status = call_user_func( $options['run_check'], $post_data, $meta_data, $terms_data );
+		} catch ( \Throwable $e ) {
+			trigger_error(
+				sprintf( 'Publication checklist: check "%s" threw an exception: %s', $id, $e->getMessage() ),
+				E_USER_WARNING
+			);
+			continue;
+		}
 
 		$result[ $id ] = [
 			'status'  => $status->get_status(),
@@ -289,7 +299,7 @@ function rest_run_checks( WP_REST_Request $request ) : \WP_REST_Response {
 		];
 	}
 
-	return new \WP_REST_Response( (object) $result );
+	return new WP_REST_Response( (object) $result );
 }
 
 /**
