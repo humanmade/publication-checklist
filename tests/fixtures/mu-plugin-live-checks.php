@@ -16,14 +16,16 @@ add_filter( 'altis.publication-checklist.block_on_failing', '__return_true' );
 
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
-	// 1. PHP-static check (no 'live'). COMPLETE only when the excerpt is non-empty.
-	//    This check does NOT re-evaluate live — only after Save Draft.
+	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.
+	//    Used in the e2e suite only to verify static checks do not appear in
+	//    getLiveResults() after edits. INFO status keeps it out of the
+	//    isIncomplete calculation so it doesn't interfere with the lock test.
 	register_prepublish_check( 'static-check', [
 		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
 			$excerpt = $post['post_excerpt'] ?? '';
 			return ! empty( trim( (string) $excerpt ) )
 				? new Status( Status::COMPLETE, 'Excerpt is set' )
-				: new Status( Status::INCOMPLETE, 'Add an excerpt to continue' );
+				: new Status( Status::INFO, 'Consider adding an excerpt' );
 		},
 	] );
 

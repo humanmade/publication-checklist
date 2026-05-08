@@ -23,6 +23,7 @@ const baseURL = process.env.WP_BASE_URL || `http://127.0.0.1:${ port }`;
 /** @see https://playwright.dev/docs/test-configuration */
 module.exports = defineConfig( {
 	testDir: './tests/e2e',
+	globalSetup: require.resolve( './tests/e2e/global-setup.js' ),
 	timeout: 60000,
 	fullyParallel: false,
 	forbidOnly: !! process.env.CI,
@@ -35,6 +36,7 @@ module.exports = defineConfig( {
 	],
 	use: {
 		baseURL,
+		storageState: 'tests/e2e/.auth/admin.json',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
 		video: 'retain-on-failure',
@@ -55,9 +57,5 @@ module.exports = defineConfig( {
 				url: baseURL,
 				reuseExistingServer: true,
 				timeout: 120000,
-				stdout: 'pipe',
-				wait: {
-					stdout: /Ready!/,
-				},
 		  },
 } );

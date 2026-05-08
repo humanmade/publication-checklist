@@ -23,7 +23,10 @@
 # Playwright
 /test-results/
 /playwright-report/
-/.auth/
+/tests/e2e/.auth/
+
+# Graphify
+/graphify-out/
 
 # Git
 !.gitkeep
