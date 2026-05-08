@@ -36,7 +36,6 @@ module.exports = {
 				"noDefaults": true
 			}
 		],
-		"jsdoc/newline-after-description": "warn",
 		"jsdoc/no-undefined-types": "warn",
 		"jsdoc/require-description-complete-sentence": "warn",
 		"jsdoc/require-hyphen-before-param-description": "warn",
