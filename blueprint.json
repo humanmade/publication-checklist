@@ -1,7 +1,6 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"landingPage": "/wp-admin/",
-	"login": true,
 	"preferredVersions": {
 		"php": "8.3",
 		"wp": "6.8"
@@ -33,6 +32,9 @@
 		{
 			"step": "wp-cli",
 			"command": "wp rewrite flush"
+		},
+		{
+			"step": "login"
 		}
 	]
 }

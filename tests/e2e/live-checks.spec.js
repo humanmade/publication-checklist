@@ -42,15 +42,6 @@ async function setTitle( editor, title ) {
 
 test.describe( 'Live publication checks', () => {
 	test.beforeEach( async ( { admin, editor, page } ) => {
-		// Explicit browser login — storageState alone is not reliable with Playground.
-		await page.goto( '/wp-login.php' );
-		if ( page.url().includes( 'wp-login.php' ) ) {
-			await page.locator( '#user_login' ).fill( 'admin' );
-			await page.locator( '#user_pass' ).fill( 'password' );
-			await page.locator( '#wp-submit' ).click();
-			await page.waitForURL( /wp-admin/, { timeout: 30000 } );
-		}
-
 		await admin.createNewPost();
 		await editor.setPreferences( 'core/edit-post', {
 			welcomeGuide: false,

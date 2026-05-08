@@ -25,7 +25,6 @@
     "start": "wp-scripts start",
     "test:e2e": "playwright test",
     "test:e2e:debug": "playwright test --debug",
-    "test:e2e:watch": "playwright test --ui",
-    "test:unit": "wp-scripts test-unit-js"
+    "test:e2e:watch": "playwright test --ui"
   }
 }
