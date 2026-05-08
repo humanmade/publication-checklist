@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "wp-scripts build",
+    "format": "wp-scripts format src",
     "lint:js": "wp-scripts lint-js src",
     "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
