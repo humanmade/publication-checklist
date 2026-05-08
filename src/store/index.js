@@ -21,14 +21,10 @@ const reducer = ( state = DEFAULT_STATE, action ) => {
 				live: action.payload,
 			};
 
-		case 'CLEAR_LIVE_RESULT':
-			return {
-				...state,
-				live: {
-					...state.live,
-					[ action.payload ]: undefined,
-				},
-			};
+		case 'CLEAR_LIVE_RESULT': {
+			const { [ action.payload ]: _, ...remaining } = state.live;
+			return { ...state, live: remaining };
+		}
 
 		default:
 			return state;
@@ -50,15 +46,15 @@ const selectors = {
 	/**
 	 * Merge live results with REST results, with priority JS > PHP-live > PHP-static.
 	 *
-	 * @param {Object} state       - Store state.
-	 * @param {Object} restResults - REST prepublish_checks object from core/editor.
-	 * @return {Object} Merged results without source field.
+	 * @param {Object}      state       - Store state.
+	 * @param {Object|null} restResults - REST prepublish_checks object from core/editor, or null.
+	 * @return {Object} Merged results without internal source field.
 	 */
 	getMergedResults: ( state, restResults ) => {
 		const merged = {};
 
 		// Start with REST results (PHP-static)
-		if ( restResults ) {
+		if ( restResults && typeof restResults === 'object' ) {
 			Object.entries( restResults ).forEach( ( [ id, result ] ) => {
 				merged[ id ] = {
 					status: result.status,
@@ -74,15 +70,12 @@ const selectors = {
 				return;
 			}
 
-			const { source, status, message, data } = liveResult;
+			// Default source to 'js' so untagged entries are treated as highest priority.
+			const { source = 'js', status, message, data } = liveResult;
 
-			// PHP-live overrides PHP-static, JS overrides everything
+			// PHP-live overrides PHP-static; JS overrides everything.
 			if ( source === 'php-live' || source === 'js' ) {
-				merged[ id ] = {
-					status,
-					message,
-					data,
-				};
+				merged[ id ] = { status, message, data };
 			}
 		} );
 
@@ -95,7 +88,10 @@ const selectors = {
  */
 const actions = {
 	/**
-	 * Set live results, replacing the entire live object.
+	 * Set live results, replacing the entire live map.
+	 *
+	 * Called by the subscriber each debounce tick with the full result set.
+	 * This is a replace, not a merge — the subscriber owns the full picture.
 	 *
 	 * @param {Object} map - Live results map keyed by check id.
 	 * @return {Object} Action object.
