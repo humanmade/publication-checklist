@@ -2,7 +2,7 @@ import { registerPlugin } from '@wordpress/plugins';
 
 import * as Plugin from './plugin';
 
-import { store, STORE_NAME } from './store'; // eslint-disable-line no-unused-vars
+import './store'; // side-effect: registers the wp.data store
 import { startSubscriber } from './store/subscriber';
 import { registerPrepublishCheck, Status } from './api';
 

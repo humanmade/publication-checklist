@@ -7,10 +7,9 @@ const PluginStatusIndicator = () => {
 	const isIncomplete = useSelect( ( select ) => {
 		const currentPost = select( 'core/editor' ).getCurrentPost();
 		const restResults = currentPost?.prepublish_checks;
-		const mergedResults = select( STORE_NAME ).getMergedResults( restResults );
-		return Object.values( mergedResults ).some(
-			( { status } ) => status === 'incomplete'
-		);
+		return Object.values(
+			select( STORE_NAME ).getMergedResults( restResults )
+		).some( ( { status } ) => status === 'incomplete' );
 	} );
 
 	const shouldBlockPublish = Boolean(
