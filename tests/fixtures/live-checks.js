@@ -1,6 +1,6 @@
 /* global window */
 ( function () {
-	var api = window.altis && window.altis.publicationChecklist;
+	var api = window.publicationChecklist;
 	if ( ! api ) {
 		return;
 	}

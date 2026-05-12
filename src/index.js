@@ -11,9 +11,8 @@ import './style.scss';
 // Start the live-check subscriber.
 startSubscriber();
 
-// Expose the public API on window.altis.publicationChecklist so plugin authors
+// Expose the public API on window.publicationChecklist so plugin authors
 // can call registerPrepublishCheck without a build step.
-window.altis = window.altis || {};
-window.altis.publicationChecklist = { registerPrepublishCheck, Status };
+window.publicationChecklist = { registerPrepublishCheck, Status };
 
 registerPlugin( Plugin.name, Plugin.settings );
