@@ -273,16 +273,30 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 	$terms_data = (array) ( $request['terms'] ?? [] );
 	$ids        = $request['ids'] ?? [];
 
-	// Normalise the JS snapshot keys to the WP_Post array shape so run_check
-	// callbacks receive the same keys regardless of whether they run on save
-	// (get_post( $id, ARRAY_A ) → 'post_title') or live ('title').
-	$id   = (int) ( $request['id'] ?? 0 );
-	$base = $id ? ( get_post( $id, ARRAY_A ) ?: [] ) : [];
+	// Normalise the JS/REST snapshot to the WP_Post array shape so run_check
+	// callbacks receive the same keys on both the live path ('title') and the
+	// save path (get_post( $id, ARRAY_A ) → 'post_title').
+	// Fields with no WP_Post equivalent (featured_media, sticky, template,
+	// comment_status, ping_status) pass through unchanged.
+	$post_id = (int) ( $request['id'] ?? 0 );
+	$base    = $post_id ? ( get_post( $post_id, ARRAY_A ) ?: [] ) : [];
+	if ( $post_id && ! empty( $base ) ) {
+		$base = enrich_post_for_checks( $post_id, $base );
+	}
+
 	$key_map = [
-		'title'   => 'post_title',
-		'content' => 'post_content',
-		'excerpt' => 'post_excerpt',
-		'status'  => 'post_status',
+		'title'    => 'post_title',
+		'content'  => 'post_content',
+		'excerpt'  => 'post_excerpt',
+		'status'   => 'post_status',
+		'author'   => 'post_author',
+		'slug'     => 'post_name',
+		'date'     => 'post_date',
+		'date_gmt' => 'post_date_gmt',
+		'parent'   => 'post_parent',
+		'password' => 'post_password',
+		'type'     => 'post_type',
+		'format'   => 'post_format',
 	];
 	$normalised = $base;
 	foreach ( $post_data as $key => $value ) {
@@ -291,9 +305,16 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 	$normalised['post_type'] = $post_type;
 	$post_data = $normalised;
 
+	// Merge with saved meta/terms so checks see the full picture, not just
+	// what the JS snapshot included (e.g. non-REST-registered meta keys).
+	if ( $post_id ) {
+		$meta_data  = get_merged_meta( $post_id, $meta_data );
+		$terms_data = get_merged_terms( $post_id, $terms_data );
+	}
+
 	$result = [];
 
-	foreach ( $GLOBALS[ GLOBAL_NAME ] as $id => $options ) {
+	foreach ( $GLOBALS[ GLOBAL_NAME ] as $check_id => $options ) {
 		// Only run live checks via this endpoint.
 		if ( ! isset( $options['live'] ) || $options['live'] !== true ) {
 			continue;
@@ -306,7 +327,7 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 		}
 
 		// If a specific list of check IDs was requested, honour it.
-		if ( ! empty( $ids ) && ! in_array( $id, $ids, true ) ) {
+		if ( ! empty( $ids ) && ! in_array( $check_id, $ids, true ) ) {
 			continue;
 		}
 
@@ -315,13 +336,13 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 			$status = call_user_func( $options['run_check'], $post_data, $meta_data, $terms_data );
 		} catch ( \Throwable $e ) {
 			trigger_error(
-				sprintf( 'Publication checklist: check "%s" threw an exception: %s', $id, $e->getMessage() ),
+				sprintf( 'Publication checklist: check "%s" threw an exception: %s', $check_id, $e->getMessage() ),
 				E_USER_WARNING
 			);
 			continue;
 		}
 
-		$result[ $id ] = [
+		$result[ $check_id ] = [
 			'status'  => $status->get_status(),
 			'message' => $status->get_message(),
 			'data'    => $status->get_data(),
@@ -344,6 +365,26 @@ function register_prepublish_check( $id, $options ) {
 }
 
 /**
+ * Enrich a WP_Post ARRAY_A with fields that are not included by get_post()
+ * but that check callbacks commonly need.
+ *
+ * Adds: featured_media (attachment ID), post_format, sticky, template.
+ * Safe to call with any positive post ID.
+ *
+ * @param int   $id   Post ID.
+ * @param array $post WP_Post array from get_post( $id, ARRAY_A ).
+ * @return array Enriched post array.
+ */
+function enrich_post_for_checks( int $id, array $post ) : array {
+	$post['featured_media'] = (int) get_post_thumbnail_id( $id );
+	$post['sticky']         = is_sticky( $id );
+	$format                 = get_post_format( $id );
+	$post['post_format']    = $format !== false ? $format : 'standard';
+	$post['template']       = get_post_meta( $id, '_wp_page_template', true ) ?: '';
+	return $post;
+}
+
+/**
  * Get the check status, formatted for the REST API.
  *
  * @param array $data Raw REST API post data.
@@ -363,6 +404,7 @@ function get_check_status_for_api( array $data ) : ?stdClass {
 		return null;
 	}
 
+	$post = enrich_post_for_checks( (int) $data['id'], $post );
 	$meta = get_post_meta( $data['id'] );
 	$terms = get_post_terms( $data['id'] );
 

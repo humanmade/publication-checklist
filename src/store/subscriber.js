@@ -12,14 +12,30 @@ function buildSnapshot() {
 	const postType = editorSelect.getCurrentPostType();
 	const id = editorSelect.getCurrentPostId();
 
-	// Always include these basics
-	const post = {
-		title: editorSelect.getEditedPostAttribute( 'title' ),
-		content: editorSelect.getEditedPostAttribute( 'content' ),
-		excerpt: editorSelect.getEditedPostAttribute( 'excerpt' ),
+	// Read every standard REST API attribute. Attributes not supported by this
+	// post type return undefined; those are filtered out before sending so the
+	// wire payload stays small and the server never receives spurious nulls.
+	const rawPost = {
+		title:          editorSelect.getEditedPostAttribute( 'title' ),
+		content:        editorSelect.getEditedPostAttribute( 'content' ),
+		excerpt:        editorSelect.getEditedPostAttribute( 'excerpt' ),
+		status:         editorSelect.getEditedPostAttribute( 'status' ),
 		featured_media: editorSelect.getEditedPostAttribute( 'featured_media' ),
-		status: editorSelect.getEditedPostAttribute( 'status' ),
+		author:         editorSelect.getEditedPostAttribute( 'author' ),
+		slug:           editorSelect.getEditedPostAttribute( 'slug' ),
+		date:           editorSelect.getEditedPostAttribute( 'date' ),
+		date_gmt:       editorSelect.getEditedPostAttribute( 'date_gmt' ),
+		parent:         editorSelect.getEditedPostAttribute( 'parent' ),
+		format:         editorSelect.getEditedPostAttribute( 'format' ),
+		sticky:         editorSelect.getEditedPostAttribute( 'sticky' ),
+		template:       editorSelect.getEditedPostAttribute( 'template' ),
+		password:       editorSelect.getEditedPostAttribute( 'password' ),
+		comment_status: editorSelect.getEditedPostAttribute( 'comment_status' ),
+		ping_status:    editorSelect.getEditedPostAttribute( 'ping_status' ),
 	};
+	const post = Object.fromEntries(
+		Object.entries( rawPost ).filter( ( [ , v ] ) => v !== undefined )
+	);
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
 
 	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy

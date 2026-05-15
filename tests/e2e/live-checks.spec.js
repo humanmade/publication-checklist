@@ -159,6 +159,27 @@ test.describe( 'Live publication checks', () => {
 		expect( dual.source ).toBe( 'js' );
 	} );
 
+	test( 'PHP-live run_check receives WP_Post-shaped data (author → post_author)', async ( {
+		page,
+	} ) => {
+		// The 'author-set' fixture check reads $post['post_author']. The JS
+		// snapshot sends 'author' (REST key); the server normalises it to
+		// 'post_author' before calling run_check. If normalisation is working,
+		// the current user's ID is non-empty and the check resolves to 'info'.
+		await waitForCheckStatus( page, 'author-set', 'info', 15000 );
+
+		const result = await page.evaluate(
+			() =>
+				window.wp.data
+					.select( 'altis/publication-checklist' )
+					.getLiveResults()[ 'author-set' ]
+		);
+		expect( result.status ).toBe( 'info' );
+		expect( result.source ).toBe( 'php-live' );
+		// Message includes the author ID, confirming post_author is non-zero.
+		expect( result.message ).toMatch( /Author assigned: \d+/ );
+	} );
+
 	test( 'Static PHP check does not re-evaluate live', async ( {
 		editor,
 		page,

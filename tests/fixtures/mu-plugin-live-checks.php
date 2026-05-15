@@ -53,6 +53,21 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		},
 	] );
 
+	// 4. Normalisation parity check.
+	//    Verifies that the author field is available under the WP_Post key
+	//    'post_author' on both the live path (author → post_author via key_map)
+	//    and the save path (get_post( ARRAY_A ) always includes post_author).
+	//    INFO status so it does not block publishing or affect the lock test.
+	register_prepublish_check( 'author-set', [
+		'live'      => true,
+		'fields'    => [ 'author' ],
+		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+			return ! empty( $post['post_author'] )
+				? new Status( Status::INFO, 'Author assigned: ' . (int) $post['post_author'] )
+				: new Status( Status::INFO, 'No author (unexpected)' );
+		},
+	] );
+
 } );
 
 // Enqueue the JS-side fixture after the main plugin script is registered.
