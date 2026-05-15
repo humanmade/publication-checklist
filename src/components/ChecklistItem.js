@@ -21,18 +21,15 @@ class ChecklistItem extends Component {
 	};
 
 	render() {
-		const {
-			data,
-			name,
-			message,
-			status,
-		} = this.props;
+		const { data, name, message, status } = this.props;
 
 		const itemClassName = `${ this.props.baseClassName }__item`;
 
 		// Ignore lint bug: https://github.com/WordPress/gutenberg/issues/16418
 		// eslint-disable-next-line @wordpress/no-unused-vars-before-return
-		const ItemElement = withFilters( 'altis-publishing-workflow.item.' + name )( ChecklistItemContent );
+		const ItemElement = withFilters(
+			'altis-publishing-workflow.item.' + name
+		)( ChecklistItemContent );
 
 		const classes = [
 			itemClassName,
