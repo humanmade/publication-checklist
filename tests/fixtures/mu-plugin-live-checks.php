@@ -31,12 +31,11 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 
 	// 2. PHP-only live check with a 'fields' allowlist.
 	//    COMPLETE when the title is at least 10 characters long.
-	//    The 'title' key matches the JS subscriber snapshot format sent to the REST endpoint.
 	register_prepublish_check( 'php-live-check', [
 		'live'      => true,
 		'fields'    => [ 'title' ],
 		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
-			$title = $post['title'] ?? '';
+			$title = $post['post_title'] ?? '';
 			return strlen( trim( (string) $title ) ) >= 10
 				? new Status( Status::COMPLETE, 'Title is long enough' )
 				: new Status( Status::INCOMPLETE, 'Title must be at least 10 characters' );

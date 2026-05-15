@@ -83,9 +83,16 @@ function enqueue_assets() {
 		];
 	}
 
+	$types = apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) );
+	$taxonomies_by_type = [];
+	foreach ( $types as $type ) {
+		$taxonomies_by_type[ $type ] = get_object_taxonomies( $type );
+	}
+
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
 		'block_publish' => should_block_publish(),
 		'checks'        => $checks,
+		'taxonomies'    => $taxonomies_by_type,
 	] );
 }
 
@@ -209,8 +216,13 @@ function register_rest_routes() : void {
 	register_rest_route( 'altis/publication-checklist/v1', '/check', [
 		'methods'             => 'POST',
 		'callback'            => __NAMESPACE__ . '\\rest_run_checks',
-		'permission_callback' => function () {
-			return current_user_can( 'edit_posts' );
+		'permission_callback' => function ( WP_REST_Request $request ) {
+			$post_type = $request['post_type'];
+			$obj = get_post_type_object( $post_type );
+			if ( ! $obj ) {
+				return false;
+			}
+			return current_user_can( $obj->cap->edit_posts );
 		},
 		'args'                => [
 			'post_type' => [
@@ -220,6 +232,10 @@ function register_rest_routes() : void {
 				'validate_callback' => function ( $value ) {
 					return array_key_exists( $value, apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) ) );
 				},
+			],
+			'id'        => [
+				'type'    => 'integer',
+				'default' => 0,
 			],
 			'post'      => [
 				'type'    => 'object',
@@ -257,10 +273,23 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 	$terms_data = (array) ( $request['terms'] ?? [] );
 	$ids        = $request['ids'] ?? [];
 
-	// Ensure post_type is set in the post array so type-matching works.
-	if ( empty( $post_data['post_type'] ) ) {
-		$post_data['post_type'] = $post_type;
+	// Normalise the JS snapshot keys to the WP_Post array shape so run_check
+	// callbacks receive the same keys regardless of whether they run on save
+	// (get_post( $id, ARRAY_A ) → 'post_title') or live ('title').
+	$id   = (int) ( $request['id'] ?? 0 );
+	$base = $id ? ( get_post( $id, ARRAY_A ) ?: [] ) : [];
+	$key_map = [
+		'title'   => 'post_title',
+		'content' => 'post_content',
+		'excerpt' => 'post_excerpt',
+		'status'  => 'post_status',
+	];
+	$normalised = $base;
+	foreach ( $post_data as $key => $value ) {
+		$normalised[ $key_map[ $key ] ?? $key ] = $value;
 	}
+	$normalised['post_type'] = $post_type;
+	$post_data = $normalised;
 
 	$result = [];
 

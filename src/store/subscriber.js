@@ -10,6 +10,7 @@ const phpChecks = window.altisPublicationChecklist?.checks ?? [];
 function buildSnapshot() {
 	const editorSelect = select( 'core/editor' );
 	const postType = editorSelect.getCurrentPostType();
+	const id = editorSelect.getCurrentPostId();
 
 	// Always include these basics
 	const post = {
@@ -20,9 +21,21 @@ function buildSnapshot() {
 		status: editorSelect.getEditedPostAttribute( 'status' ),
 	};
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
-	const terms = editorSelect.getEditedPostAttribute( 'terms' ) ?? {};
 
-	return { postType, post, meta, terms };
+	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
+	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
+	// as a single 'terms' attribute.
+	const taxonomies =
+		window.altisPublicationChecklist?.taxonomies?.[ postType ] ?? [];
+	const terms = {};
+	for ( const tax of taxonomies ) {
+		const value = editorSelect.getEditedPostAttribute( tax );
+		if ( value !== undefined ) {
+			terms[ tax ] = value;
+		}
+	}
+
+	return { id, postType, post, meta, terms };
 }
 
 // Debounce helper (no lodash needed — simple closure)
@@ -111,7 +124,7 @@ export function startSubscriber() {
 		const jsChecks = getRegistered(); // { id, type, runCheck }
 
 		// 2. Build a full snapshot.
-		const { postType, post, meta, terms } = buildSnapshot();
+		const { id, postType, post, meta, terms } = buildSnapshot();
 
 		// 3. Run JS checks inline.
 		// liveResults is a fresh local object per tick; it is never a reference
@@ -172,6 +185,7 @@ export function startSubscriber() {
 			try {
 				const phpResults = await runServerChecks(
 					postType,
+					id,
 					post,
 					meta,
 					terms,
