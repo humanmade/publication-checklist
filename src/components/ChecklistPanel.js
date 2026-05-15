@@ -5,11 +5,7 @@ import PropTypes from 'prop-types';
 
 import { PanelBody } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
-import {
-	PluginPrePublishPanel,
-	PluginSidebar,
-	PluginSidebarMoreMenuItem,
-} from '@wordpress/editor';
+import { PluginPrePublishPanel, PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { Component, Fragment } from '@wordpress/element';
 import { withDispatch, withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
@@ -68,7 +64,10 @@ class ChecklistPanel extends Component {
 
 		return {
 			completion,
-			completableItems: [ ...incomplete, ...completed ],
+			completableItems: [
+				...incomplete,
+				...completed,
+			],
 			otherItems: other,
 		};
 	}
@@ -88,23 +87,24 @@ class ChecklistPanel extends Component {
 		}
 	}
 
+
 	render() {
 		const { completableItems, otherItems } = this.state;
 
-		const showChecklist =			! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
+		const showChecklist = ! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
 		const { shouldRenderInPublishSidebar } = this.props;
 
 		const { completion } = this.state;
 
-		const { completed, toComplete } = completion;
+		const {
+			completed,
+			toComplete,
+		} = completion;
 		const isToComplete = toComplete > 0;
 		const isCompleted = completed >= toComplete;
 
-		const title = __(
-			'Publication Checklist',
-			'altis-publication-checklist'
-		);
+		const title = __( 'Publication Checklist', 'altis-publication-checklist' );
 
 		return (
 			<Fragment>
@@ -113,10 +113,8 @@ class ChecklistPanel extends Component {
 						{ shouldRenderInPublishSidebar && (
 							<PluginPrePublishPanel
 								className={ classNames( panelClassName, {
-									[ `${ panelClassName }--to-complete` ]:
-										isToComplete,
-									[ `${ panelClassName }--completed` ]:
-										isCompleted,
+									[ `${ panelClassName }--to-complete` ]: isToComplete,
+									[ `${ panelClassName }--completed` ]: isCompleted,
 								} ) }
 								initialOpen
 								title={ title }
@@ -130,13 +128,13 @@ class ChecklistPanel extends Component {
 								/>
 							</PluginPrePublishPanel>
 						) }
-						<PluginSidebarMoreMenuItem
-							target={ sidebarName }
-							icon="yes"
-						>
+						<PluginSidebarMoreMenuItem target={ sidebarName } icon="yes">
 							{ title }
 						</PluginSidebarMoreMenuItem>
-						<PluginSidebar name={ sidebarName } title={ title }>
+						<PluginSidebar
+							name={ sidebarName }
+							title={ title }
+						>
 							<PanelBody>
 								<ChecklistPanelContent
 									baseClassName={ baseClassName }
@@ -177,5 +175,5 @@ export default compose(
 		return {
 			onEnablePublishSidebar: enablePublishSidebar,
 		};
-	} )
+	} ),
 )( ChecklistPanel );

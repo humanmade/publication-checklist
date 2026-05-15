@@ -12,18 +12,13 @@ const CompletionIndicator = ( { baseClassName, completed, toComplete } ) => {
 
 	/* translators: %s: number of completed tasks, %s: total number of to-complete tasks */
 	const label = sprintf(
-		_n(
-			'%s of %s task completed.',
-			'%s of %s tasks completed.',
-			toComplete,
-			'altis-publication-checklist'
-		),
+		_n( '%s of %s task completed.', '%s of %s tasks completed.', toComplete, 'altis-publication-checklist' ),
 		completed,
-		toComplete
+		toComplete,
 	);
 
 	const color = completed >= toComplete ? '#3fcf8e' : '#f97a14';
-	const percent = ( 100 / toComplete ) * completed;
+	const percent = 100 / toComplete * completed;
 
 	return (
 		<div className={ `${ baseClassName }__completion-indicator` }>
