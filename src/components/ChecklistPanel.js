@@ -91,7 +91,8 @@ class ChecklistPanel extends Component {
 	render() {
 		const { completableItems, otherItems } = this.state;
 
-		const showChecklist =			! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
+		const showChecklist =
+			! _isEmpty( completableItems ) || ! _isEmpty( otherItems );
 
 		const { shouldRenderInPublishSidebar } = this.props;
 

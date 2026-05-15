@@ -23,7 +23,8 @@ const ChecklistPanelContent = ( {
 	const [ isExpanded, setExpanded ] = useState( false );
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
-	const shouldBlockPublish =		!! window.altisPublicationChecklist.block_publish ?? false;
+	const shouldBlockPublish =
+		!! window.altisPublicationChecklist.block_publish ?? false;
 
 	useEffect( () => {
 		onConfirmedReady( completed >= toComplete || confirmedReady );

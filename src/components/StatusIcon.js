@@ -8,7 +8,7 @@ import { COMPLETE, INCOMPLETE, INFO } from '../itemStatus';
  *
  * @param {string} status - Item status.
  *
- * @return {string} Icon.
+ * @returns {string} Icon.
  */
 export const mapStatusToIcon = ( status ) => {
 	switch ( status ) {
