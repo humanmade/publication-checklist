@@ -97,6 +97,12 @@ provided, it accepts an array of:
 - Meta keys prefixed with `meta.` (e.g. `'meta.my_key'`)
 - Taxonomy slugs prefixed with `terms.` (e.g. `'terms.category'`)
 
+> **Note on `fields`:** This is a *client-side* optimisation hint. The browser
+> skips the REST round-trip when none of a check's declared fields have changed,
+> saving typing latency. Server-side, every matching live check still runs on
+> every request regardless of what changed. Write expensive `run_check` callbacks
+> defensively — they may be called on any edit.
+
 > **Note:** The `run_check` callback receives the *unsaved* edited values, not the
 > saved post. Check callbacks must be read-only — do not perform database writes
 > based on the supplied data.
@@ -112,11 +118,11 @@ check logic in JavaScript, use the JS registration API:
 
 ```js
 // Via the global (no build step required):
-const { registerPrepublishCheck, Status } = window.altis.publicationChecklist;
+const { registerPrepublishCheck, Status } = window.publicationChecklist;
 
 // Or import it — add `altis_publication_checklist` as a webpack external mapped
-// to `window.altis.publicationChecklist` in your project's webpack config:
-import { registerPrepublishCheck, Status } from '@altis/publication-checklist';
+// to `window.publicationChecklist` in your project's webpack config:
+import { registerPrepublishCheck, Status } from '@humanmade/publication-checklist';
 
 registerPrepublishCheck( 'has-featured-image', {
     type: 'post', // optional; matches PHP 'type' field
