@@ -411,6 +411,13 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 	}
 
 	$meta = $request['meta'] ?? [];
+
+	// A featured image arrives as featured_media, and core attaches it after
+	// wp_update_post(), so without this checks read the image the post had before.
+	if ( isset( $request['featured_media'] ) && ! array_key_exists( '_thumbnail_id', (array) $meta ) ) {
+		$meta['_thumbnail_id'] = (int) $request['featured_media'];
+	}
+
 	$post = (array) $data;
 
 	if ( property_exists( $data, 'ID' ) ) {
@@ -478,16 +485,20 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 		return $data;
 	}
 
-	// Block if it fails.
+	// Block if it fails. compact() leaves ID, meta_input and tax_input off $data; they
+	// stay on $postarr. $data reaches the posts table as-is, so the ID goes on a copy.
+	$check_data = $data;
+
 	if ( isset( $postarr['ID'] ) ) {
-		$meta = get_merged_meta( $postarr['ID'], $data['meta_input'] ?? [] );
-		$terms = get_merged_terms( $postarr['ID'], $data['tax_input'] ?? [] );
+		$check_data['ID'] = (int) $postarr['ID'];
+		$meta = get_merged_meta( $postarr['ID'], $postarr['meta_input'] ?? [] );
+		$terms = get_merged_terms( $postarr['ID'], $postarr['tax_input'] ?? [] );
 	} else {
-		$meta = $data['meta_input'] ?? [];
-		$terms = $data['tax_input'] ?? [];
+		$meta = $postarr['meta_input'] ?? [];
+		$terms = $postarr['tax_input'] ?? [];
 	}
 
-	$checks = get_check_status( $data, $meta, $terms );
+	$checks = get_check_status( $check_data, $meta, $terms );
 	$check_success = get_combined_status( $checks );
 	if ( ! $check_success ) {
 		// Don't allow status to be changed.
