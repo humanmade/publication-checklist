@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { Button, ToggleControl } from '@wordpress/components';
-import { compose } from '@wordpress/compose';
+import { compose, useInstanceId } from '@wordpress/compose';
 import { withDispatch } from '@wordpress/data';
 import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -19,16 +19,37 @@ const ChecklistPanelContent = ( {
 	completed,
 	otherItems,
 	toComplete,
-	onConfirmedReady,
+	onLockPostSaving,
+	onUnlockPostSaving,
 } ) => {
 	const [ isExpanded, setExpanded ] = useState( false );
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
 	const shouldBlockPublish = !! window.altisPublicationChecklist.block_publish ?? false;
 
+	// ChecklistPanel renders this twice, so a shared lock name would let the first
+	// unmount release the survivor's lock.
+	const lockName = useInstanceId(
+		ChecklistPanelContent,
+		'publication-checklist-confirmed-ready'
+	);
+
 	useEffect( () => {
-		onConfirmedReady( completed >= toComplete || confirmedReady );
-	}, [ completed, confirmedReady, toComplete ] );
+		if ( completed >= toComplete || confirmedReady ) {
+			onUnlockPostSaving( lockName );
+		} else {
+			onLockPostSaving( lockName );
+		}
+
+		return () => onUnlockPostSaving( lockName );
+	}, [
+		completed,
+		confirmedReady,
+		toComplete,
+		lockName,
+		onLockPostSaving,
+		onUnlockPostSaving,
+	] );
 
 	const isComplete = completed >= toComplete;
 	const requiredLabel = __(
@@ -112,20 +133,16 @@ ChecklistPanelContent.propTypes = {
 	otherItems: itemsCollectionPropType.isRequired,
 	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number,
-	onConfirmedReady: PropTypes.func.isRequired,
+	onLockPostSaving: PropTypes.func.isRequired,
+	onUnlockPostSaving: PropTypes.func.isRequired,
 };
 
 export default compose( [
 	withDispatch( ( dispatch ) => {
 		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
 		return {
-			onConfirmedReady: confirmed => {
-				if ( confirmed ) {
-					unlockPostSaving( 'publication-checklist-confirmed-ready' );
-				} else {
-					lockPostSaving( 'publication-checklist-confirmed-ready' );
-				}
-			},
+			onLockPostSaving: lockPostSaving,
+			onUnlockPostSaving: unlockPostSaving,
 		};
 	} ),
 ] )( ChecklistPanelContent );

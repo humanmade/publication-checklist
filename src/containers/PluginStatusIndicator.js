@@ -1,5 +1,6 @@
 import { Check, Error } from '../icons';
 import { useEffect } from '@wordpress/element';
+import { useInstanceId } from '@wordpress/compose';
 import { dispatch, useSelect } from '@wordpress/data';
 
 const PluginStatusIndicator = () => {
@@ -16,17 +17,26 @@ const PluginStatusIndicator = () => {
 
 	const shouldBlockPublish = Boolean( window.altisPublicationChecklist.block_publish );
 
+	// The editor renders this icon in more than one slot, so a shared lock name would
+	// let the first unmount release the survivor's lock.
+	const lockName = useInstanceId(
+		PluginStatusIndicator,
+		'publication-checklist'
+	);
+
 	useEffect( () => {
 		if ( ! shouldBlockPublish ) {
 			return;
 		}
 		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
 		if ( isIncomplete ) {
-			lockPostSaving( 'publication-checklist' );
+			lockPostSaving( lockName );
 		} else {
-			unlockPostSaving( 'publication-checklist' );
+			unlockPostSaving( lockName );
 		}
-	}, [ shouldBlockPublish, isIncomplete ] );
+
+		return () => unlockPostSaving( lockName );
+	}, [ shouldBlockPublish, isIncomplete, lockName ] );
 
 	return isIncomplete ? <Error /> : <Check />;
 };
