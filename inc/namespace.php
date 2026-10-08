@@ -75,10 +75,11 @@ function enqueue_assets() {
 
 	$checks = [];
 	foreach ( $GLOBALS[ GLOBAL_NAME ] as $id => $options ) {
+		$source = isset( $options['live'] ) && $options['live'] === true ? 'php-live' : 'php';
 		$checks[] = [
 			'id'     => $id,
 			'type'   => $options['type'] ?? 'post',
-			'source' => isset( $options['live'] ) && $options['live'] === true ? 'php-live' : 'php',
+			'source' => $source,
 			'fields' => $options['fields'] ?? null,
 		];
 	}
