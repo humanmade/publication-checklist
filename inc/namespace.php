@@ -74,7 +74,7 @@ function enqueue_assets() {
 	);
 
 	$checks = [];
-	foreach ( $GLOBALS[ GLOBAL_NAME ] as $id => $options ) {
+	foreach ( get_registered_checks() as $id => $options ) {
 		$source = isset( $options['live'] ) && $options['live'] === true ? 'php-live' : 'php';
 		$checks[] = [
 			'id'     => $id,
@@ -105,7 +105,7 @@ function enqueue_assets() {
  */
 function register_column( array $columns ) : array {
 	// If no checks have been registered, don't show the column.
-	$registered = $GLOBALS[ GLOBAL_NAME ];
+	$registered = get_registered_checks();
 	if ( empty( $registered ) ) {
 		return $columns;
 	}
@@ -315,7 +315,7 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
 
 	$result = [];
 
-	foreach ( $GLOBALS[ GLOBAL_NAME ] as $check_id => $options ) {
+	foreach ( get_registered_checks() as $check_id => $options ) {
 		// Only run live checks via this endpoint.
 		if ( ! isset( $options['live'] ) || $options['live'] !== true ) {
 			continue;
@@ -363,6 +363,15 @@ function rest_run_checks( WP_REST_Request $request ) : WP_REST_Response {
  */
 function register_prepublish_check( $id, $options ) {
 	$GLOBALS[ GLOBAL_NAME ][ $id ] = $options;
+}
+
+/**
+ * Get the registered prepublish checks.
+ *
+ * @return array Map of check ID => check options.
+ */
+function get_registered_checks() : array {
+	return $GLOBALS[ GLOBAL_NAME ] ?? [];
 }
 
 /**
@@ -430,7 +439,7 @@ function get_check_status_for_api( array $data ) : ?stdClass {
  * @return Status[] Map of check ID => status.
  */
 function get_check_status( array $data, array $meta, array $terms ) : array {
-	$checks = $GLOBALS[ GLOBAL_NAME ];
+	$checks = get_registered_checks();
 	$status = [];
 	foreach ( $checks as $id => $options ) {
 		$valid_types = $options['type'] ?? 'post';
