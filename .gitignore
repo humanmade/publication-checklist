@@ -20,6 +20,15 @@
 # Webpack
 /build/
 
+# Playwright
+/test-results/
+/playwright-report/
+/tests/e2e/.auth/
+
+# AI
+CLAUDE.md
+/graphify-out/
+.rtk/
 
 # Git
 !.gitkeep

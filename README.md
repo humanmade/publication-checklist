@@ -72,6 +72,80 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 ```
 
 
+## Live checks (PHP)
+
+Existing checks update whenever the post is saved. To make a check re-evaluate
+*live* as the user edits the post — without requiring a save — add `'live' => true`
+to the check registration:
+
+```php
+register_prepublish_check( 'has-featured-image', [
+    'type'      => 'post',
+    'live'      => true,
+    'fields'    => [ 'featured_media' ], // optional: only re-run when this field changes
+    'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+        return ! empty( $post['featured_media'] )
+            ? new Status( Status::COMPLETE, 'Featured image set' )
+            : new Status( Status::INCOMPLETE, 'Add a featured image' );
+    },
+] );
+```
+
+The `fields` key is optional. If omitted, the check re-runs on every edit. If
+provided, it accepts an array of:
+- Post attributes (e.g. `'title'`, `'featured_media'`, `'status'`)
+- Meta keys prefixed with `meta.` (e.g. `'meta.my_key'`)
+- Taxonomy slugs prefixed with `terms.` (e.g. `'terms.category'`)
+
+> **Note on `fields`:** This is a *client-side* optimisation hint. The browser
+> skips the REST round-trip when none of a check's declared fields have changed,
+> saving typing latency. Server-side, every matching live check still runs on
+> every request regardless of what changed. Write expensive `run_check` callbacks
+> defensively — they may be called on any edit.
+
+> **Note:** The `run_check` callback receives the *unsaved* edited values, not the
+> saved post. Check callbacks must be read-only — do not perform database writes
+> based on the supplied data.
+
+The PHP-side enforcement at publish time is unchanged: if a check returns
+`Status::INCOMPLETE` when the post is saved, publication is still blocked.
+
+
+## Live checks (JS)
+
+For checks that depend on browser-only state, or when you prefer to keep the
+check logic in JavaScript, use the JS registration API:
+
+```js
+// Via the global (no build step required):
+const { registerPrepublishCheck, Status } = window.publicationChecklist;
+
+// Or import it — add `altis_publication_checklist` as a webpack external mapped
+// to `window.publicationChecklist` in your project's webpack config:
+import { registerPrepublishCheck, Status } from '@humanmade/publication-checklist';
+
+registerPrepublishCheck( 'has-featured-image', {
+    type: 'post', // optional; matches PHP 'type' field
+    runCheck: ( { post, meta, terms, select } ) => {
+        const hasFeatured = !! select( 'core/editor' ).getEditedPostAttribute( 'featured_media' );
+        return hasFeatured
+            ? new Status( Status.COMPLETE, 'Featured image set' )
+            : new Status( Status.INCOMPLETE, 'Add a featured image' );
+    },
+} );
+```
+
+- `runCheck` must be synchronous and return a `Status` instance (or a plain
+  `{ status, message, data }` object).
+- `post`, `meta`, and `terms` are pre-built from the current editor state so
+  most checks won't need to call `select` directly.
+- If a JS check registers the same `id` as a PHP check, the JS verdict takes
+  precedence in the pre-publish panel. The PHP check still enforces at publish time.
+- JS-only checks (no PHP counterpart) are enforced client-side via the
+  `lockPostSaving` mechanism — there is no server-side enforcement at publish time.
+  If server-side enforcement matters, register a PHP `run_check` for the same id.
+
+
 ## Displaying check status
 
 By default, Publication Checklist will render a simple checklist of all checks.
@@ -119,7 +193,7 @@ const propTypes = {
 };
 ```
 
-To enable advanced functionality, you may want to wrap this component in [selectors which provide data about the post](https://developer.wordpress.org/block-editor/data/data-core-block-editor/). Note that the backend acts as the canonical source of all check data, so changes to check status will require saving to the backend to take effect.
+To enable advanced functionality, you may want to wrap this component in [selectors which provide data about the post](https://developer.wordpress.org/block-editor/data/data-core-block-editor/). By default, check status updates when the post is saved to the backend. To update the checklist in real time as the user edits, use live checks: see [Live checks (PHP)](#live-checks-php) and [Live checks (JS)](#live-checks-js).
 
 
 ## Enforcing checks
@@ -140,6 +214,32 @@ To hide this column, filter the `altis.publication-checklist.show_tasks_column` 
 The tasks column appears after the title column by default on supported post types.
 
 To change which column the tasks column appears after use the `altis.publication-checklist.show_tasks_after_column` filter and return the desired column slug such as `title`, `author` or `tags` for example.
+
+## Local development
+
+A WordPress Playground environment is included for local development and running the e2e test suite.
+
+**Requirements:** Node.js 20+, npm.
+
+```bash
+# Install dependencies (first time only)
+npm install
+npx playwright install --with-deps chromium
+
+# Build the plugin assets
+npm run build          # one-off build
+npm run start          # watch mode
+
+# Start the Playground environment
+npm run playground:start
+
+# Run the e2e test suite
+npm run test:e2e       # headless
+npm run test:e2e:watch # Playwright UI (interactive)
+npm run test:e2e:debug # pause on first failure
+```
+
+The Playground starts WordPress with the plugin pre-activated and a small test-fixture mu-plugin (`tests/fixtures/mu-plugin-live-checks.php`) that registers the checks used by the e2e suite. The JS counterpart (`tests/fixtures/live-checks.js`) is automatically enqueued by the mu-plugin.
 
 ## Release Process
 
