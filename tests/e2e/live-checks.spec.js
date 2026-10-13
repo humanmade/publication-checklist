@@ -4,15 +4,17 @@ const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
  * Poll the altis/publication-checklist store until the given check id has
  * the expected status, or timeout is reached.
  *
- * @param {import('@playwright/test').Page} page
- * @param {string} checkId
- * @param {'complete'|'incomplete'} status
- * @param {number} [timeout]
+ * @param {import('@playwright/test').Page} page      - Editor page.
+ * @param {string}                          checkId   - Check id to watch.
+ * @param {'complete'|'incomplete'}         status    - Expected status.
+ * @param {number}                          [timeout] - Milliseconds to wait.
  */
 async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
 	await page.waitForFunction(
 		( { checkId, status } ) => {
-			const store = window.wp?.data?.select?.( 'altis/publication-checklist' );
+			const store = window.wp?.data?.select?.(
+				'altis/publication-checklist'
+			);
 			if ( ! store ) {
 				return false;
 			}
@@ -29,12 +31,13 @@ async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
  * title field drop characters on some machines; the subscriber only reacts to
  * store changes, so this exercises the same path.
  *
- * @param {import('@playwright/test').Page} page
- * @param {string} title
+ * @param {import('@playwright/test').Page} page  - Editor page.
+ * @param {string}                          title - New post title.
  */
 async function setTitle( page, title ) {
 	await page.evaluate(
-		( t ) => window.wp.data.dispatch( 'core/editor' ).editPost( { title: t } ),
+		( t ) =>
+			window.wp.data.dispatch( 'core/editor' ).editPost( { title: t } ),
 		title
 	);
 }
@@ -48,16 +51,12 @@ test.describe( 'Live publication checks', () => {
 		} );
 		// Wait for the altis store to be registered before asserting on it.
 		await page.waitForFunction(
-			() =>
-				!! window.wp?.data?.select?.( 'altis/publication-checklist' ),
+			() => !! window.wp?.data?.select?.( 'altis/publication-checklist' ),
 			{ timeout: 10000 }
 		);
 	} );
 
-	test( 'JS check updates live without saving', async ( {
-		editor,
-		page,
-	} ) => {
+	test( 'JS check updates live without saving', async ( { page } ) => {
 		// With a blank title the JS-only check must start incomplete.
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
@@ -99,7 +98,6 @@ test.describe( 'Live publication checks', () => {
 	} );
 
 	test( 'PHP-only live check updates via REST without saving', async ( {
-		editor,
 		page,
 	} ) => {
 		// Blank title is under 10 chars — check starts incomplete.
@@ -122,7 +120,6 @@ test.describe( 'Live publication checks', () => {
 	} );
 
 	test( 'Publish is locked while any live check is incomplete, unlocks when all pass', async ( {
-		editor,
 		page,
 	} ) => {
 		// Any incomplete live check should engage the save lock.
@@ -145,8 +142,7 @@ test.describe( 'Live publication checks', () => {
 
 		// All checks satisfied — lock must be released.
 		await page.waitForFunction(
-			() =>
-				! window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
+			() => ! window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
 			{ timeout: 5000 }
 		);
 
@@ -157,7 +153,6 @@ test.describe( 'Live publication checks', () => {
 	} );
 
 	test( 'JS result overrides PHP-live result for the same check ID', async ( {
-		editor,
 		page,
 	} ) => {
 		// Fill a title long enough for php-live-check but without "dual-ok".
@@ -201,16 +196,12 @@ test.describe( 'Live publication checks', () => {
 		expect( result.message ).toMatch( /Author assigned: \d+/ );
 	} );
 
-	test( 'Static PHP check does not re-evaluate live', async ( {
-		editor,
-		page,
-	} ) => {
+	test( 'Static PHP check does not re-evaluate live', async ( { page } ) => {
 		// static-check is not a live check — it must never appear in getLiveResults().
-		const initialLive = await page.evaluate(
-			() =>
-				window.wp.data
-					.select( 'altis/publication-checklist' )
-					.getLiveResults()
+		const initialLive = await page.evaluate( () =>
+			window.wp.data
+				.select( 'altis/publication-checklist' )
+				.getLiveResults()
 		);
 		expect( initialLive[ 'static-check' ] ).toBeUndefined();
 
@@ -223,11 +214,10 @@ test.describe( 'Live publication checks', () => {
 		// would already be present if it were ever going to appear.
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
-		const afterLive = await page.evaluate(
-			() =>
-				window.wp.data
-					.select( 'altis/publication-checklist' )
-					.getLiveResults()
+		const afterLive = await page.evaluate( () =>
+			window.wp.data
+				.select( 'altis/publication-checklist' )
+				.getLiveResults()
 		);
 		expect( afterLive[ 'static-check' ] ).toBeUndefined();
 	} );
