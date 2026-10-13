@@ -1,0 +1,19 @@
+# Anything marked `export-ignore` is left out of `git archive` output, which is
+# how the release workflow builds the plugin ZIP. The compiled `build/`
+# directory is not ignored, so it ships in release archives.
+
+/.editorconfig export-ignore
+/.eslintrc.js export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/.nvmrc export-ignore
+/blueprint.json export-ignore
+/CLAUDE.md export-ignore
+/node_modules export-ignore
+/package-lock.json export-ignore
+/package.json export-ignore
+/playwright.config.js export-ignore
+/README.md export-ignore
+/src export-ignore
+/tests export-ignore

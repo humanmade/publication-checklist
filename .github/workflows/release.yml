@@ -1,0 +1,106 @@
+name: Release
+
+# Builds the plugin from main, stamps the version into the source, then creates
+# a tag that points at the built, versioned code.
+#
+# The tag is created once and never moved or force-pushed, so Packagist (which
+# requires tags to be immutable) accepts it without conflict.
+#
+# Run this manually from the Actions tab and supply the version to release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without a leading "v" (e.g. 1.2.3)'
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.event.inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, tag and publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Validate version input
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Version must be in X.Y.Z format without a leading 'v'. Got: '$VERSION'"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "TAG=v$VERSION" >> "$GITHUB_ENV"
+
+      - name: Check out source
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Ensure the tag does not already exist
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/${TAG}$"; then
+            echo "::error::Tag ${TAG} already exists. Tags are immutable, so bump the version and try again."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Stamp version into the plugin
+        run: |
+          sed -i "s/__VERSION__/${VERSION}/g" plugin.php
+          echo "Stamped plugin header and constant:"
+          grep -n "Version:\|const VERSION" plugin.php
+
+      - name: Create the release commit and tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # build/ is gitignored in source, so force-add the compiled assets
+          # to make the tagged tree ready to install.
+          git add -f build
+          git add plugin.php
+          git commit -m "Release ${TAG}"
+
+          git tag -a "${TAG}" -m "Release ${TAG}"
+
+          # Push only the tag and the objects it reaches.
+          git push origin "refs/tags/${TAG}"
+
+      - name: Build distribution ZIP
+        run: |
+          mkdir -p dist
+          # git archive honours the export-ignore rules in .gitattributes, so
+          # the ZIP matches the tagged tree minus development files.
+          git archive --format=zip \
+            --prefix=publication-checklist/ \
+            -o "dist/publication-checklist-${TAG}.zip" \
+            "${TAG}"
+          echo "Created dist/publication-checklist-${TAG}.zip"
+
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        with:
+          tag: ${{ env.TAG }}
+          name: ${{ env.TAG }}
+          generateReleaseNotes: true
+          prerelease: ${{ contains(env.VERSION, '-') }}
+          artifacts: dist/publication-checklist-${{ env.TAG }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}

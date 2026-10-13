@@ -245,9 +245,9 @@ The Playground starts WordPress with the plugin pre-activated and a small test-f
 
 Merges to `main` will automatically build to the `release` branch.
 
-Commits in the `release` branch may be tagged by [running the Tag and Release workflow with the desired tag value](https://github.com/humanmade/publication-checklist/actions/workflows/tag-and-release.yml), then marked as releases in GitHub for download.
+To cut a release, [run the Release workflow](https://github.com/humanmade/publication-checklist/actions/workflows/release.yml) with the version number, without a leading `v` (for example `1.2.3`). The workflow builds the plugin from `main`, replaces the `__VERSION__` placeholder in `plugin.php`, commits the built files, and pushes a new `v1.2.3` tag. It then publishes a GitHub release with a ZIP of the plugin. The workflow stops if the tag already exists, so a tag is never moved once it is published.
 
-Tagging releases allows for installation via [packagist](https://packagist.org/packages/humanmade/hm-mega-menu-block) and [composer](http://getcomposer.org/). A project may also be set up to track the `dev-release` branch to use the latest built beta versions in between tagged releases.
+Tagged releases can be installed via [packagist](https://packagist.org/packages/humanmade/publication-checklist) and [composer](http://getcomposer.org/). A project may also be set up to track the `dev-release` branch to use the latest built beta versions in between tagged releases.
 
 
 ## License
