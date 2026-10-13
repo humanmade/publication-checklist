@@ -10,10 +10,7 @@ function resolvePort() {
 	if ( process.env.WP_PLAYGROUND_PORT ) {
 		return Number( process.env.WP_PLAYGROUND_PORT );
 	}
-	const hash = crypto
-		.createHash( 'sha1' )
-		.update( process.cwd() )
-		.digest();
+	const hash = crypto.createHash( 'sha1' ).update( process.cwd() ).digest();
 	return 9400 + ( hash.readUInt16BE( 0 ) % 100 );
 }
 
@@ -23,6 +20,7 @@ const baseURL = process.env.WP_BASE_URL || `http://127.0.0.1:${ port }`;
 /** @see https://playwright.dev/docs/test-configuration */
 module.exports = defineConfig( {
 	testDir: './tests/e2e',
+	globalSetup: require.resolve( './tests/e2e/global-setup.js' ),
 	timeout: 60000,
 	fullyParallel: false,
 	forbidOnly: !! process.env.CI,
@@ -35,6 +33,7 @@ module.exports = defineConfig( {
 	],
 	use: {
 		baseURL,
+		storageState: 'tests/e2e/.auth/admin.json',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
 		video: 'retain-on-failure',

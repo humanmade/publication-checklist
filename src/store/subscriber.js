@@ -10,19 +10,48 @@ const phpChecks = window.altisPublicationChecklist?.checks ?? [];
 function buildSnapshot() {
 	const editorSelect = select( 'core/editor' );
 	const postType = editorSelect.getCurrentPostType();
+	const id = editorSelect.getCurrentPostId();
 
-	// Always include these basics
-	const post = {
+	// Read every standard REST API attribute. Attributes not supported by this
+	// post type return undefined; those are filtered out before sending so the
+	// wire payload stays small and the server never receives spurious nulls.
+	const rawPost = {
 		title: editorSelect.getEditedPostAttribute( 'title' ),
 		content: editorSelect.getEditedPostAttribute( 'content' ),
 		excerpt: editorSelect.getEditedPostAttribute( 'excerpt' ),
-		featured_media: editorSelect.getEditedPostAttribute( 'featured_media' ),
 		status: editorSelect.getEditedPostAttribute( 'status' ),
+		featured_media: editorSelect.getEditedPostAttribute( 'featured_media' ),
+		author: editorSelect.getEditedPostAttribute( 'author' ),
+		slug: editorSelect.getEditedPostAttribute( 'slug' ),
+		date: editorSelect.getEditedPostAttribute( 'date' ),
+		date_gmt: editorSelect.getEditedPostAttribute( 'date_gmt' ),
+		parent: editorSelect.getEditedPostAttribute( 'parent' ),
+		format: editorSelect.getEditedPostAttribute( 'format' ),
+		sticky: editorSelect.getEditedPostAttribute( 'sticky' ),
+		template: editorSelect.getEditedPostAttribute( 'template' ),
+		password: editorSelect.getEditedPostAttribute( 'password' ),
+		comment_status: editorSelect.getEditedPostAttribute( 'comment_status' ),
+		ping_status: editorSelect.getEditedPostAttribute( 'ping_status' ),
 	};
+	const post = Object.fromEntries(
+		Object.entries( rawPost ).filter( ( [ , v ] ) => v !== undefined )
+	);
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
-	const terms = editorSelect.getEditedPostAttribute( 'terms' ) ?? {};
 
-	return { postType, post, meta, terms };
+	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
+	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
+	// as a single 'terms' attribute.
+	const allTaxonomies = window.altisPublicationChecklist?.taxonomies ?? {};
+	const taxonomies = allTaxonomies[ postType ] ?? [];
+	const terms = {};
+	for ( const tax of taxonomies ) {
+		const value = editorSelect.getEditedPostAttribute( tax );
+		if ( value !== undefined ) {
+			terms[ tax ] = value;
+		}
+	}
+
+	return { id, postType, post, meta, terms };
 }
 
 // Debounce helper (no lodash needed — simple closure)
@@ -102,6 +131,10 @@ export function startSubscriber() {
 	// after a newer tick has already dispatched, its results are discarded.
 	let generation = 0;
 
+	// Last PHP-live result per check id. Ticks that skip the round-trip reuse
+	// these, because setLiveResults replaces the whole live map.
+	const lastPhpResults = {};
+
 	const phpLiveChecks = phpChecks.filter( ( c ) => c.source === 'php-live' );
 
 	const runChecks = debounce( async () => {
@@ -111,7 +144,7 @@ export function startSubscriber() {
 		const jsChecks = getRegistered(); // { id, type, runCheck }
 
 		// 2. Build a full snapshot.
-		const { postType, post, meta, terms } = buildSnapshot();
+		const { id, postType, post, meta, terms } = buildSnapshot();
 
 		// 3. Run JS checks inline.
 		// liveResults is a fresh local object per tick; it is never a reference
@@ -172,6 +205,7 @@ export function startSubscriber() {
 			try {
 				const phpResults = await runServerChecks(
 					postType,
+					id,
 					post,
 					meta,
 					terms,
@@ -182,11 +216,7 @@ export function startSubscriber() {
 					return;
 				}
 				Object.entries( phpResults ).forEach( ( [ id, result ] ) => {
-					// JS results have higher priority — skip if already set by a JS check.
-					if ( liveResults[ id ]?.source === 'js' ) {
-						return;
-					}
-					liveResults[ id ] = { ...result, source: 'php-live' };
+					lastPhpResults[ id ] = { ...result, source: 'php-live' };
 				} );
 				updatePrevFieldValues(
 					phpLiveChecks,
@@ -203,6 +233,13 @@ export function startSubscriber() {
 				);
 			}
 		}
+
+		// JS results have higher priority — skip ids already set by a JS check.
+		Object.entries( lastPhpResults ).forEach( ( [ id, result ] ) => {
+			if ( liveResults[ id ]?.source !== 'js' ) {
+				liveResults[ id ] = result;
+			}
+		} );
 
 		// 6. Update store — skip if a newer tick already dispatched.
 		if ( thisGeneration !== generation ) {

@@ -31,12 +31,11 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 
 	// 2. PHP-only live check with a 'fields' allowlist.
 	//    COMPLETE when the title is at least 10 characters long.
-	//    The 'title' key matches the JS subscriber snapshot format sent to the REST endpoint.
 	register_prepublish_check( 'php-live-check', [
 		'live'      => true,
 		'fields'    => [ 'title' ],
 		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
-			$title = $post['title'] ?? '';
+			$title = $post['post_title'] ?? '';
 			return strlen( trim( (string) $title ) ) >= 10
 				? new Status( Status::COMPLETE, 'Title is long enough' )
 				: new Status( Status::INCOMPLETE, 'Title must be at least 10 characters' );
@@ -51,6 +50,21 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		'fields'    => [ 'title' ],
 		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
 			return new Status( Status::COMPLETE, 'PHP says OK (always)' );
+		},
+	] );
+
+	// 4. Normalisation parity check.
+	//    Verifies that the author field is available under the WP_Post key
+	//    'post_author' on both the live path (author → post_author via key_map)
+	//    and the save path (get_post( ARRAY_A ) always includes post_author).
+	//    INFO status so it does not block publishing or affect the lock test.
+	register_prepublish_check( 'author-set', [
+		'live'      => true,
+		'fields'    => [ 'author' ],
+		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+			return ! empty( $post['post_author'] )
+				? new Status( Status::INFO, 'Author assigned: ' . (int) $post['post_author'] )
+				: new Status( Status::INFO, 'No author (unexpected)' );
 		},
 	] );
 

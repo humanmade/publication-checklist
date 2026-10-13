@@ -4,15 +4,17 @@ const { test, expect } = require( '@wordpress/e2e-test-utils-playwright' );
  * Poll the altis/publication-checklist store until the given check id has
  * the expected status, or timeout is reached.
  *
- * @param {import('@playwright/test').Page} page
- * @param {string} checkId
- * @param {'complete'|'incomplete'} status
- * @param {number} [timeout]
+ * @param {import('@playwright/test').Page} page      - Editor page.
+ * @param {string}                          checkId   - Check id to watch.
+ * @param {'complete'|'incomplete'}         status    - Expected status.
+ * @param {number}                          [timeout] - Milliseconds to wait.
  */
 async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
 	await page.waitForFunction(
 		( { checkId, status } ) => {
-			const store = window.wp?.data?.select?.( 'altis/publication-checklist' );
+			const store = window.wp?.data?.select?.(
+				'altis/publication-checklist'
+			);
 			if ( ! store ) {
 				return false;
 			}
@@ -25,19 +27,19 @@ async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
 }
 
 /**
- * Fill the post title in the block editor canvas using pressSequentially, which
- * is more reliable than fill() for contenteditable elements across WP versions.
+ * Set the post title through the editor store. Simulated keystrokes into the
+ * title field drop characters on some machines; the subscriber only reacts to
+ * store changes, so this exercises the same path.
  *
- * @param {import('@wordpress/e2e-test-utils-playwright').Editor} editor
- * @param {string} title
+ * @param {import('@playwright/test').Page} page  - Editor page.
+ * @param {string}                          title - New post title.
  */
-async function setTitle( editor, title ) {
-	const titleField = editor.canvas.getByRole( 'textbox', {
-		name: 'Add title',
-	} );
-	await titleField.click( { force: true } );
-	await titleField.press( 'ControlOrMeta+a' );
-	await titleField.pressSequentially( title );
+async function setTitle( page, title ) {
+	await page.evaluate(
+		( t ) =>
+			window.wp.data.dispatch( 'core/editor' ).editPost( { title: t } ),
+		title
+	);
 }
 
 test.describe( 'Live publication checks', () => {
@@ -49,21 +51,17 @@ test.describe( 'Live publication checks', () => {
 		} );
 		// Wait for the altis store to be registered before asserting on it.
 		await page.waitForFunction(
-			() =>
-				!! window.wp?.data?.select?.( 'altis/publication-checklist' ),
+			() => !! window.wp?.data?.select?.( 'altis/publication-checklist' ),
 			{ timeout: 10000 }
 		);
 	} );
 
-	test( 'JS check updates live without saving', async ( {
-		editor,
-		page,
-	} ) => {
+	test( 'JS check updates live without saving', async ( { page } ) => {
 		// With a blank title the JS-only check must start incomplete.
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
 		// Fill a title that satisfies the check (must start with "Hello").
-		await setTitle( editor, 'Hello world' );
+		await setTitle( page, 'Hello world' );
 
 		// Without saving, the JS result should flip to complete.
 		await waitForCheckStatus( page, 'js-only-check', 'complete' );
@@ -77,15 +75,36 @@ test.describe( 'Live publication checks', () => {
 		expect( status ).toBe( 'complete' );
 	} );
 
+	test( 'PHP-live result survives an edit to a field it does not watch', async ( {
+		page,
+	} ) => {
+		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 15000 );
+
+		// The excerpt is not in the check's fields, so this tick skips the REST call.
+		await page.evaluate( () =>
+			window.wp.data
+				.dispatch( 'core/editor' )
+				.editPost( { excerpt: 'Unrelated edit' } )
+		);
+		await page.waitForTimeout( 1000 );
+
+		const result = await page.evaluate(
+			() =>
+				window.wp.data
+					.select( 'altis/publication-checklist' )
+					.getLiveResults()[ 'php-live-check' ]
+		);
+		expect( result?.status ).toBe( 'incomplete' );
+	} );
+
 	test( 'PHP-only live check updates via REST without saving', async ( {
-		editor,
 		page,
 	} ) => {
 		// Blank title is under 10 chars — check starts incomplete.
 		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 15000 );
 
 		// Fill a title >= 10 characters.
-		await setTitle( editor, 'A long enough title' );
+		await setTitle( page, 'A long enough title' );
 
 		// PHP check must become complete via REST (no save required).
 		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
@@ -101,7 +120,6 @@ test.describe( 'Live publication checks', () => {
 	} );
 
 	test( 'Publish is locked while any live check is incomplete, unlocks when all pass', async ( {
-		editor,
 		page,
 	} ) => {
 		// Any incomplete live check should engage the save lock.
@@ -116,7 +134,7 @@ test.describe( 'Live publication checks', () => {
 		//   • starts with "Hello" → js-only-check complete
 		//   • contains "dual-ok"  → dual-check (JS) complete
 		//   • length >= 10        → php-live-check complete
-		await setTitle( editor, 'Hello dual-ok long title' );
+		await setTitle( page, 'Hello dual-ok long title' );
 
 		await waitForCheckStatus( page, 'js-only-check', 'complete' );
 		await waitForCheckStatus( page, 'dual-check', 'complete' );
@@ -124,8 +142,7 @@ test.describe( 'Live publication checks', () => {
 
 		// All checks satisfied — lock must be released.
 		await page.waitForFunction(
-			() =>
-				! window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
+			() => ! window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
 			{ timeout: 5000 }
 		);
 
@@ -136,11 +153,10 @@ test.describe( 'Live publication checks', () => {
 	} );
 
 	test( 'JS result overrides PHP-live result for the same check ID', async ( {
-		editor,
 		page,
 	} ) => {
 		// Fill a title long enough for php-live-check but without "dual-ok".
-		await setTitle( editor, 'A long enough title' );
+		await setTitle( page, 'A long enough title' );
 
 		// PHP-live check should complete (title >= 10 chars).
 		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
@@ -159,21 +175,38 @@ test.describe( 'Live publication checks', () => {
 		expect( dual.source ).toBe( 'js' );
 	} );
 
-	test( 'Static PHP check does not re-evaluate live', async ( {
-		editor,
+	test( 'PHP-live run_check receives WP_Post-shaped data (author → post_author)', async ( {
 		page,
 	} ) => {
-		// static-check is not a live check — it must never appear in getLiveResults().
-		const initialLive = await page.evaluate(
+		// The 'author-set' fixture check reads $post['post_author']. The JS
+		// snapshot sends 'author' (REST key); the server normalises it to
+		// 'post_author' before calling run_check. If normalisation is working,
+		// the current user's ID is non-empty and the check resolves to 'info'.
+		await waitForCheckStatus( page, 'author-set', 'info', 15000 );
+
+		const result = await page.evaluate(
 			() =>
 				window.wp.data
 					.select( 'altis/publication-checklist' )
-					.getLiveResults()
+					.getLiveResults()[ 'author-set' ]
+		);
+		expect( result.status ).toBe( 'info' );
+		expect( result.source ).toBe( 'php-live' );
+		// Message includes the author ID, confirming post_author is non-zero.
+		expect( result.message ).toMatch( /Author assigned: \d+/ );
+	} );
+
+	test( 'Static PHP check does not re-evaluate live', async ( { page } ) => {
+		// static-check is not a live check — it must never appear in getLiveResults().
+		const initialLive = await page.evaluate( () =>
+			window.wp.data
+				.select( 'altis/publication-checklist' )
+				.getLiveResults()
 		);
 		expect( initialLive[ 'static-check' ] ).toBeUndefined();
 
 		// Make an edit that triggers the subscriber.
-		await setTitle( editor, 'Changed title value' );
+		await setTitle( page, 'Changed title value' );
 
 		// Use js-only-check appearing as a synchronization signal:
 		// once it's in the live results we know the subscriber has run and
@@ -181,11 +214,10 @@ test.describe( 'Live publication checks', () => {
 		// would already be present if it were ever going to appear.
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
-		const afterLive = await page.evaluate(
-			() =>
-				window.wp.data
-					.select( 'altis/publication-checklist' )
-					.getLiveResults()
+		const afterLive = await page.evaluate( () =>
+			window.wp.data
+				.select( 'altis/publication-checklist' )
+				.getLiveResults()
 		);
 		expect( afterLive[ 'static-check' ] ).toBeUndefined();
 	} );
