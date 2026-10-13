@@ -24,7 +24,8 @@ const ChecklistPanelContent = ( {
 	const [ isExpanded, setExpanded ] = useState( false );
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
-	const shouldBlockPublish = !! window.altisPublicationChecklist?.block_publish;
+	const shouldBlockPublish =
+		!! window.altisPublicationChecklist?.block_publish;
 
 	// ChecklistPanel renders this twice, so a shared lock name would let the first
 	// unmount release the survivor's lock.
