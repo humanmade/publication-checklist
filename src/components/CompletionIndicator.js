@@ -10,11 +10,11 @@ const CompletionIndicator = ( { baseClassName, completed, toComplete } ) => {
 		return null;
 	}
 
-	/* translators: %s: number of completed tasks, %s: total number of to-complete tasks */
 	const label = sprintf(
+		/* translators: 1: number of completed tasks, 2: total number of tasks to complete */
 		_n(
-			'%s of %s task completed.',
-			'%s of %s tasks completed.',
+			'%1$s of %2$s task completed.',
+			'%1$s of %2$s tasks completed.',
 			toComplete,
 			'altis-publication-checklist'
 		),

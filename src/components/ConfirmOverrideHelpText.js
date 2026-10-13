@@ -11,7 +11,8 @@ function ConfirmOverrideHelpText( {
 	hasPublishAction,
 } ) {
 	let message = __(
-		'Confirm that you wish to ignore these tasks and publish anyway.'
+		'Confirm that you wish to ignore these tasks and publish anyway.',
+		'altis-publication-checklist'
 	);
 
 	if ( ! hasPublishAction ) {

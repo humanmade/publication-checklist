@@ -126,7 +126,6 @@ ChecklistPanelContent.propTypes = {
 	completed: PropTypes.number,
 	completableItems: itemsCollectionPropType.isRequired,
 	otherItems: itemsCollectionPropType.isRequired,
-	shouldBlockPublish: PropTypes.bool.isRequired,
 	toComplete: PropTypes.number,
 	onLockPostSaving: PropTypes.func.isRequired,
 	onUnlockPostSaving: PropTypes.func.isRequired,
