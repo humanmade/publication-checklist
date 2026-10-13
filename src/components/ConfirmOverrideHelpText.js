@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { get } from 'lodash';
 
 import { __ } from '@wordpress/i18n';
@@ -42,6 +43,12 @@ function ConfirmOverrideHelpText( {
 		</Fragment>
 	);
 }
+
+ConfirmOverrideHelpText.propTypes = {
+	hasPublishAction: PropTypes.bool,
+	isBeingScheduled: PropTypes.bool,
+	isPublished: PropTypes.bool,
+};
 
 export default compose( [
 	withSelect( ( select ) => {

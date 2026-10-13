@@ -55,15 +55,8 @@ module.exports = {
 				ignoreRestSiblings: true,
 			},
 		],
-		'operator-linebreak': [
-			'error',
-			'before',
-			{
-				overrides: {
-					'=': 'none',
-				},
-			},
-		],
+		// Prettier breaks long assignments after '=', which this rule forbids.
+		'operator-linebreak': 'off',
 		'react/prop-types': 'warn',
 		'valid-jsdoc': [ 'off', {} ],
 	},
