@@ -12,7 +12,6 @@ import ConfirmOverrideHelpText from './ConfirmOverrideHelpText';
 
 import { itemsCollectionPropType } from '../propTypes';
 
-
 const ChecklistPanelContent = ( {
 	baseClassName,
 	completableItems,
@@ -25,7 +24,8 @@ const ChecklistPanelContent = ( {
 	const [ isExpanded, setExpanded ] = useState( false );
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
-	const shouldBlockPublish = !! window.altisPublicationChecklist?.block_publish;
+	const shouldBlockPublish =
+		!! window.altisPublicationChecklist?.block_publish;
 
 	// ChecklistPanel renders this twice, so a shared lock name would let the first
 	// unmount release the survivor's lock.
@@ -66,10 +66,11 @@ const ChecklistPanelContent = ( {
 
 			{ otherItems.length > 0 && (
 				<Fragment>
-					<h3
-						className={ `${ baseClassName }__subtitle` }
-					>
-						{ __( 'Optional tasks:', 'altis-publication-checklist' ) }
+					<h3 className={ `${ baseClassName }__subtitle` }>
+						{ __(
+							'Optional tasks:',
+							'altis-publication-checklist'
+						) }
 					</h3>
 					<Checklist
 						baseClassName={ baseClassName }
@@ -82,14 +83,12 @@ const ChecklistPanelContent = ( {
 
 	return (
 		<div className={ baseClassName }>
-			{ ( shouldBlockPublish && ! isComplete ) && (
-				<p
-					className={ `${ baseClassName }__required` }
-				>
+			{ shouldBlockPublish && ! isComplete && (
+				<p className={ `${ baseClassName }__required` }>
 					{ requiredLabel }
 				</p>
 			) }
-			{ ( ! shouldBlockPublish && ! isComplete ) && (
+			{ ! shouldBlockPublish && ! isComplete && (
 				<ToggleControl
 					label={ __( 'Skip checks', 'altis-publication-checklist' ) }
 					help={ <ConfirmOverrideHelpText /> }
@@ -103,9 +102,7 @@ const ChecklistPanelContent = ( {
 				toComplete={ toComplete }
 			/>
 
-			{ ( ! isComplete || ( isComplete && isExpanded ) ) && (
-				checklists
-			) }
+			{ ( ! isComplete || ( isComplete && isExpanded ) ) && checklists }
 
 			{ isComplete && (
 				<Button
@@ -115,11 +112,9 @@ const ChecklistPanelContent = ( {
 					onClick={ () => setExpanded( ! isExpanded ) }
 					aria-expanded={ isExpanded }
 				>
-					{ isExpanded ? (
-						__( 'Hide tasks', 'altis-publication-checklist' )
-					) : (
-						__( 'Show tasks', 'altis-publication-checklist' )
-					) }
+					{ isExpanded
+						? __( 'Hide tasks', 'altis-publication-checklist' )
+						: __( 'Show tasks', 'altis-publication-checklist' ) }
 				</Button>
 			) }
 		</div>
