@@ -160,8 +160,6 @@ ChecklistPanel.propTypes = {
 	items: itemsMapPropType.isRequired,
 	shouldRenderInPublishSidebar: PropTypes.bool.isRequired,
 	onEnablePublishSidebar: PropTypes.func.isRequired,
-	onLockPostSaving: PropTypes.func.isRequired,
-	onUnlockPostSaving: PropTypes.func.isRequired,
 };
 
 export default compose(
