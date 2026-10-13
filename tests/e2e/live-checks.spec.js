@@ -25,19 +25,18 @@ async function waitForCheckStatus( page, checkId, status, timeout = 6000 ) {
 }
 
 /**
- * Fill the post title in the block editor canvas using pressSequentially, which
- * is more reliable than fill() for contenteditable elements across WP versions.
+ * Set the post title through the editor store. Simulated keystrokes into the
+ * title field drop characters on some machines; the subscriber only reacts to
+ * store changes, so this exercises the same path.
  *
- * @param {import('@wordpress/e2e-test-utils-playwright').Editor} editor
+ * @param {import('@playwright/test').Page} page
  * @param {string} title
  */
-async function setTitle( editor, title ) {
-	const titleField = editor.canvas.getByRole( 'textbox', {
-		name: 'Add title',
-	} );
-	await titleField.click( { force: true } );
-	await titleField.press( 'ControlOrMeta+a' );
-	await titleField.pressSequentially( title );
+async function setTitle( page, title ) {
+	await page.evaluate(
+		( t ) => window.wp.data.dispatch( 'core/editor' ).editPost( { title: t } ),
+		title
+	);
 }
 
 test.describe( 'Live publication checks', () => {
@@ -63,7 +62,7 @@ test.describe( 'Live publication checks', () => {
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
 		// Fill a title that satisfies the check (must start with "Hello").
-		await setTitle( editor, 'Hello world' );
+		await setTitle( page, 'Hello world' );
 
 		// Without saving, the JS result should flip to complete.
 		await waitForCheckStatus( page, 'js-only-check', 'complete' );
@@ -107,7 +106,7 @@ test.describe( 'Live publication checks', () => {
 		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 15000 );
 
 		// Fill a title >= 10 characters.
-		await setTitle( editor, 'A long enough title' );
+		await setTitle( page, 'A long enough title' );
 
 		// PHP check must become complete via REST (no save required).
 		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
@@ -138,7 +137,7 @@ test.describe( 'Live publication checks', () => {
 		//   • starts with "Hello" → js-only-check complete
 		//   • contains "dual-ok"  → dual-check (JS) complete
 		//   • length >= 10        → php-live-check complete
-		await setTitle( editor, 'Hello dual-ok long title' );
+		await setTitle( page, 'Hello dual-ok long title' );
 
 		await waitForCheckStatus( page, 'js-only-check', 'complete' );
 		await waitForCheckStatus( page, 'dual-check', 'complete' );
@@ -162,7 +161,7 @@ test.describe( 'Live publication checks', () => {
 		page,
 	} ) => {
 		// Fill a title long enough for php-live-check but without "dual-ok".
-		await setTitle( editor, 'A long enough title' );
+		await setTitle( page, 'A long enough title' );
 
 		// PHP-live check should complete (title >= 10 chars).
 		await waitForCheckStatus( page, 'php-live-check', 'complete', 15000 );
@@ -216,7 +215,7 @@ test.describe( 'Live publication checks', () => {
 		expect( initialLive[ 'static-check' ] ).toBeUndefined();
 
 		// Make an edit that triggers the subscriber.
-		await setTitle( editor, 'Changed title value' );
+		await setTitle( page, 'Changed title value' );
 
 		// Use js-only-check appearing as a synchronization signal:
 		// once it's in the live results we know the subscriber has run and
