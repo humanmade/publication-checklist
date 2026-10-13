@@ -44,31 +44,57 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Ensure the tag does not already exist
+      - name: Check whether the tag already exists
         run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/${TAG}$"; then
-            echo "::error::Tag ${TAG} already exists. Tags are immutable, so bump the version and try again."
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/${TAG}" > /dev/null
+          status=$?
+          set -e
+
+          # Exit code 2 means no matching ref.
+          if [ "$status" -eq 2 ]; then
+            echo "TAG_EXISTS=false" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          if [ "$status" -ne 0 ]; then
+            echo "::error::Could not list the remote tags."
             exit 1
           fi
 
+          # An existing tag is only reused if an earlier run of this workflow
+          # made it, so a re-run can finish the ZIP and release steps.
+          git fetch --force origin "refs/tags/${TAG}:refs/tags/${TAG}"
+          SUBJECT=$(git log -1 --format=%s "${TAG}^{commit}")
+          AUTHOR=$(git log -1 --format=%an "${TAG}^{commit}")
+          if [ "$SUBJECT" != "Release ${TAG}" ] || [ "$AUTHOR" != "github-actions[bot]" ]; then
+            echo "::error::Tag ${TAG} already exists and was not made by this workflow. Tags are immutable, so bump the version and try again."
+            exit 1
+          fi
+          echo "::notice::Tag ${TAG} already exists from an earlier run. Skipping the build and publishing the release from it."
+          echo "TAG_EXISTS=true" >> "$GITHUB_ENV"
+
       - name: Set up Node
+        if: env.TAG_EXISTS != 'true'
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: 'npm'
 
       - name: Install dependencies and build
+        if: env.TAG_EXISTS != 'true'
         run: |
           npm ci
           npm run build
 
       - name: Stamp version into the plugin
+        if: env.TAG_EXISTS != 'true'
         run: |
           sed -i "s/__VERSION__/${VERSION}/g" plugin.php
           echo "Stamped plugin header and constant:"
           grep -n "Version:\|const VERSION" plugin.php
 
       - name: Create the release commit and tag
+        if: env.TAG_EXISTS != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -81,9 +107,6 @@ jobs:
 
           git tag -a "${TAG}" -m "Release ${TAG}"
 
-          # Push only the tag and the objects it reaches.
-          git push origin "refs/tags/${TAG}"
-
       - name: Build distribution ZIP
         run: |
           mkdir -p dist
@@ -95,11 +118,17 @@ jobs:
             "${TAG}"
           echo "Created dist/publication-checklist-${TAG}.zip"
 
+      - name: Push the tag
+        if: env.TAG_EXISTS != 'true'
+        # Push only the tag and the objects it reaches.
+        run: git push origin "refs/tags/${TAG}"
+
       - name: Publish GitHub release
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
           tag: ${{ env.TAG }}
           name: ${{ env.TAG }}
+          allowUpdates: true
           generateReleaseNotes: true
           prerelease: ${{ contains(env.VERSION, '-') }}
           artifacts: dist/publication-checklist-${{ env.TAG }}.zip

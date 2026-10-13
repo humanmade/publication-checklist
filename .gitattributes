@@ -9,8 +9,6 @@
 /.gitignore export-ignore
 /.nvmrc export-ignore
 /blueprint.json export-ignore
-/CLAUDE.md export-ignore
-/node_modules export-ignore
 /package-lock.json export-ignore
 /package.json export-ignore
 /playwright.config.js export-ignore
