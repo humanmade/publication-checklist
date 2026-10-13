@@ -2,20 +2,20 @@ import { Check, Error } from '../icons';
 import { useEffect } from '@wordpress/element';
 import { useInstanceId } from '@wordpress/compose';
 import { dispatch, useSelect } from '@wordpress/data';
+import { STORE_NAME } from '../store';
 
 const PluginStatusIndicator = () => {
-
-	const isIncomplete = useSelect( select => {
+	const isIncomplete = useSelect( ( select ) => {
 		const currentPost = select( 'core/editor' ).getCurrentPost();
-		if ( currentPost && currentPost.prepublish_checks ) {
-			return Object.values( currentPost.prepublish_checks )
-				.map( ( { status } ) => status )
-				.includes( 'incomplete' );
-		}
-		return false;
+		const restResults = currentPost?.prepublish_checks;
+		return Object.values(
+			select( STORE_NAME ).getMergedResults( restResults )
+		).some( ( { status } ) => status === 'incomplete' );
 	} );
 
-	const shouldBlockPublish = Boolean( window.altisPublicationChecklist.block_publish );
+	const shouldBlockPublish = Boolean(
+		window.altisPublicationChecklist.block_publish
+	);
 
 	// The editor renders this icon in more than one slot, so a shared lock name would
 	// let the first unmount release the survivor's lock.
