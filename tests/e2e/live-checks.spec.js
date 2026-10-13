@@ -77,6 +77,28 @@ test.describe( 'Live publication checks', () => {
 		expect( status ).toBe( 'complete' );
 	} );
 
+	test( 'PHP-live result survives an edit to a field it does not watch', async ( {
+		page,
+	} ) => {
+		await waitForCheckStatus( page, 'php-live-check', 'incomplete', 15000 );
+
+		// The excerpt is not in the check's fields, so this tick skips the REST call.
+		await page.evaluate( () =>
+			window.wp.data
+				.dispatch( 'core/editor' )
+				.editPost( { excerpt: 'Unrelated edit' } )
+		);
+		await page.waitForTimeout( 1000 );
+
+		const result = await page.evaluate(
+			() =>
+				window.wp.data
+					.select( 'altis/publication-checklist' )
+					.getLiveResults()[ 'php-live-check' ]
+		);
+		expect( result?.status ).toBe( 'incomplete' );
+	} );
+
 	test( 'PHP-only live check updates via REST without saving', async ( {
 		editor,
 		page,

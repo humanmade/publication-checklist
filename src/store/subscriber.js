@@ -131,6 +131,10 @@ export function startSubscriber() {
 	// after a newer tick has already dispatched, its results are discarded.
 	let generation = 0;
 
+	// Last PHP-live result per check id. Ticks that skip the round-trip reuse
+	// these, because setLiveResults replaces the whole live map.
+	const lastPhpResults = {};
+
 	const phpLiveChecks = phpChecks.filter( ( c ) => c.source === 'php-live' );
 
 	const runChecks = debounce( async () => {
@@ -212,11 +216,7 @@ export function startSubscriber() {
 					return;
 				}
 				Object.entries( phpResults ).forEach( ( [ id, result ] ) => {
-					// JS results have higher priority — skip if already set by a JS check.
-					if ( liveResults[ id ]?.source === 'js' ) {
-						return;
-					}
-					liveResults[ id ] = { ...result, source: 'php-live' };
+					lastPhpResults[ id ] = { ...result, source: 'php-live' };
 				} );
 				updatePrevFieldValues(
 					phpLiveChecks,
@@ -233,6 +233,13 @@ export function startSubscriber() {
 				);
 			}
 		}
+
+		// JS results have higher priority — skip ids already set by a JS check.
+		Object.entries( lastPhpResults ).forEach( ( [ id, result ] ) => {
+			if ( liveResults[ id ]?.source !== 'js' ) {
+				liveResults[ id ] = result;
+			}
+		} );
 
 		// 6. Update store — skip if a newer tick already dispatched.
 		if ( thisGeneration !== generation ) {
