@@ -10,10 +10,7 @@ function resolvePort() {
 	if ( process.env.WP_PLAYGROUND_PORT ) {
 		return Number( process.env.WP_PLAYGROUND_PORT );
 	}
-	const hash = crypto
-		.createHash( 'sha1' )
-		.update( process.cwd() )
-		.digest();
+	const hash = crypto.createHash( 'sha1' ).update( process.cwd() ).digest();
 	return 9400 + ( hash.readUInt16BE( 0 ) % 100 );
 }
 
