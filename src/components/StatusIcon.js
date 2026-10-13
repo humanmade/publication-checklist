@@ -39,9 +39,7 @@ const StatusIcon = ( { baseClassName, name, status } ) => {
 		`${ iconClass }--${ status }`,
 	] );
 
-	return (
-		<span className={ className }>{ icon }</span>
-	);
+	return <span className={ className }>{ icon }</span>;
 };
 
 StatusIcon.propTypes = {
