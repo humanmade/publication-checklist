@@ -245,9 +245,13 @@ The Playground starts WordPress with the plugin pre-activated and a small test-f
 
 Merges to `main` will automatically build to the `release` branch.
 
-Commits in the `release` branch may be tagged by [running the Tag and Release workflow with the desired tag value](https://github.com/humanmade/publication-checklist/actions/workflows/tag-and-release.yml), then marked as releases in GitHub for download.
+To cut a release, [run the Release workflow](https://github.com/humanmade/publication-checklist/actions/workflows/release.yml) with the version number, without a leading `v` (for example `1.2.3`). The workflow builds the plugin from `main`, replaces the `__VERSION__` placeholder in `plugin.php`, commits the built files, and pushes a new `v1.2.3` tag. It then publishes a GitHub release with a ZIP of the plugin. The workflow stops if the tag already exists, so a tag is never moved once it is published.
 
-Tagging releases allows for installation via [packagist](https://packagist.org/packages/humanmade/hm-mega-menu-block) and [composer](http://getcomposer.org/). A project may also be set up to track the `dev-release` branch to use the latest built beta versions in between tagged releases.
+If a run fails after it has pushed the tag, run the workflow again with the same version. It reuses the tag that the earlier run made and only publishes the GitHub release. It still stops if the tag was made any other way.
+
+To make a pre-release, add a suffix to the version, for example `1.2.3-beta1` or `1.2.3-RC1`. The workflow marks any version with a suffix as a pre-release. Packagist only reads Composer's stability suffixes: `alpha`, `beta`, `RC`, `patch` and `dev`, optionally followed by a number. It ignores a tag with any other suffix, such as `1.2.3-hotfix`, and that version can't be reused because tags are never moved.
+
+Tagged releases can be installed via [packagist](https://packagist.org/packages/humanmade/publication-checklist) and [composer](http://getcomposer.org/). A project may also be set up to track the `dev-release` branch to use the latest built beta versions in between tagged releases.
 
 
 ## License
