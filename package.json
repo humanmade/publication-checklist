@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
-    "@wordpress/e2e-test-utils-playwright": "^1.15.0",
-    "@wordpress/scripts": "^30.24.0"
+    "@wordpress/e2e-test-utils-playwright": "^3.0.0",
+    "@wordpress/scripts": "^36.1.0"
   },
   "npmpackagejsonlint": {
     "extends": "@wordpress/npm-package-json-lint-config",
