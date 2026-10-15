@@ -70,15 +70,29 @@ function matchesType( type, postType ) {
 		: type === postType;
 }
 
-// Shallow-compare the fields a PHP-live check declares against previously-seen values.
-// Returns true if any declared field has changed since last check.
-// If check.fields is null (no filter), always returns true.
+// The fields a PHP-live check watches. A check without a declared list watches
+// every field in the snapshot.
+function getWatchedFields( check, post, meta, terms ) {
+	return (
+		check.fields ?? [
+			...Object.keys( post ),
+			...Object.keys( meta ).map( ( key ) => 'meta.' + key ),
+			...Object.keys( terms ).map( ( key ) => 'terms.' + key ),
+		]
+	);
+}
+
+// Shallow-compare the fields a PHP-live check watches against previously-seen values.
+// Returns true if any watched field has changed since last check. For a check
+// without declared fields, also returns true when a field has appeared or
+// disappeared since the previous snapshot.
 function hasFieldsChanged( check, post, meta, terms, prevFieldValues ) {
-	if ( ! check.fields ) {
-		return true; // no filter — always re-run
-	}
 	const prev = prevFieldValues[ check.id ] ?? {};
-	for ( const field of check.fields ) {
+	const fields = getWatchedFields( check, post, meta, terms );
+	if ( ! check.fields && Object.keys( prev ).length !== fields.length ) {
+		return true;
+	}
+	for ( const field of fields ) {
 		const current = getFieldValue( field, post, meta, terms );
 		if ( current !== prev[ field ] ) {
 			return true;
@@ -105,11 +119,8 @@ function updatePrevFieldValues(
 	prevFieldValues
 ) {
 	for ( const check of phpLiveChecks ) {
-		if ( ! check.fields ) {
-			continue;
-		}
 		const snapshot = {};
-		for ( const field of check.fields ) {
+		for ( const field of getWatchedFields( check, post, meta, terms ) ) {
 			snapshot[ field ] = getFieldValue( field, post, meta, terms );
 		}
 		prevFieldValues[ check.id ] = snapshot;
