@@ -171,6 +171,8 @@ addFilter( 'altis-publishing-workflow.item.image-texts', 'foo/link-message', () 
 } );
 ```
 
+Return the parts in a `Fragment`, as in the example, not inside one wrapping element. Each list item is a grid. The status icon and the message share the first line, and anything after the message goes on its own line under it. If you wrap everything in one element, it all stays on one line.
+
 Your component receives the following props:
 
 ```jsx
@@ -199,6 +201,10 @@ To enable advanced functionality, you may want to wrap this component in [select
 ## Enforcing checks
 
 To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
+
+## Showing the tasks expanded
+
+Once every required task is complete, the pre-publish panel hides the task list behind a "Show tasks" button. To list the tasks by default, filter the `altis.publication-checklist.show_tasks_expanded` value and return true from your callback. Editors can still collapse the list with "Hide tasks".
 
 
 ## Modifying the list view
