@@ -55,6 +55,22 @@ function should_block_publish() {
 }
 
 /**
+ * Should the panel list the tasks when every required one is complete?
+ *
+ * @return bool True to start expanded, false to start behind "Show tasks".
+ */
+function should_expand_tasks() {
+	/**
+	 * Filter to list the tasks by default once every required one is complete.
+	 *
+	 * The editor can still hide them with "Hide tasks".
+	 *
+	 * @param bool $expand_tasks Should the tasks start expanded?
+	 */
+	return apply_filters( 'altis.publication-checklist.show_tasks_expanded', false );
+}
+
+/**
  * Enqueue browser assets for the editor.
  */
 function enqueue_assets() {
@@ -91,9 +107,10 @@ function enqueue_assets() {
 	}
 
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [
-		'block_publish' => should_block_publish(),
-		'checks'        => $checks,
-		'taxonomies'    => $taxonomies_by_type,
+		'block_publish'  => should_block_publish(),
+		'checks'         => $checks,
+		'taxonomies'     => $taxonomies_by_type,
+		'tasks_expanded' => should_expand_tasks(),
 	] );
 }
 
