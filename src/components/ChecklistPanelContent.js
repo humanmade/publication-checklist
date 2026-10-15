@@ -53,7 +53,10 @@ const ChecklistPanelContent = ( {
 		onUnlockPostSaving,
 	] );
 
-	const isComplete = completed >= toComplete;
+	// No required task is left. True for a post with only optional items.
+	const requiredDone = completed >= toComplete;
+	// Required tasks exist and are all done.
+	const isComplete = toComplete > 0 && requiredDone;
 	const requiredLabel = __(
 		'This post cannot be published until all required tasks are completed.',
 		'altis-publication-checklist'
@@ -85,12 +88,12 @@ const ChecklistPanelContent = ( {
 
 	return (
 		<div className={ baseClassName }>
-			{ shouldBlockPublish && ! isComplete && (
+			{ shouldBlockPublish && ! requiredDone && (
 				<p className={ `${ baseClassName }__required` }>
 					{ requiredLabel }
 				</p>
 			) }
-			{ ! shouldBlockPublish && ! isComplete && (
+			{ ! shouldBlockPublish && ! requiredDone && (
 				<ToggleControl
 					label={ __( 'Skip checks', 'altis-publication-checklist' ) }
 					help={ <ConfirmOverrideHelpText /> }
@@ -104,7 +107,7 @@ const ChecklistPanelContent = ( {
 				toComplete={ toComplete }
 			/>
 
-			{ ( ! isComplete || ( isComplete && isExpanded ) ) && checklists }
+			{ ( ! isComplete || isExpanded ) && checklists }
 
 			{ isComplete && (
 				<Button
