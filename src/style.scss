@@ -1,4 +1,5 @@
 .altis-publication-checklist {
+
 	&__required {
 		margin-top: 0;
 		font-style: italic;
@@ -25,7 +26,7 @@
 	}
 
 	&__status-icon {
-		font-weight: bold;
+		font-weight: 700;
 		margin-right: 0.5em;
 		text-align: center;
 		width: 1em;
@@ -42,7 +43,10 @@
 		margin-top: 1em;
 	}
 
-	/* The prepublish sidebar sits higher than modal overlays, so bump the z-index */
+	/*
+	 * The prepublish sidebar sits higher than modal overlays, so bump the
+	 * z-index.
+	 */
 	&__confirm-overlay.components-modal__screen-overlay {
 		z-index: 100001;
 	}
@@ -96,19 +100,19 @@
 			}
 
 			&::before {
-				content: '';
-				width: calc( var( --indicator-size ) + 0.5em );
+				content: "";
+				width: calc(var(--indicator-size) + 0.5em);
 			}
 
 			&::after {
 				background: #f97a14;
 				border-radius: 100%;
-				content: '';
-				height: var( --indicator-size );
-				margin-top: calc( -1 * var( --indicator-size ) / 2 );
+				content: "";
+				height: var(--indicator-size);
+				margin-top: calc(-1 * var(--indicator-size) / 2);
 				position: absolute;
 				top: 50%;
-				width: var( --indicator-size );
+				width: var(--indicator-size);
 			}
 		}
 
