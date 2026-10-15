@@ -42,6 +42,53 @@ async function setTitle( page, title ) {
 	);
 }
 
+/**
+ * Count the POSTs the page sends to the server-side check endpoint.
+ *
+ * @param {import('@playwright/test').Page} page - Editor page.
+ * @return {{count: number}} Counter; assign `count = 0` to reset it.
+ */
+function trackCheckRequests( page ) {
+	const requests = { count: 0 };
+	page.on( 'request', ( request ) => {
+		if (
+			request.method() === 'POST' &&
+			decodeURIComponent( request.url() ).includes(
+				'publication-checklist/v1/check'
+			)
+		) {
+			requests.count++;
+		}
+	} );
+	return requests;
+}
+
+/**
+ * Assert that the fields-less `no-fields-check` is idle, re-runs once when
+ * `edit` changes the snapshot, and is idle again afterwards.
+ *
+ * @param {import('@playwright/test').Page} page - Editor page.
+ * @param {() => Promise<void>}             edit - Changes the edited post.
+ */
+async function expectOneRerunAfter( page, edit ) {
+	const requests = trackCheckRequests( page );
+
+	await waitForCheckStatus( page, 'no-fields-check', 'info', 15000 );
+
+	requests.count = 0;
+	await page.waitForTimeout( 2000 );
+	expect( requests.count ).toBe( 0 );
+
+	await edit();
+	await page.waitForTimeout( 2000 );
+	expect( requests.count ).toBeGreaterThanOrEqual( 1 );
+	expect( requests.count ).toBeLessThanOrEqual( 2 );
+
+	requests.count = 0;
+	await page.waitForTimeout( 2000 );
+	expect( requests.count ).toBe( 0 );
+}
+
 test.describe( 'Live publication checks', () => {
 	test.beforeEach( async ( { admin, editor, page } ) => {
 		await admin.createNewPost();
@@ -194,6 +241,56 @@ test.describe( 'Live publication checks', () => {
 		expect( result.source ).toBe( 'php-live' );
 		// Message includes the author ID, confirming post_author is non-zero.
 		expect( result.message ).toMatch( /Author assigned: \d+/ );
+	} );
+
+	test( 'PHP-live check without fields does not poll the server while idle', async ( {
+		page,
+	} ) => {
+		const requests = trackCheckRequests( page );
+
+		await waitForCheckStatus( page, 'no-fields-check', 'info', 15000 );
+
+		// The check's own result dispatch is a store change; it must not
+		// trigger another request.
+		requests.count = 0;
+		await page.waitForTimeout( 3000 );
+		expect( requests.count ).toBe( 0 );
+
+		// A real edit still re-runs the check.
+		await setTitle( page, 'Some new title' );
+		await page.waitForTimeout( 2000 );
+		expect( requests.count ).toBeGreaterThanOrEqual( 1 );
+		expect( requests.count ).toBeLessThanOrEqual( 2 );
+	} );
+
+	test( 'PHP-live check without fields re-runs once when a meta value changes', async ( {
+		page,
+	} ) => {
+		await expectOneRerunAfter( page, () =>
+			page.evaluate( () =>
+				window.wp.data
+					.dispatch( 'core/editor' )
+					.editPost( { meta: { pc_test_meta: 'x' } } )
+			)
+		);
+	} );
+
+	test( 'PHP-live check without fields re-runs once when a term assignment changes', async ( {
+		page,
+	} ) => {
+		const [ term ] = await page.evaluate( () =>
+			window.wp.apiFetch( { path: '/wp/v2/pc_test_tax' } )
+		);
+
+		await expectOneRerunAfter( page, () =>
+			page.evaluate(
+				( termId ) =>
+					window.wp.data
+						.dispatch( 'core/editor' )
+						.editPost( { pc_test_tax: [ termId ] } ),
+				term.id
+			)
+		);
 	} );
 
 	test( 'Static PHP check does not re-evaluate live', async ( { page } ) => {
