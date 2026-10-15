@@ -22,6 +22,10 @@ add_filter( 'altis.publication-checklist.show_tasks_expanded', function () {
 
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
+	// Register only the checks that never return INCOMPLETE when the e2e suite
+	// sets this cookie, so the post has no required items.
+	$optional_only = ! empty( $_COOKIE['publication_checklist_optional_only'] );
+
 	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.
 	//    Used in the e2e suite only to verify static checks do not appear in
 	//    getLiveResults() after edits. INFO status keeps it out of the
@@ -35,29 +39,31 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		},
 	] );
 
-	// 2. PHP-only live check with a 'fields' allowlist.
-	//    COMPLETE when the title is at least 10 characters long.
-	register_prepublish_check( 'php-live-check', [
-		'live'      => true,
-		'fields'    => [ 'title' ],
-		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
-			$title = $post['post_title'] ?? '';
-			return strlen( trim( (string) $title ) ) >= 10
-				? new Status( Status::COMPLETE, 'Title is long enough' )
-				: new Status( Status::INCOMPLETE, 'Title must be at least 10 characters' );
-		},
-	] );
+	if ( ! $optional_only ) {
+		// 2. PHP-only live check with a 'fields' allowlist.
+		//    COMPLETE when the title is at least 10 characters long.
+		register_prepublish_check( 'php-live-check', [
+			'live'      => true,
+			'fields'    => [ 'title' ],
+			'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+				$title = $post['post_title'] ?? '';
+				return strlen( trim( (string) $title ) ) >= 10
+					? new Status( Status::COMPLETE, 'Title is long enough' )
+					: new Status( Status::INCOMPLETE, 'Title must be at least 10 characters' );
+			},
+		] );
 
-	// 3. PHP side of the dual-check pair.
-	//    PHP always returns COMPLETE; the JS override in live-checks.js
-	//    requires the title to contain "dual-ok" and wins in the editor UI.
-	register_prepublish_check( 'dual-check', [
-		'live'      => true,
-		'fields'    => [ 'title' ],
-		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
-			return new Status( Status::COMPLETE, 'PHP says OK (always)' );
-		},
-	] );
+		// 3. PHP side of the dual-check pair.
+		//    PHP always returns COMPLETE; the JS override in live-checks.js
+		//    requires the title to contain "dual-ok" and wins in the editor UI.
+		register_prepublish_check( 'dual-check', [
+			'live'      => true,
+			'fields'    => [ 'title' ],
+			'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+				return new Status( Status::COMPLETE, 'PHP says OK (always)' );
+			},
+		] );
+	}
 
 	// 4. Normalisation parity check.
 	//    Verifies that the author field is available under the WP_Post key
