@@ -14,6 +14,12 @@ use function Altis\Workflow\PublicationChecklist\register_prepublish_check;
 // Enable publish blocking so the publish-lock test scenario works.
 add_filter( 'altis.publication-checklist.block_on_failing', '__return_true' );
 
+// Start with completed tasks expanded when the e2e suite sets this cookie, so
+// it can test the show_tasks_expanded filter.
+add_filter( 'altis.publication-checklist.show_tasks_expanded', function () {
+	return ! empty( $_COOKIE['publication_checklist_tasks_expanded'] );
+} );
+
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
 	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.

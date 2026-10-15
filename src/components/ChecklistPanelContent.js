@@ -21,7 +21,9 @@ const ChecklistPanelContent = ( {
 	onLockPostSaving,
 	onUnlockPostSaving,
 } ) => {
-	const [ isExpanded, setExpanded ] = useState( false );
+	const [ isExpanded, setExpanded ] = useState(
+		!! window.altisPublicationChecklist?.tasks_expanded
+	);
 	const [ confirmedReady, setConfirmedReady ] = useState( false );
 
 	const shouldBlockPublish =

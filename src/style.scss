@@ -9,14 +9,19 @@
 		margin: 0.5em 0;
 	}
 
+	// Anything an item filter adds after the message stacks under it.
 	&__item {
-		display: flex;
+		display: grid;
+		grid-template-columns: auto 1fr;
 		line-height: 2;
 		margin: 0;
 		padding: 0;
 
+		> :nth-child(n + 3) {
+			grid-column: 2;
+		}
+
 		> .components-button {
-			display: inline;
 			font-size: inherit;
 		}
 	}
@@ -94,9 +99,7 @@
 
 			svg {
 				fill: #f97a14;
-				height: 30px;
 				margin-left: auto;
-				width: 30px;
 			}
 
 			&::before {

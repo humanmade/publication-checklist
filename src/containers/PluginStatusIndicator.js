@@ -4,7 +4,7 @@ import { useInstanceId } from '@wordpress/compose';
 import { dispatch, useSelect } from '@wordpress/data';
 import { STORE_NAME } from '../store';
 
-const PluginStatusIndicator = () => {
+const PluginStatusIndicator = ( props ) => {
 	const isIncomplete = useSelect( ( select ) => {
 		const currentPost = select( 'core/editor' ).getCurrentPost();
 		const restResults = currentPost?.prepublish_checks;
@@ -38,7 +38,7 @@ const PluginStatusIndicator = () => {
 		return () => unlockPostSaving( lockName );
 	}, [ shouldBlockPublish, isIncomplete, lockName ] );
 
-	return isIncomplete ? <Error /> : <Check />;
+	return isIncomplete ? <Error { ...props } /> : <Check { ...props } />;
 };
 
 export default PluginStatusIndicator;
