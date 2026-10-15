@@ -1,11 +1,25 @@
-export const Check = () => (
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+import PropTypes from 'prop-types';
+
+export const Check = ( { size = 24, ...props } ) => (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		width={ size }
+		height={ size }
+		{ ...props }
+	>
 		<path d="M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z" />
 	</svg>
 );
 
-export const Error = () => (
-	<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+export const Error = ( { size = 24, ...props } ) => (
+	<svg
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		width={ size }
+		height={ size }
+		{ ...props }
+	>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -13,3 +27,10 @@ export const Error = () => (
 		/>
 	</svg>
 );
+
+const iconPropTypes = {
+	size: PropTypes.number,
+};
+
+Check.propTypes = iconPropTypes;
+Error.propTypes = iconPropTypes;
