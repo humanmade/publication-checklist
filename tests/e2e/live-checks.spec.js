@@ -196,6 +196,36 @@ test.describe( 'Live publication checks', () => {
 		expect( result.message ).toMatch( /Author assigned: \d+/ );
 	} );
 
+	test( 'PHP-live check without fields does not poll the server while idle', async ( {
+		page,
+	} ) => {
+		let checkRequests = 0;
+		page.on( 'request', ( request ) => {
+			if (
+				request.method() === 'POST' &&
+				decodeURIComponent( request.url() ).includes(
+					'publication-checklist/v1/check'
+				)
+			) {
+				checkRequests++;
+			}
+		} );
+
+		await waitForCheckStatus( page, 'no-fields-check', 'info', 15000 );
+
+		// The check's own result dispatch is a store change; it must not
+		// trigger another request.
+		checkRequests = 0;
+		await page.waitForTimeout( 3000 );
+		expect( checkRequests ).toBe( 0 );
+
+		// A real edit still re-runs the check.
+		await setTitle( page, 'Some new title' );
+		await page.waitForTimeout( 2000 );
+		expect( checkRequests ).toBeGreaterThanOrEqual( 1 );
+		expect( checkRequests ).toBeLessThanOrEqual( 2 );
+	} );
+
 	test( 'Static PHP check does not re-evaluate live', async ( { page } ) => {
 		// static-check is not a live check — it must never appear in getLiveResults().
 		const initialLive = await page.evaluate( () =>

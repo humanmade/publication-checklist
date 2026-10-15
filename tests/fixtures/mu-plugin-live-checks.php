@@ -74,6 +74,16 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		},
 	] );
 
+	// 5. Live check without a 'fields' allowlist.
+	//    Watches every field in the snapshot. INFO status so it does not block
+	//    publishing or affect the lock test.
+	register_prepublish_check( 'no-fields-check', [
+		'live'      => true,
+		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+			return new Status( Status::INFO, 'No fields allowlist' );
+		},
+	] );
+
 } );
 
 // Enqueue the JS-side fixture after the main plugin script is registered.
