@@ -20,6 +20,21 @@ add_filter( 'altis.publication-checklist.show_tasks_expanded', function () {
 	return ! empty( $_COOKIE['publication_checklist_tasks_expanded'] );
 } );
 
+// A meta key and a taxonomy for the tests that edit them. The taxonomy has no
+// custom rest_base, so its REST key equals its name, which is the key the
+// editor snapshot reads.
+add_action( 'init', function () {
+	register_post_meta( 'post', 'pc_test_meta', [
+		'show_in_rest' => true,
+		'single'       => true,
+		'type'         => 'string',
+	] );
+	register_taxonomy( 'pc_test_tax', 'post', [ 'show_in_rest' => true ] );
+	if ( ! term_exists( 'pc-test-term', 'pc_test_tax' ) ) {
+		wp_insert_term( 'pc-test-term', 'pc_test_tax' );
+	}
+} );
+
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
 	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.
