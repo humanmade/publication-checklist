@@ -174,7 +174,7 @@ export function startSubscriber() {
 							: result.message,
 						data: result.getData
 							? result.getData()
-							: result.data ?? null,
+							: ( result.data ?? null ),
 						source: 'js',
 					};
 				}

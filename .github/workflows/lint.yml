@@ -1,0 +1,44 @@
+name: Lint
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    lint:
+        timeout-minutes: 15
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: 'npm'
+
+            - name: Install dependencies
+              id: install
+              run: npm ci
+
+            # Later steps run even if an earlier lint fails, so every problem shows in one run.
+            - name: Lint JavaScript
+              run: npm run lint:js
+
+            - name: Lint styles
+              if: ${{ !cancelled() && steps.install.outcome != 'failure' }}
+              run: npm run lint:style
+
+            - name: Lint package.json
+              if: ${{ !cancelled() && steps.install.outcome != 'failure' }}
+              run: npm run lint:pkg-json
