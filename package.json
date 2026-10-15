@@ -3,6 +3,20 @@
   "description": "A simple, yet flexible publication checklist for WordPress.",
   "author": "Human Made",
   "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "wordpress-plugin",
+    "gutenberg",
+    "publication-checklist"
+  ],
+  "homepage": "https://github.com/humanmade/publication-checklist#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanmade/publication-checklist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/humanmade/publication-checklist/issues"
+  },
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
@@ -12,14 +26,25 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
-    "@wordpress/e2e-test-utils-playwright": "^1.15.0",
-    "@wordpress/scripts": "^30.24.0"
+    "@wordpress/e2e-test-utils-playwright": "^3.0.0",
+    "@wordpress/scripts": "^36.1.0"
+  },
+  "overrides": {
+    "postcss-selector-parser": "^7.1.6",
+    "serialize-javascript": "^7.0.5",
+    "uuid": "^11.1.1"
+  },
+  "npmpackagejsonlint": {
+    "extends": "@wordpress/npm-package-json-lint-config",
+    "rules": {
+      "require-version": "off"
+    }
   },
   "scripts": {
     "build": "wp-scripts build",
     "format": "wp-scripts format src",
     "lint:js": "wp-scripts lint-js src",
-    "lint:pkg-json": "wp-scripts lint-pkg-json package.json",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
     "lint:style": "wp-scripts lint-style '**/*.scss'",
     "playground:start": "npx @wp-playground/cli server --blueprint=blueprint.json --auto-mount",
     "start": "wp-scripts start",
