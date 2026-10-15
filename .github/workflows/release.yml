@@ -123,6 +123,20 @@ jobs:
         # Push only the tag and the objects it reaches.
         run: git push origin "refs/tags/${TAG}"
 
+      - name: Find the previous release tag
+        # Release tags sit on commits off main, so GitHub can't find the
+        # previous release from history and lists every PR since the first.
+        # A stable release compares with the last stable tag. A pre-release
+        # compares with the tag just before it, pre-release or not.
+        run: |
+          PREVIOUS_TAG=$(git -c versionsort.suffix=-alpha -c versionsort.suffix=-beta \
+              -c versionsort.suffix=-RC -c versionsort.suffix=- \
+              tag --list 'v*' --sort=v:refname \
+            | if [[ "$VERSION" == *-* ]]; then cat; else grep -v -- '-'; fi \
+            | grep -x -B1 -F "$TAG" | grep -vxF "$TAG" || true)
+          echo "Release notes start after: ${PREVIOUS_TAG:-the first commit}"
+          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> "$GITHUB_ENV"
+
       - name: Publish GitHub release
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
         with:
@@ -130,6 +144,7 @@ jobs:
           name: ${{ env.TAG }}
           allowUpdates: true
           generateReleaseNotes: true
+          generateReleaseNotesPreviousTag: ${{ env.PREVIOUS_TAG }}
           prerelease: ${{ contains(env.VERSION, '-') }}
           artifacts: dist/publication-checklist-${{ env.TAG }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
