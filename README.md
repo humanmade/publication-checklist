@@ -171,6 +171,8 @@ addFilter( 'altis-publishing-workflow.item.image-texts', 'foo/link-message', () 
 } );
 ```
 
+Return the parts in a `Fragment`, as in the example, not inside one wrapping element. Each list item is a grid. The status icon and the message share the first line, and anything after the message goes on its own line under it. If you wrap everything in one element, it all stays on one line.
+
 Your component receives the following props:
 
 ```jsx
