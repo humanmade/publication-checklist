@@ -95,7 +95,7 @@ The `fields` key is optional. If omitted, the check re-runs on every edit. If
 provided, it accepts an array of:
 - Post attributes (e.g. `'title'`, `'featured_media'`, `'status'`)
 - Meta keys prefixed with `meta.` (e.g. `'meta.my_key'`)
-- Taxonomy slugs prefixed with `terms.` (e.g. `'terms.category'`)
+- Taxonomy names prefixed with `terms.` (e.g. `'terms.category'`, `'terms.post_tag'`)
 
 > **Note on `fields`:** This is a *client-side* optimisation hint. The browser
 > skips the REST round-trip when none of a check's declared fields have changed,
@@ -138,7 +138,7 @@ registerPrepublishCheck( 'has-featured-image', {
 - `runCheck` must be synchronous and return a `Status` instance (or a plain
   `{ status, message, data }` object).
 - `post`, `meta`, and `terms` are pre-built from the current editor state so
-  most checks won't need to call `select` directly.
+  most checks won't need to call `select` directly. `terms` is keyed by taxonomy name, for example `terms.category` and `terms.post_tag`.
 - If a JS check registers the same `id` as a PHP check, the JS verdict takes
   precedence in the pre-publish panel. The PHP check still enforces at publish time.
 - JS-only checks (no PHP counterpart) are enforced client-side via the
