@@ -39,15 +39,16 @@ function buildSnapshot() {
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
 
 	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
-	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
-	// as a single 'terms' attribute.
+	// assignments under their REST base (e.g. 'categories', 'tags'), not as a
+	// single 'terms' attribute. Store them under the taxonomy name (e.g.
+	// 'category', 'post_tag') to match the keys the server uses.
 	const allTaxonomies = window.altisPublicationChecklist?.taxonomies ?? {};
-	const taxonomies = allTaxonomies[ postType ] ?? [];
+	const taxonomies = allTaxonomies[ postType ] ?? {};
 	const terms = {};
-	for ( const tax of taxonomies ) {
-		const value = editorSelect.getEditedPostAttribute( tax );
+	for ( const [ name, restBase ] of Object.entries( taxonomies ) ) {
+		const value = editorSelect.getEditedPostAttribute( restBase );
 		if ( value !== undefined ) {
-			terms[ tax ] = value;
+			terms[ name ] = value;
 		}
 	}
 
