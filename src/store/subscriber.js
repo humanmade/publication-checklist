@@ -38,6 +38,10 @@ function buildSnapshot() {
 	);
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
 
+	// Only the unsaved meta edits go to the server, so values written outside
+	// the editor (e.g. by a classic metabox) are not overridden by stale ones.
+	const metaEdits = id ? ( editorSelect.getPostEdits().meta ?? {} ) : meta;
+
 	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
 	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
 	// as a single 'terms' attribute.
@@ -51,7 +55,7 @@ function buildSnapshot() {
 		}
 	}
 
-	return { id, postType, post, meta, terms };
+	return { id, postType, post, meta, metaEdits, terms };
 }
 
 // Debounce helper (no lodash needed — simple closure)
@@ -155,7 +159,7 @@ export function startSubscriber() {
 		const jsChecks = getRegistered(); // { id, type, runCheck }
 
 		// 2. Build a full snapshot.
-		const { id, postType, post, meta, terms } = buildSnapshot();
+		const { id, postType, post, meta, metaEdits, terms } = buildSnapshot();
 
 		// 3. Run JS checks inline.
 		// liveResults is a fresh local object per tick; it is never a reference
@@ -218,7 +222,7 @@ export function startSubscriber() {
 					postType,
 					id,
 					post,
-					meta,
+					metaEdits,
 					terms,
 					pendingPhpIds
 				);
