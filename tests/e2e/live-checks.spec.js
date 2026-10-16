@@ -166,16 +166,52 @@ test.describe( 'Live publication checks', () => {
 		expect( result.source ).toBe( 'php-live' );
 	} );
 
-	test( 'Publish is locked while any live check is incomplete, unlocks when all pass', async ( {
+	test( 'Saving stays unlocked until the publish panel opens, and unlocks when all checks pass', async ( {
 		page,
 	} ) => {
-		// Any incomplete live check should engage the save lock.
+		const isLocked = () =>
+			page.evaluate( () =>
+				window.wp.data.select( 'core/editor' ).isPostSavingLocked()
+			);
+
+		// Save draft stays disabled on an empty post, so give it a title that
+		// still fails the checks.
+		await setTitle( page, 'Draft' );
 		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
 
-		const lockedInitially = await page.evaluate( () =>
-			window.wp.data.select( 'core/editor' ).isPostSavingLocked()
+		// With the panel closed, an incomplete check must not block saving.
+		expect( await isLocked() ).toBe( false );
+		await expect(
+			page.getByRole( 'button', { name: 'Save draft', exact: true } )
+		).toBeEnabled();
+
+		await page.evaluate( () =>
+			window.wp.data.dispatch( 'core/editor' ).savePost()
 		);
-		expect( lockedInitially ).toBe( true );
+		await page.waitForFunction(
+			() => {
+				const editor = window.wp.data.select( 'core/editor' );
+				return (
+					! editor.isSavingPost() &&
+					editor.didPostSaveRequestSucceed()
+				);
+			},
+			null,
+			{ timeout: 15000 }
+		);
+
+		// Opening the publish panel locks saving, which disables its Publish button.
+		await page.locator( '.editor-post-publish-panel__toggle' ).click();
+		await page.waitForFunction(
+			() => window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
+			null,
+			{ timeout: 5000 }
+		);
+		const publishButton = page.locator( '.editor-post-publish-button' );
+		await expect( publishButton ).toHaveAttribute(
+			'aria-disabled',
+			'true'
+		);
 
 		// "Hello dual-ok long title" satisfies all three conditions:
 		//   • starts with "Hello" → js-only-check complete
@@ -190,13 +226,11 @@ test.describe( 'Live publication checks', () => {
 		// All checks satisfied — lock must be released.
 		await page.waitForFunction(
 			() => ! window.wp.data.select( 'core/editor' ).isPostSavingLocked(),
+			null,
 			{ timeout: 5000 }
 		);
-
-		const lockedAfter = await page.evaluate( () =>
-			window.wp.data.select( 'core/editor' ).isPostSavingLocked()
-		);
-		expect( lockedAfter ).toBe( false );
+		expect( await isLocked() ).toBe( false );
+		await expect( publishButton ).toBeEnabled();
 	} );
 
 	test( 'JS result overrides PHP-live result for the same check ID', async ( {
