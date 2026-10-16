@@ -5,6 +5,14 @@
 		return;
 	}
 
+	// Register no JS checks when the e2e suite sets this cookie, so the post
+	// has only optional items.
+	if (
+		document.cookie.indexOf( 'publication_checklist_optional_only=' ) !== -1
+	) {
+		return;
+	}
+
 	// JS-only check: COMPLETE when the title starts with "Hello".
 	api.registerPrepublishCheck( 'js-only-check', {
 		type: 'post',

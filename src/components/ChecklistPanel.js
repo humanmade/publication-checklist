@@ -100,7 +100,7 @@ class ChecklistPanel extends Component {
 
 		const { completed, toComplete } = completion;
 		const isToComplete = toComplete > 0;
-		const isCompleted = completed >= toComplete;
+		const isCompleted = toComplete > 0 && completed >= toComplete;
 
 		const title = __(
 			'Publication Checklist',
