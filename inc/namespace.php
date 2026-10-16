@@ -173,6 +173,7 @@ function render_column( string $column_id ) {
 	}
 
 	$post_data = get_post( null, ARRAY_A );
+	$post_data = enrich_post_for_checks( (int) $post_data['ID'], $post_data );
 	$meta = get_merged_meta( $post_data['ID'], [] );
 	$taxonomies = get_object_taxonomies( $post_data['post_type'] );
 	$terms = get_post_terms( $post_data['ID'], $taxonomies );
@@ -635,6 +636,13 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 		$existing_post = get_post( $data->ID, ARRAY_A );
 		$post = array_merge( $existing_post, $post );
 		$meta = get_merged_meta( $data->ID, $meta );
+		$post = enrich_post_for_checks( (int) $data->ID, $post );
+	}
+
+	// The request value wins over the stored thumbnail, which core only updates
+	// after wp_update_post().
+	if ( isset( $request['featured_media'] ) ) {
+		$post['featured_media'] = (int) $request['featured_media'];
 	}
 
 	/** @var \WP_Taxonomy[] */
@@ -704,9 +712,16 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 		$check_data['ID'] = (int) $postarr['ID'];
 		$meta = get_merged_meta( $postarr['ID'], $postarr['meta_input'] ?? [] );
 		$terms = get_merged_terms( $postarr['ID'], $postarr['tax_input'] ?? [] );
+		$check_data = enrich_post_for_checks( (int) $postarr['ID'], $check_data );
 	} else {
 		$meta = $postarr['meta_input'] ?? [];
 		$terms = $postarr['tax_input'] ?? [];
+	}
+
+	// wp_insert_post() sets the thumbnail from _thumbnail_id after this filter runs,
+	// so the value passed in wins over the stored one.
+	if ( isset( $postarr['_thumbnail_id'] ) ) {
+		$check_data['featured_media'] = (int) $postarr['_thumbnail_id'];
 	}
 
 	$checks = get_check_status( $check_data, $meta, $terms );
