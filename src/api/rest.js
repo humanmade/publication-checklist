@@ -18,3 +18,17 @@ export function runServerChecks( postType, id, post, meta, terms, ids ) {
 		data: { post_type: postType, id, post, meta, terms, ids },
 	} );
 }
+
+/**
+ * Fetch the saved check results for all checks of a post.
+ *
+ * @param {string} restNamespace - REST namespace of the post type, e.g. 'wp/v2'.
+ * @param {string} restBase      - REST base of the post type, e.g. 'posts'.
+ * @param {number} id            - The post ID.
+ * @return {Promise<Object>} Promise resolving to { prepublish_checks: { [id]: { status, message, data } } }.
+ */
+export function fetchSavedChecks( restNamespace, restBase, id ) {
+	return apiFetch( {
+		path: `/${ restNamespace }/${ restBase }/${ id }?context=edit&_fields=prepublish_checks`,
+	} );
+}

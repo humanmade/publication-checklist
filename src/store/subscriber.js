@@ -1,6 +1,6 @@
 import { select, subscribe, dispatch } from '@wordpress/data';
 import { getRegistered } from '../api';
-import { runServerChecks } from '../api/rest';
+import { fetchSavedChecks, runServerChecks } from '../api/rest';
 import { STORE_NAME } from './index';
 
 // Cache PHP check metadata once — it is set at page load and never changes.
@@ -263,5 +263,60 @@ export function startSubscriber() {
 		dispatch( STORE_NAME ).setLiveResults( liveResults );
 	}, 250 );
 
+	// Counter for saved-results requests, so a slow response can't overwrite a newer one.
+	let savedRequest = 0;
+
+	// Re-run the checks after classic metaboxes have saved. The editor saves
+	// the post first, then posts the metaboxes, so results from the post save
+	// miss anything the metaboxes write.
+	function refreshAfterMetaBoxSave() {
+		for ( const key in prevFieldValues ) {
+			delete prevFieldValues[ key ];
+		}
+		runChecks();
+
+		const { getCurrentPostType, getCurrentPostId } =
+			select( 'core/editor' );
+		const postType = getCurrentPostType();
+		const id = getCurrentPostId();
+		const type = select( 'core' ).getPostType( postType );
+		const restBase = type?.rest_base;
+		if ( ! restBase || ! id ) {
+			return;
+		}
+		const thisRequest = ++savedRequest;
+		fetchSavedChecks( type?.rest_namespace ?? 'wp/v2', restBase, id )
+			.then( ( response ) => {
+				// Discard if a newer save has already started a request.
+				if ( thisRequest !== savedRequest ) {
+					return;
+				}
+				dispatch( STORE_NAME ).setSavedResults(
+					response.prepublish_checks ?? null
+				);
+			} )
+			.catch( ( e ) => {
+				// eslint-disable-next-line no-console
+				console.warn(
+					'Publication checklist: saved checks request failed:',
+					e
+				);
+			} );
+	}
+
+	let wasSavingMetaBoxes = false;
+	function watchMetaBoxSaves() {
+		const editPost = select( 'core/edit-post' );
+		if ( ! editPost?.hasMetaBoxes || ! editPost.hasMetaBoxes() ) {
+			return;
+		}
+		const isSaving = editPost.isSavingMetaBoxes();
+		if ( wasSavingMetaBoxes && ! isSaving ) {
+			refreshAfterMetaBoxSave();
+		}
+		wasSavingMetaBoxes = isSaving;
+	}
+
 	subscribe( runChecks );
+	subscribe( watchMetaBoxSaves );
 }
