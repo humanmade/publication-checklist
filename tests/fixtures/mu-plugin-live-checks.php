@@ -41,6 +41,18 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 	// sets this cookie, so the post has no required items.
 	$optional_only = ! empty( $_COOKIE['publication_checklist_optional_only'] );
 
+	// Register a required, non-live check that needs a featured image when the
+	// e2e suite sets this cookie. It reads the featured_media key of the post.
+	if ( ! empty( $_COOKIE['publication_checklist_featured_image'] ) ) {
+		register_prepublish_check( 'featured-image-check', [
+			'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+				return ! empty( $post['featured_media'] )
+					? new Status( Status::COMPLETE, 'Featured image is set' )
+					: new Status( Status::INCOMPLETE, 'Add a featured image' );
+			},
+		] );
+	}
+
 	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.
 	//    Used in the e2e suite only to verify static checks do not appear in
 	//    getLiveResults() after edits. INFO status keeps it out of the
