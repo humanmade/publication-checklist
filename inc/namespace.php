@@ -219,6 +219,12 @@ function register_rest_fields() {
 	foreach ( $types as $type ) {
 		register_rest_field( $type, 'prepublish_checks', [
 			'get_callback' => __NAMESPACE__ . '\\get_check_status_for_api',
+			'schema'       => [
+				'description' => __( 'Publication checklist status for each check.', 'altis-publication-checklist' ),
+				'type'        => [ 'object', 'null' ],
+				'context'     => [ 'edit' ],
+				'readonly'    => true,
+			],
 		] );
 
 		if ( should_block_publish() ) {
@@ -414,10 +420,19 @@ function enrich_post_for_checks( int $id, array $post ) : array {
 /**
  * Get the check status, formatted for the REST API.
  *
- * @param array $data Raw REST API post data.
- * @return stdClass Map of check ID => status.
+ * Only returns data for the edit context, the only context the field is shown in.
+ *
+ * @param array                $data       Raw REST API post data.
+ * @param string               $field_name Field name.
+ * @param WP_REST_Request|null $request    Current request.
+ * @return stdClass|null Map of check ID => status, or null when not shown.
  */
-function get_check_status_for_api( array $data ) : ?stdClass {
+function get_check_status_for_api( array $data, string $field_name = '', ?WP_REST_Request $request = null ) : ?stdClass {
+	// Skip running the checks when the response won't include them.
+	if ( $request && $request['context'] !== 'edit' ) {
+		return null;
+	}
+
 	// Bail early if data ID is empty
 	if ( empty( $data['id'] ) ) {
 		return null;
