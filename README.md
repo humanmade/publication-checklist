@@ -150,6 +150,8 @@ registerPrepublishCheck( 'has-featured-image', {
 
 By default, Publication Checklist will render a simple checklist of all checks.
 
+The REST API includes each post's check results in a `prepublish_checks` field. The field is only returned with `context=edit`, so only users who can edit the post can see it.
+
 You can override a specific item to render richer UI if needed. For example, you may wish to integrate deeply into the block editor, or allow users to correct failing checks inline. This UI is directly inserted into the React element tree and replaces the default output.
 
 Publication Checklist exposes a `altis-publishing-workflow.item.{check_id}` filter using [`withFilters`](https://github.com/WordPress/gutenberg/tree/master/packages/components/src/higher-order/with-filters) to allow overriding the list item component.
