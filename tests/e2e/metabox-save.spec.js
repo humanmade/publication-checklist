@@ -119,4 +119,84 @@ test.describe( 'Classic metabox saves', () => {
 		await savePost( page );
 		await expectStatus( page, 'incomplete', ids );
 	} );
+
+	test( 'Meta edits after a metabox save do not override its value', async ( {
+		admin,
+		baseURL,
+		context,
+		editor,
+		page,
+	} ) => {
+		const ids = [ 'metabox-static', 'metabox-live' ];
+
+		await context.addCookies( [
+			{
+				name: 'publication_checklist_metabox',
+				value: '1',
+				url: baseURL,
+			},
+		] );
+
+		await admin.createNewPost();
+		await prepareEditor( { editor, page } );
+
+		await page.evaluate( () =>
+			window.wp.data
+				.dispatch( 'core/editor' )
+				.editPost( { title: 'Metabox meta edit post' } )
+		);
+		await page.locator( '#pc_metabox_note' ).fill( 'A note' );
+		await savePost( page );
+		await expectStatus( page, 'complete', ids );
+
+		// The editor's copy of the metabox key is still empty. Editing another
+		// meta key must not send that stale value to the live checks.
+		await page.evaluate( () =>
+			window.wp.data.dispatch( 'core/editor' ).editPost( {
+				title: 'Metabox meta edit post edited',
+				meta: { pc_test_meta: 'Another value' },
+			} )
+		);
+		await page.waitForTimeout( 1500 );
+		await expectStatus( page, 'complete', ids );
+	} );
+
+	test( 'A failed refetch does not keep results from an earlier save', async ( {
+		admin,
+		baseURL,
+		context,
+		editor,
+		page,
+	} ) => {
+		await context.addCookies( [
+			{
+				name: 'publication_checklist_metabox',
+				value: '1',
+				url: baseURL,
+			},
+		] );
+
+		await admin.createNewPost();
+		await prepareEditor( { editor, page } );
+
+		await page.evaluate( () =>
+			window.wp.data
+				.dispatch( 'core/editor' )
+				.editPost( { title: 'Metabox refetch post' } )
+		);
+		await savePost( page );
+
+		// The first save has stored results that say the excerpt is missing.
+		await page.evaluate( () =>
+			window.wp.data
+				.dispatch( 'core/editor' )
+				.editPost( { excerpt: 'An excerpt' } )
+		);
+		await page.route(
+			( url ) => url.href.includes( '_fields=prepublish_checks' ),
+			( route ) => route.abort()
+		);
+		await savePost( page );
+		await expectStatus( page, 'complete', [ 'static-check' ] );
+	} );
 } );

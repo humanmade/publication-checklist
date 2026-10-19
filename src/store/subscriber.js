@@ -1,4 +1,5 @@
 import { select, subscribe, dispatch } from '@wordpress/data';
+import isEqual from 'lodash/isEqual';
 import { getRegistered } from '../api';
 import { fetchSavedChecks, runServerChecks } from '../api/rest';
 import { STORE_NAME } from './index';
@@ -38,9 +39,17 @@ function buildSnapshot() {
 	);
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
 
-	// Only the unsaved meta edits go to the server, so values written outside
-	// the editor (e.g. by a classic metabox) are not overridden by stale ones.
-	const metaEdits = id ? ( editorSelect.getPostEdits().meta ?? {} ) : meta;
+	// Only meta that differs from the saved record goes to the server. The
+	// edits object can hold every meta key, including stale copies of values a
+	// classic metabox saved, which would override the saved values server-side.
+	const savedMeta = editorSelect.getCurrentPost()?.meta ?? {};
+	const metaEdits = id
+		? Object.fromEntries(
+				Object.entries( editorSelect.getPostEdits().meta ?? {} ).filter(
+					( [ key, value ] ) => ! isEqual( value, savedMeta[ key ] )
+				)
+			)
+		: meta;
 
 	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
 	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
@@ -317,6 +326,26 @@ export function startSubscriber() {
 		wasSavingMetaBoxes = isSaving;
 	}
 
+	// Saved results from an earlier save must not outlive the next save: if the
+	// refetch after its metaboxes is slow or fails, the checklist falls back to
+	// the results the editor got from the post save. Autosaves are skipped
+	// because no refetch follows them.
+	let wasSavingPost = false;
+	function watchPostSaves() {
+		const editorSelect = select( 'core/editor' );
+		const isSaving =
+			editorSelect.isSavingPost() && ! editorSelect.isAutosavingPost();
+		const started = ! wasSavingPost && isSaving;
+		// Set before dispatching: the dispatch notifies this subscriber again.
+		wasSavingPost = isSaving;
+		if ( started ) {
+			// Also discards a refetch from the previous save that is still in flight.
+			savedRequest++;
+			dispatch( STORE_NAME ).setSavedResults( null );
+		}
+	}
+
 	subscribe( runChecks );
 	subscribe( watchMetaBoxSaves );
+	subscribe( watchPostSaves );
 }
