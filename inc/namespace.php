@@ -626,8 +626,9 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 
 	// A featured image arrives as featured_media, and core attaches it after
 	// wp_update_post(), so without this checks read the image the post had before.
-	if ( isset( $request['featured_media'] ) && ! array_key_exists( '_thumbnail_id', (array) $meta ) ) {
-		$meta['_thumbnail_id'] = (int) $request['featured_media'];
+	$featured_media = isset( $request['featured_media'] ) ? (int) $request['featured_media'] : null;
+	if ( $featured_media !== null ) {
+		$meta['_thumbnail_id'] = $featured_media;
 	}
 
 	$post = (array) $data;
@@ -639,10 +640,20 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 		$post = enrich_post_for_checks( (int) $data->ID, $post );
 	}
 
-	// The request value wins over the stored thumbnail, which core only updates
-	// after wp_update_post().
-	if ( isset( $request['featured_media'] ) ) {
-		$post['featured_media'] = (int) $request['featured_media'];
+	// Core saves these after rest_pre_insert, so the request value wins over the
+	// stored one that enrich_post_for_checks() read.
+	if ( $featured_media !== null ) {
+		$post['featured_media'] = $featured_media;
+	}
+	$request_fields = [
+		'sticky'   => 'sticky',
+		'format'   => 'post_format',
+		'template' => 'template',
+	];
+	foreach ( $request_fields as $param => $key ) {
+		if ( isset( $request[ $param ] ) ) {
+			$post[ $key ] = $request[ $param ];
+		}
 	}
 
 	/** @var \WP_Taxonomy[] */
@@ -719,9 +730,10 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 	}
 
 	// wp_insert_post() sets the thumbnail from _thumbnail_id after this filter runs,
-	// so the value passed in wins over the stored one.
+	// so the value passed in wins over the stored one. The classic editor sends -1
+	// for no image.
 	if ( isset( $postarr['_thumbnail_id'] ) ) {
-		$check_data['featured_media'] = (int) $postarr['_thumbnail_id'];
+		$check_data['featured_media'] = max( 0, (int) $postarr['_thumbnail_id'] );
 	}
 
 	$checks = get_check_status( $check_data, $meta, $terms );

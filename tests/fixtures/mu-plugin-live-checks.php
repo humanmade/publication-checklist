@@ -35,6 +35,17 @@ add_action( 'init', function () {
 	}
 } );
 
+// A page template that posts accept, so a request can set the template key.
+add_filter( 'theme_post_templates', function ( array $templates ) : array {
+	$templates['pc-test-template.php'] = 'PC test template';
+	return $templates;
+} );
+
+// Use the classic editor form when the e2e suite sets this cookie.
+add_filter( 'use_block_editor_for_post', function ( $enabled ) {
+	return ! empty( $_COOKIE['publication_checklist_classic_editor'] ) ? false : $enabled;
+} );
+
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
 	// Register only the checks that never return INCOMPLETE when the e2e suite
@@ -49,6 +60,21 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 				return ! empty( $post['featured_media'] )
 					? new Status( Status::COMPLETE, 'Featured image is set' )
 					: new Status( Status::INCOMPLETE, 'Add a featured image' );
+			},
+		] );
+	}
+
+	// Register a required, non-live check on the sticky, format and template
+	// keys of the post when the e2e suite sets this cookie.
+	if ( ! empty( $_COOKIE['publication_checklist_post_fields'] ) ) {
+		register_prepublish_check( 'post-fields-check', [
+			'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+				$ok = ! empty( $post['sticky'] )
+					&& 'aside' === ( $post['post_format'] ?? '' )
+					&& 'pc-test-template.php' === ( $post['template'] ?? '' );
+				return $ok
+					? new Status( Status::COMPLETE, 'Sticky, aside format and template are set' )
+					: new Status( Status::INCOMPLETE, 'Make the post sticky, aside format and use the test template' );
 			},
 		] );
 	}

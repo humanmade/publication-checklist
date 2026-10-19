@@ -83,4 +83,108 @@ test.describe( 'Featured image checks', () => {
 		await expect( cell( withImage.id ) ).toContainText( 'All done!' );
 		await expect( cell( withoutImage.id ) ).toContainText( '1 left' );
 	} );
+
+	test( 'The classic editor blocks a post that has no featured image', async ( {
+		baseURL,
+		context,
+		page,
+	} ) => {
+		await context.addCookies( [
+			{
+				name: 'publication_checklist_featured_image',
+				value: '1',
+				url: baseURL,
+			},
+		] );
+
+		await page.goto( '/wp-admin/post-new.php' );
+		await page.waitForFunction( () => !! window.wp?.apiFetch );
+
+		const draft = await api( page, {
+			path: '/wp/v2/posts',
+			method: 'POST',
+			data: { title: TITLE, status: 'draft' },
+		} );
+
+		// The fixture then shows the classic editor, whose form sends
+		// _thumbnail_id=-1 for a post without an image.
+		await context.addCookies( [
+			{
+				name: 'publication_checklist_classic_editor',
+				value: '1',
+				url: baseURL,
+			},
+		] );
+
+		await page.goto( `/wp-admin/post.php?post=${ draft.id }&action=edit` );
+		await expect( page.locator( '#_thumbnail_id' ) ).toHaveValue( '-1' );
+		await page.locator( '#publish' ).click();
+		await page.waitForURL( /post\.php.*message=/ );
+
+		await page.goto( '/wp-admin/edit.php?post_status=draft' );
+		await expect( page.locator( `#post-${ draft.id }` ) ).toBeVisible();
+	} );
+} );
+
+test.describe( 'Request values in checks', () => {
+	const fields = {
+		sticky: true,
+		format: 'aside',
+		template: 'pc-test-template.php',
+	};
+
+	test.beforeEach( async ( { baseURL, context, page } ) => {
+		// The fixture then registers a required check that reads the sticky,
+		// post_format and template keys.
+		await context.addCookies( [
+			{
+				name: 'publication_checklist_post_fields',
+				value: '1',
+				url: baseURL,
+			},
+		] );
+
+		await page.goto( '/wp-admin/post-new.php' );
+		await page.waitForFunction( () => !! window.wp?.apiFetch );
+	} );
+
+	test( 'A publish request supplies the sticky, format and template values', async ( {
+		page,
+	} ) => {
+		const draft = await api( page, {
+			path: '/wp/v2/posts',
+			method: 'POST',
+			data: { title: TITLE, status: 'draft' },
+		} );
+
+		const published = await api( page, {
+			path: `/wp/v2/posts/${ draft.id }`,
+			method: 'POST',
+			data: { status: 'publish', ...fields },
+		} );
+		expect( published.status ).toBe( 'publish' );
+	} );
+
+	for ( const [ key, value ] of [
+		[ 'sticky', false ],
+		[ 'format', 'standard' ],
+		[ 'template', '' ],
+	] ) {
+		test( `A publish request that unsets ${ key } is blocked`, async ( {
+			page,
+		} ) => {
+			const draft = await api( page, {
+				path: '/wp/v2/posts',
+				method: 'POST',
+				data: { title: TITLE, status: 'draft', ...fields },
+			} );
+
+			const blocked = await api( page, {
+				path: `/wp/v2/posts/${ draft.id }`,
+				method: 'POST',
+				data: { status: 'publish', [ key ]: value },
+			} );
+			expect( blocked.status ).toBe( 'draft' );
+		} );
+	}
 } );
