@@ -223,7 +223,8 @@ function register_rest_fields() {
 		] );
 
 		if ( should_block_publish() ) {
-			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
+			// Run last: the filter documents a stdClass, so callbacks after this one would receive the WP_Error.
+			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', PHP_INT_MAX, 2 );
 		}
 	}
 }
