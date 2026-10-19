@@ -233,6 +233,29 @@ test.describe( 'Live publication checks', () => {
 		await expect( publishButton ).toBeEnabled();
 	} );
 
+	test( 'Saving stays unlocked while the checklist sidebar is open', async ( {
+		page,
+	} ) => {
+		await setTitle( page, 'Draft' );
+		await waitForCheckStatus( page, 'js-only-check', 'incomplete' );
+
+		await page
+			.getByRole( 'button', { name: 'Publication Checklist' } )
+			.click();
+		await expect(
+			page.locator( '.altis-publication-checklist__required' )
+		).toBeVisible();
+
+		expect(
+			await page.evaluate( () =>
+				window.wp.data.select( 'core/editor' ).isPostSavingLocked()
+			)
+		).toBe( false );
+		await expect(
+			page.getByRole( 'button', { name: 'Save draft', exact: true } )
+		).toBeEnabled();
+	} );
+
 	test( 'JS result overrides PHP-live result for the same check ID', async ( {
 		page,
 	} ) => {
