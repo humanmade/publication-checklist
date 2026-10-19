@@ -6,7 +6,7 @@ const TITLE = 'A post title that is long enough';
  * Run an apiFetch request in the page, so it carries the REST nonce.
  *
  * @param {import('@playwright/test').Page} page    - Admin page with wp.apiFetch loaded.
- * @param {Object}                          options - apiFetch options.
+ * @param {Object}                          options - Options for apiFetch.
  * @return {Promise<Object>} The decoded response.
  */
 const api = ( page, options ) =>
