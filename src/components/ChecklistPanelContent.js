@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import { Button, ToggleControl } from '@wordpress/components';
 import { compose, useInstanceId } from '@wordpress/compose';
-import { withDispatch } from '@wordpress/data';
+import { useSelect, withDispatch } from '@wordpress/data';
 import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -29,6 +29,12 @@ const ChecklistPanelContent = ( {
 	const shouldBlockPublish =
 		!! window.altisPublicationChecklist?.block_publish;
 
+	// Only the pre-publish panel gates publishing. The sidebar must not lock saving.
+	const isPublishPanelOpen = useSelect(
+		( select ) => select( 'core/editor' ).isPublishSidebarOpened(),
+		[]
+	);
+
 	// ChecklistPanel renders this twice, so a shared lock name would let the first
 	// unmount release the survivor's lock.
 	const lockName = useInstanceId(
@@ -37,7 +43,11 @@ const ChecklistPanelContent = ( {
 	);
 
 	useEffect( () => {
-		if ( completed >= toComplete || confirmedReady ) {
+		if (
+			completed >= toComplete ||
+			confirmedReady ||
+			! isPublishPanelOpen
+		) {
 			onUnlockPostSaving( lockName );
 		} else {
 			onLockPostSaving( lockName );
@@ -47,6 +57,7 @@ const ChecklistPanelContent = ( {
 	}, [
 		completed,
 		confirmedReady,
+		isPublishPanelOpen,
 		toComplete,
 		lockName,
 		onLockPostSaving,
