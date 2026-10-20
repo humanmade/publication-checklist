@@ -42,11 +42,45 @@ add_action( 'init', function () {
 	}
 } );
 
+// A classic metabox that saves a REST-registered meta key outside the block
+// editor, like Yoast SEO does. Only set up when the e2e suite sets this cookie.
+if ( ! empty( $_COOKIE['publication_checklist_metabox'] ) ) {
+	add_action( 'init', function () {
+		register_post_meta( 'post', 'pc_metabox_note', [
+			'show_in_rest' => true,
+			'single'       => true,
+			'type'         => 'string',
+		] );
+	} );
+
+	add_action( 'add_meta_boxes_post', function ( WP_Post $post ) {
+		add_meta_box(
+			'pc-metabox-test',
+			'Checklist metabox test',
+			function ( WP_Post $post ) {
+				printf(
+					'<input type="text" id="pc_metabox_note" name="pc_metabox_note" value="%s" />',
+					esc_attr( (string) get_post_meta( $post->ID, 'pc_metabox_note', true ) )
+				);
+			}
+		);
+	} );
+
+	add_action( 'save_post_post', function ( int $post_id ) {
+		if ( isset( $_POST['pc_metabox_note'] ) ) {
+			update_post_meta( $post_id, 'pc_metabox_note', sanitize_text_field( wp_unslash( $_POST['pc_metabox_note'] ) ) );
+		}
+	} );
+}
+
 add_action( 'altis.publication-checklist.register_prepublish_checks', function () {
 
 	// Register only the checks that never return INCOMPLETE when the e2e suite
 	// sets this cookie, so the post has no required items.
 	$optional_only = ! empty( $_COOKIE['publication_checklist_optional_only'] );
+
+	// Register the checks for the classic metabox when the e2e suite sets this cookie.
+	$metabox = ! empty( $_COOKIE['publication_checklist_metabox'] );
 
 	// 1. PHP-static check (no 'live'). Informational — does NOT block publishing.
 	//    Used in the e2e suite only to verify static checks do not appear in
@@ -111,6 +145,34 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 			return new Status( Status::INFO, 'No fields allowlist' );
 		},
 	] );
+
+	if ( $metabox ) {
+		// 6. Checks on a meta value that a classic metabox saves. The save path
+		//    passes get_post_meta() arrays (['x']) and the live path passes plain
+		//    values, so read either form. The message names the check because
+		//    the checklist shows messages, not ids.
+		$metabox_note_check = function ( string $label ) : callable {
+			return function ( array $post, array $meta, array $terms ) use ( $label ) : Status {
+				$note = $meta['pc_metabox_note'] ?? '';
+				if ( is_array( $note ) ) {
+					$note = $note[0] ?? '';
+				}
+				return ! empty( trim( (string) $note ) )
+					? new Status( Status::COMPLETE, $label )
+					: new Status( Status::INCOMPLETE, $label );
+			};
+		};
+
+		register_prepublish_check( 'metabox-static', [
+			'run_check' => $metabox_note_check( 'Metabox note (saved)' ),
+		] );
+
+		register_prepublish_check( 'metabox-live', [
+			'live'      => true,
+			'fields'    => [ 'title', 'meta.pc_metabox_note' ],
+			'run_check' => $metabox_note_check( 'Metabox note (live)' ),
+		] );
+	}
 
 } );
 

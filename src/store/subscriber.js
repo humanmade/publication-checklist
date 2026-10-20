@@ -1,6 +1,7 @@
 import { select, subscribe, dispatch } from '@wordpress/data';
+import isEqual from 'lodash/isEqual';
 import { getRegistered } from '../api';
-import { runServerChecks } from '../api/rest';
+import { fetchSavedChecks, runServerChecks } from '../api/rest';
 import { STORE_NAME } from './index';
 
 // Cache PHP check metadata once — it is set at page load and never changes.
@@ -38,6 +39,18 @@ function buildSnapshot() {
 	);
 	const meta = editorSelect.getEditedPostAttribute( 'meta' ) ?? {};
 
+	// Only meta that differs from the saved record goes to the server. The
+	// edits object can hold every meta key, including stale copies of values a
+	// classic metabox saved, which would override the saved values server-side.
+	const savedMeta = editorSelect.getCurrentPost()?.meta ?? {};
+	const metaEdits = id
+		? Object.fromEntries(
+				Object.entries( editorSelect.getPostEdits().meta ?? {} ).filter(
+					( [ key, value ] ) => ! isEqual( value, savedMeta[ key ] )
+				)
+			)
+		: meta;
+
 	// Build terms from per-taxonomy attributes. Core editor exposes taxonomy
 	// assignments under their taxonomy slug (e.g. 'categories', 'tags'), not
 	// as a single 'terms' attribute.
@@ -51,7 +64,7 @@ function buildSnapshot() {
 		}
 	}
 
-	return { id, postType, post, meta, terms };
+	return { id, postType, post, meta, metaEdits, terms };
 }
 
 // Debounce helper (no lodash needed — simple closure)
@@ -155,7 +168,7 @@ export function startSubscriber() {
 		const jsChecks = getRegistered(); // { id, type, runCheck }
 
 		// 2. Build a full snapshot.
-		const { id, postType, post, meta, terms } = buildSnapshot();
+		const { id, postType, post, meta, metaEdits, terms } = buildSnapshot();
 
 		// 3. Run JS checks inline.
 		// liveResults is a fresh local object per tick; it is never a reference
@@ -218,7 +231,7 @@ export function startSubscriber() {
 					postType,
 					id,
 					post,
-					meta,
+					metaEdits,
 					terms,
 					pendingPhpIds
 				);
@@ -259,5 +272,80 @@ export function startSubscriber() {
 		dispatch( STORE_NAME ).setLiveResults( liveResults );
 	}, 250 );
 
+	// Counter for saved-results requests, so a slow response can't overwrite a newer one.
+	let savedRequest = 0;
+
+	// Re-run the checks after classic metaboxes have saved. The editor saves
+	// the post first, then posts the metaboxes, so results from the post save
+	// miss anything the metaboxes write.
+	function refreshAfterMetaBoxSave() {
+		for ( const key in prevFieldValues ) {
+			delete prevFieldValues[ key ];
+		}
+		runChecks();
+
+		const { getCurrentPostType, getCurrentPostId } =
+			select( 'core/editor' );
+		const postType = getCurrentPostType();
+		const id = getCurrentPostId();
+		const type = select( 'core' ).getPostType( postType );
+		const restBase = type?.rest_base;
+		if ( ! restBase || ! id ) {
+			return;
+		}
+		const thisRequest = ++savedRequest;
+		fetchSavedChecks( type?.rest_namespace ?? 'wp/v2', restBase, id )
+			.then( ( response ) => {
+				// Discard if a newer save has already started a request.
+				if ( thisRequest !== savedRequest ) {
+					return;
+				}
+				dispatch( STORE_NAME ).setSavedResults(
+					response.prepublish_checks ?? null
+				);
+			} )
+			.catch( ( e ) => {
+				// eslint-disable-next-line no-console
+				console.warn(
+					'Publication checklist: saved checks request failed:',
+					e
+				);
+			} );
+	}
+
+	let wasSavingMetaBoxes = false;
+	function watchMetaBoxSaves() {
+		const editPost = select( 'core/edit-post' );
+		if ( ! editPost?.hasMetaBoxes || ! editPost.hasMetaBoxes() ) {
+			return;
+		}
+		const isSaving = editPost.isSavingMetaBoxes();
+		if ( wasSavingMetaBoxes && ! isSaving ) {
+			refreshAfterMetaBoxSave();
+		}
+		wasSavingMetaBoxes = isSaving;
+	}
+
+	// Saved results from an earlier save must not outlive the next save: if the
+	// refetch after its metaboxes is slow or fails, the checklist falls back to
+	// the results the editor got from the post save. Autosaves are skipped
+	// because no refetch follows them.
+	let wasSavingPost = false;
+	function watchPostSaves() {
+		const editorSelect = select( 'core/editor' );
+		const isSaving =
+			editorSelect.isSavingPost() && ! editorSelect.isAutosavingPost();
+		const started = ! wasSavingPost && isSaving;
+		// Set before dispatching: the dispatch notifies this subscriber again.
+		wasSavingPost = isSaving;
+		if ( started ) {
+			// Also discards a refetch from the previous save that is still in flight.
+			savedRequest++;
+			dispatch( STORE_NAME ).setSavedResults( null );
+		}
+	}
+
 	subscribe( runChecks );
+	subscribe( watchMetaBoxSaves );
+	subscribe( watchPostSaves );
 }
