@@ -104,7 +104,14 @@ function enqueue_assets() {
 	$types = apply_filters( 'altis.publication-checklist.enabled_types', get_post_types( [ 'show_in_rest' => true ] ) );
 	$taxonomies_by_type = [];
 	foreach ( $types as $type ) {
-		$taxonomies_by_type[ $type ] = get_object_taxonomies( $type );
+		$rest_bases = [];
+		foreach ( get_object_taxonomies( $type, 'objects' ) as $taxonomy ) {
+			if ( empty( $taxonomy->show_in_rest ) ) {
+				continue;
+			}
+			$rest_bases[ $taxonomy->name ] = ! empty( $taxonomy->rest_base ) ? $taxonomy->rest_base : $taxonomy->name;
+		}
+		$taxonomies_by_type[ $type ] = (object) $rest_bases;
 	}
 
 	wp_localize_script( SCRIPT_ID, 'altisPublicationChecklist', [

@@ -40,6 +40,12 @@ add_action( 'init', function () {
 	if ( ! term_exists( 'pc-test-term', 'pc_test_tax' ) ) {
 		wp_insert_term( 'pc-test-term', 'pc_test_tax' );
 	}
+
+	// A category for the test that checks core taxonomies, whose REST base
+	// ('categories') differs from their name ('category').
+	if ( ! empty( $_COOKIE['publication_checklist_category'] ) && ! term_exists( 'pc-test-category', 'category' ) ) {
+		wp_insert_term( 'pc-test-category', 'category' );
+	}
 } );
 
 // A classic metabox that saves a REST-registered meta key outside the block
@@ -136,7 +142,25 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		},
 	] );
 
-	// 5. Live check without a 'fields' allowlist.
+	// 5. Category check, registered when the e2e suite sets its cookie.
+	//    COMPLETE once a category other than the default is assigned. The live
+	//    path passes a list of ids; the save path passes whatever
+	//    get_post_terms() returns, which is also a list of ids.
+	if ( ! empty( $_COOKIE['publication_checklist_category'] ) ) {
+		register_prepublish_check( 'category-check', [
+			'live'      => true,
+			'fields'    => [ 'terms.category' ],
+			'run_check' => function ( array $post, array $meta, array $terms ) : Status {
+				$default = (int) get_option( 'default_category' );
+				$ids = array_map( 'intval', array_values( (array) ( $terms['category'] ?? [] ) ) );
+				return count( array_diff( $ids, [ $default ] ) ) > 0
+					? new Status( Status::COMPLETE, 'A non-default category is set' )
+					: new Status( Status::INCOMPLETE, 'Choose a category other than the default' );
+			},
+		] );
+	}
+
+	// 6. Live check without a 'fields' allowlist.
 	//    Watches every field in the snapshot. INFO status so it does not block
 	//    publishing or affect the lock test.
 	register_prepublish_check( 'no-fields-check', [
