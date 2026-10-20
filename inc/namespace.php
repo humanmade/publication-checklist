@@ -3,6 +3,7 @@
 namespace Altis\Workflow\PublicationChecklist;
 
 use stdClass;
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -220,10 +221,17 @@ function register_rest_fields() {
 	foreach ( $types as $type ) {
 		register_rest_field( $type, 'prepublish_checks', [
 			'get_callback' => __NAMESPACE__ . '\\get_check_status_for_api',
+			'schema'       => [
+				'description' => __( 'Publication checklist status for each check.', 'altis-publication-checklist' ),
+				'type'        => [ 'object', 'null' ],
+				'context'     => [ 'edit' ],
+				'readonly'    => true,
+			],
 		] );
 
 		if ( should_block_publish() ) {
-			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', 10, 2 );
+			// Run last: the filter documents a stdClass, so callbacks after this one would receive the WP_Error.
+			add_filter( 'rest_pre_insert_' . $type, __NAMESPACE__ . '\\block_publish_for_rest', PHP_INT_MAX, 2 );
 		}
 	}
 }
@@ -415,10 +423,19 @@ function enrich_post_for_checks( int $id, array $post ) : array {
 /**
  * Get the check status, formatted for the REST API.
  *
- * @param array $data Raw REST API post data.
- * @return stdClass Map of check ID => status.
+ * Only returns data for the edit context, the only context the field is shown in.
+ *
+ * @param array                $data       Raw REST API post data.
+ * @param string               $field_name Field name.
+ * @param WP_REST_Request|null $request    Current request.
+ * @return stdClass|null Map of check ID => status, or null when not shown.
  */
-function get_check_status_for_api( array $data ) : ?stdClass {
+function get_check_status_for_api( array $data, string $field_name = '', ?WP_REST_Request $request = null ) : ?stdClass {
+	// Skip running the checks when the response won't include them.
+	if ( $request && $request['context'] !== 'edit' ) {
+		return null;
+	}
+
 	// Bail early if data ID is empty
 	if ( empty( $data['id'] ) ) {
 		return null;
@@ -602,16 +619,16 @@ function is_publish_status( string $status ) : bool {
 }
 
 /**
- * Block publication for REST requests.
+ * Block publication for REST requests by returning an error.
  *
  * We have more data at the REST API level, so running checks here allows more
  * accurate data to be passed through.
  *
  * @param stdClass $data Data to be passed through to wp_insert_post.
  * @param WP_REST_Request $request Full request data.
- * @return stdClass Updated data.
+ * @return stdClass|WP_Error Updated data, or an error if the checks fail.
  */
-function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : stdClass {
+function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) {
 	// Don't block if the status isn't changing.
 	if ( ! isset( $data->post_status ) ) {
 		return $data;
@@ -675,8 +692,27 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) : st
 	$checks = get_check_status( $post, $meta, $all_terms );
 	$check_success = get_combined_status( $checks );
 	if ( ! $check_success ) {
-		// Don't allow status to be changed.
-		unset( $data->post_status );
+		$failing = [];
+		foreach ( $checks as $id => $status ) {
+			if ( $status->get_status() !== Status::INCOMPLETE ) {
+				continue;
+			}
+
+			$failing[ $id ] = [
+				'status' => $status->get_status(),
+				'message' => $status->get_message(),
+				'data' => $status->get_data(),
+			];
+		}
+
+		return new WP_Error(
+			'altis_publication_checklist_incomplete',
+			__( 'The post cannot be published until the required publication checklist tasks are complete.', 'altis-publication-checklist' ),
+			[
+				'status' => 400,
+				'checks' => $failing,
+			]
+		);
 	}
 
 	// Mark post as checked for this request, and skip follow-up checks.
