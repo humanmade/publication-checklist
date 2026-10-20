@@ -181,6 +181,7 @@ function render_column( string $column_id ) {
 	}
 
 	$post_data = get_post( null, ARRAY_A );
+	$post_data = enrich_post_for_checks( (int) $post_data['ID'], $post_data );
 	$meta = get_merged_meta( $post_data['ID'], [] );
 	$taxonomies = get_object_taxonomies( $post_data['post_type'] );
 	$terms = get_post_terms( $post_data['ID'], $taxonomies );
@@ -649,8 +650,9 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) {
 
 	// A featured image arrives as featured_media, and core attaches it after
 	// wp_update_post(), so without this checks read the image the post had before.
-	if ( isset( $request['featured_media'] ) && ! array_key_exists( '_thumbnail_id', (array) $meta ) ) {
-		$meta['_thumbnail_id'] = (int) $request['featured_media'];
+	$featured_media = isset( $request['featured_media'] ) ? (int) $request['featured_media'] : null;
+	if ( $featured_media !== null ) {
+		$meta['_thumbnail_id'] = $featured_media;
 	}
 
 	$post = (array) $data;
@@ -659,6 +661,23 @@ function block_publish_for_rest( stdClass $data, WP_REST_Request $request ) {
 		$existing_post = get_post( $data->ID, ARRAY_A );
 		$post = array_merge( $existing_post, $post );
 		$meta = get_merged_meta( $data->ID, $meta );
+		$post = enrich_post_for_checks( (int) $data->ID, $post );
+	}
+
+	// Core saves these after rest_pre_insert, so the request value wins over the
+	// stored one that enrich_post_for_checks() read.
+	if ( $featured_media !== null ) {
+		$post['featured_media'] = $featured_media;
+	}
+	$request_fields = [
+		'sticky'   => 'sticky',
+		'format'   => 'post_format',
+		'template' => 'template',
+	];
+	foreach ( $request_fields as $param => $key ) {
+		if ( isset( $request[ $param ] ) ) {
+			$post[ $key ] = $request[ $param ];
+		}
 	}
 
 	/** @var \WP_Taxonomy[] */
@@ -747,9 +766,17 @@ function block_publish_if_failing( array $data, array $postarr ) : array {
 		$check_data['ID'] = (int) $postarr['ID'];
 		$meta = get_merged_meta( $postarr['ID'], $postarr['meta_input'] ?? [] );
 		$terms = get_merged_terms( $postarr['ID'], $postarr['tax_input'] ?? [] );
+		$check_data = enrich_post_for_checks( (int) $postarr['ID'], $check_data );
 	} else {
 		$meta = $postarr['meta_input'] ?? [];
 		$terms = $postarr['tax_input'] ?? [];
+	}
+
+	// wp_insert_post() sets the thumbnail from _thumbnail_id after this filter runs,
+	// so the value passed in wins over the stored one. The classic editor sends -1
+	// for no image.
+	if ( isset( $postarr['_thumbnail_id'] ) ) {
+		$check_data['featured_media'] = max( 0, (int) $postarr['_thumbnail_id'] );
 	}
 
 	$checks = get_check_status( $check_data, $meta, $terms );
