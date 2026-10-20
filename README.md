@@ -204,6 +204,8 @@ To enable advanced functionality, you may want to wrap this component in [select
 
 To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
 
+A blocked REST publish request returns a 400 error with the code `altis_publication_checklist_incomplete`, and lists the failing checks under `data.checks`.
+
 ## Showing the tasks expanded
 
 Once every required task is complete, the pre-publish panel hides the task list behind a "Show tasks" button. To list the tasks by default, filter the `altis.publication-checklist.show_tasks_expanded` value and return true from your callback. Editors can still collapse the list with "Hide tasks".

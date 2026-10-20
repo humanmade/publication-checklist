@@ -20,6 +20,13 @@ add_filter( 'altis.publication-checklist.show_tasks_expanded', function () {
 	return ! empty( $_COOKIE['publication_checklist_tasks_expanded'] );
 } );
 
+// A typed callback at a later priority than the plugin's default, as other plugins
+// register. It fatals if the plugin's WP_Error reaches it, which the REST publish
+// tests catch.
+add_filter( 'rest_pre_insert_post', function ( stdClass $post ) : stdClass {
+	return $post;
+}, 20 );
+
 // A meta key and a taxonomy for the tests that edit them. The taxonomy has no
 // custom rest_base, so its REST key equals its name, which is the key the
 // editor snapshot reads.
