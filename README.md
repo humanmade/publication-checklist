@@ -202,7 +202,7 @@ To enable advanced functionality, you may want to wrap this component in [select
 
 ## Enforcing checks
 
-To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
+To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. Editors can still save drafts. The Publish button in the pre-publish panel stays disabled, with a message that checks must be completed, until the required tasks are done. The server also rejects requests to publish the post while checks fail.
 
 A blocked REST publish request returns a 400 error with the code `altis_publication_checklist_incomplete`, and lists the failing checks under `data.checks`.
 
