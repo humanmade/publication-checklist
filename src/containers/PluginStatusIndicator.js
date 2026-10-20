@@ -5,12 +5,16 @@ import { dispatch, useSelect } from '@wordpress/data';
 import { STORE_NAME } from '../store';
 
 const PluginStatusIndicator = ( props ) => {
-	const isIncomplete = useSelect( ( select ) => {
+	const { isIncomplete, isPublishPanelOpen } = useSelect( ( select ) => {
 		const currentPost = select( 'core/editor' ).getCurrentPost();
 		const restResults = currentPost?.prepublish_checks;
-		return Object.values(
-			select( STORE_NAME ).getMergedResults( restResults )
-		).some( ( { status } ) => status === 'incomplete' );
+		return {
+			isIncomplete: Object.values(
+				select( STORE_NAME ).getMergedResults( restResults )
+			).some( ( { status } ) => status === 'incomplete' ),
+			isPublishPanelOpen:
+				select( 'core/editor' ).isPublishSidebarOpened(),
+		};
 	} );
 
 	const shouldBlockPublish = Boolean(
@@ -29,14 +33,14 @@ const PluginStatusIndicator = ( props ) => {
 			return;
 		}
 		const { lockPostSaving, unlockPostSaving } = dispatch( 'core/editor' );
-		if ( isIncomplete ) {
+		if ( isIncomplete && isPublishPanelOpen ) {
 			lockPostSaving( lockName );
 		} else {
 			unlockPostSaving( lockName );
 		}
 
 		return () => unlockPostSaving( lockName );
-	}, [ shouldBlockPublish, isIncomplete, lockName ] );
+	}, [ shouldBlockPublish, isIncomplete, isPublishPanelOpen, lockName ] );
 
 	return isIncomplete ? <Error { ...props } /> : <Check { ...props } />;
 };
