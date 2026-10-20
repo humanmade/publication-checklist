@@ -152,6 +152,8 @@ registerPrepublishCheck( 'has-featured-image', {
 
 By default, Publication Checklist will render a simple checklist of all checks.
 
+The REST API includes each post's check results in a `prepublish_checks` field. The field is only returned with `context=edit`, so only users who can edit the post can see it.
+
 You can override a specific item to render richer UI if needed. For example, you may wish to integrate deeply into the block editor, or allow users to correct failing checks inline. This UI is directly inserted into the React element tree and replaces the default output.
 
 Publication Checklist exposes a `altis-publishing-workflow.item.{check_id}` filter using [`withFilters`](https://github.com/WordPress/gutenberg/tree/master/packages/components/src/higher-order/with-filters) to allow overriding the list item component.
@@ -202,7 +204,9 @@ To enable advanced functionality, you may want to wrap this component in [select
 
 ## Enforcing checks
 
-To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. This will change the UI to disable the publish button, display a user-facing message that checks must be completed, and block requests to publish the post.
+To enforce these checks and block publication, filter the `altis.publication-checklist.block_on_failing` value and return true from your callback. Editors can still save drafts. The Publish button in the pre-publish panel stays disabled, with a message that checks must be completed, until the required tasks are done. The server also rejects requests to publish the post while checks fail.
+
+A blocked REST publish request returns a 400 error with the code `altis_publication_checklist_incomplete`, and lists the failing checks under `data.checks`.
 
 ![The Publication Checklist sidebar with three of four required tasks incomplete and a notice that the post cannot be published until they are done.](docs/images/checklist-incomplete.png)
 

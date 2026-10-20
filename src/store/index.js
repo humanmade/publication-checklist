@@ -4,6 +4,7 @@ export const STORE_NAME = 'altis/publication-checklist';
 
 const DEFAULT_STATE = {
 	live: {},
+	saved: null,
 };
 
 /**
@@ -19,6 +20,12 @@ const reducer = ( state = DEFAULT_STATE, action ) => {
 			return {
 				...state,
 				live: action.payload,
+			};
+
+		case 'SET_SAVED_RESULTS':
+			return {
+				...state,
+				saved: action.payload,
 			};
 
 		case 'CLEAR_LIVE_RESULT': {
@@ -44,7 +51,9 @@ const selectors = {
 	getLiveResults: ( state ) => state.live,
 
 	/**
-	 * Merge live results with REST results, with priority JS > PHP-live > PHP-static.
+	 * Merge live results with saved results, with priority JS > PHP-live > PHP-static.
+	 *
+	 * Saved results fetched after a metabox save replace the REST results from core/editor.
 	 *
 	 * @param {Object}      state       - Store state.
 	 * @param {Object|null} restResults - REST prepublish_checks object from core/editor, or null.
@@ -52,10 +61,11 @@ const selectors = {
 	 */
 	getMergedResults: ( state, restResults ) => {
 		const merged = {};
+		const base = state.saved ?? restResults;
 
-		// Start with REST results (PHP-static)
-		if ( restResults && typeof restResults === 'object' ) {
-			Object.entries( restResults ).forEach( ( [ id, result ] ) => {
+		// Start with saved results (PHP-static)
+		if ( base && typeof base === 'object' ) {
+			Object.entries( base ).forEach( ( [ id, result ] ) => {
 				merged[ id ] = {
 					status: result.status,
 					message: result.message,
@@ -98,6 +108,17 @@ const actions = {
 	 */
 	setLiveResults: ( map ) => ( {
 		type: 'SET_LIVE_RESULTS',
+		payload: map,
+	} ),
+
+	/**
+	 * Set the saved results fetched from the server, replacing any previous map.
+	 *
+	 * @param {Object|null} map - Saved results map keyed by check id, or null to use core/editor's.
+	 * @return {Object} Action object.
+	 */
+	setSavedResults: ( map ) => ( {
+		type: 'SET_SAVED_RESULTS',
 		payload: map,
 	} ),
 
