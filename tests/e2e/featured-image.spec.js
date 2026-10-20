@@ -12,6 +12,23 @@ const TITLE = 'A post title that is long enough';
 const api = ( page, options ) =>
 	page.evaluate( ( opts ) => window.wp.apiFetch( opts ), options );
 
+/**
+ * Run an apiFetch request that should fail, and return the error it rejects with.
+ *
+ * @param {import('@playwright/test').Page} page    - Admin page with wp.apiFetch loaded.
+ * @param {Object}                          options - Options for apiFetch.
+ * @return {Promise<Object|null>} The REST error, or null if the request succeeded.
+ */
+const apiError = ( page, options ) =>
+	page.evaluate(
+		( opts ) =>
+			window.wp.apiFetch( opts ).then(
+				() => null,
+				( error ) => error
+			),
+		options
+	);
+
 test.describe( 'Featured image checks', () => {
 	test( 'Server-side checks see the featured image', async ( {
 		baseURL,
@@ -66,12 +83,18 @@ test.describe( 'Featured image checks', () => {
 		expect( published.status ).toBe( 'publish' );
 
 		// A post without an image is still blocked.
-		const blocked = await api( page, {
+		const blocked = await apiError( page, {
 			path: `/wp/v2/posts/${ withoutImage.id }`,
 			method: 'POST',
 			data: { status: 'publish' },
 		} );
-		expect( blocked.status ).toBe( 'draft' );
+		expect( blocked?.code ).toBe(
+			'altis_publication_checklist_incomplete'
+		);
+		const stillDraft = await api( page, {
+			path: `/wp/v2/posts/${ withoutImage.id }?context=edit`,
+		} );
+		expect( stillDraft.status ).toBe( 'draft' );
 
 		await page.goto( '/wp-admin/edit.php?post_status=all' );
 
@@ -179,12 +202,14 @@ test.describe( 'Request values in checks', () => {
 				data: { title: TITLE, status: 'draft', ...fields },
 			} );
 
-			const blocked = await api( page, {
+			const blocked = await apiError( page, {
 				path: `/wp/v2/posts/${ draft.id }`,
 				method: 'POST',
 				data: { status: 'publish', [ key ]: value },
 			} );
-			expect( blocked.status ).toBe( 'draft' );
+			expect( blocked?.code ).toBe(
+				'altis_publication_checklist_incomplete'
+			);
 		} );
 	}
 } );
