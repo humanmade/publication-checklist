@@ -4,7 +4,7 @@ Run checks and enforce conditions before posts are published. Built and designed
 
 Publication Checklist provides a framework for building out prepublish checks, with flexibility to fit your workflows.
 
-![Screen recording of the block editor with the Publication Checklist sidebar open. Typing a title, choosing a category and setting a featured image tick off the required tasks one by one, then the pre-publish panel opens with every task complete.](docs/images/live-checks.gif)
+![Screen recording of the block editor with the pre-publish panel open. Typing a title, choosing a category and setting a featured image tick off the required tasks one by one until the Publish button becomes enabled.](docs/images/live-checks.gif)
 
 
 ## Demo Plugin
@@ -208,13 +208,13 @@ To enforce these checks and block publication, filter the `altis.publication-che
 
 A blocked REST publish request returns a 400 error with the code `altis_publication_checklist_incomplete`, and lists the failing checks under `data.checks`.
 
-![The Publication Checklist sidebar with three of four required tasks incomplete and a notice that the post cannot be published until they are done.](docs/images/checklist-incomplete.png)
+![The pre-publish panel with a disabled Publish button, a notice that the post cannot be published until all required tasks are done, and a checklist with three of four required tasks incomplete.](docs/images/checklist-incomplete.png)
 
 ## Showing the tasks expanded
 
 Once every required task is complete, the pre-publish panel hides the task list behind a "Show tasks" button. To list the tasks by default, filter the `altis.publication-checklist.show_tasks_expanded` value and return true from your callback. Editors can still collapse the list with "Hide tasks".
 
-![The pre-publish panel once every required task is done, with the task list collapsed behind a Show tasks button.](docs/images/checklist-complete.png)
+![The pre-publish panel once every required task is done, with an enabled Publish button and the task list collapsed behind a Show tasks link.](docs/images/checklist-complete.png)
 
 
 ## Modifying the list view
