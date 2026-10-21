@@ -31,8 +31,7 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 		'live'      => true,
 		'fields'    => [ 'featured_media' ],
 		'run_check' => function ( array $post ) : Status {
-			$media = $post['featured_media'] ?? get_post_thumbnail_id( (int) ( $post['ID'] ?? 0 ) );
-			return ! empty( $media )
+			return ! empty( $post['featured_media'] )
 				? new Status( Status::COMPLETE, 'Featured image added' )
 				: new Status( Status::INCOMPLETE, 'Add a featured image' );
 		},
@@ -40,10 +39,9 @@ add_action( 'altis.publication-checklist.register_prepublish_checks', function (
 
 	register_prepublish_check( 'category', [
 		'live'      => true,
-		'fields'    => [ 'terms.categories' ],
+		'fields'    => [ 'terms.category' ],
 		'run_check' => function ( array $post, array $meta, array $terms ) : Status {
-			// The live path keys terms by REST base, the save path by taxonomy name.
-			$ids     = array_map( 'intval', (array) ( $terms['categories'] ?? $terms['category'] ?? [] ) );
+			$ids     = array_map( 'intval', (array) ( $terms['category'] ?? [] ) );
 			$default = (int) get_option( 'default_category' );
 			$chosen  = array_diff( $ids, [ $default ] );
 			return ! empty( $chosen )
@@ -70,10 +68,5 @@ add_action( 'enqueue_block_editor_assets', function () {
 		[ 'altis_publication_checklist', 'wp-data' ],
 		'1.0.0',
 		true
-	);
-	wp_add_inline_script(
-		'demo-checks',
-		'window.demoChecks = ' . wp_json_encode( [ 'defaultCategory' => (int) get_option( 'default_category' ) ] ) . ';',
-		'before'
 	);
 } );
