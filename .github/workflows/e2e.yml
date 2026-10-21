@@ -46,19 +46,35 @@ jobs:
 
             - name: Start WordPress Playground
               run: |
-                  npx @wp-playground/cli server \
+                  npx @wp-playground/cli@3.1.59 server \
                     --blueprint=blueprint.json \
                     --php=${{ matrix.php }} \
                     --wp=${{ matrix.wordpress }} \
                     --port=$WP_PLAYGROUND_PORT \
-                    --auto-mount &
+                    --verbosity=debug \
+                    --auto-mount > "$RUNNER_TEMP/playground.log" 2>&1 &
                   echo "PLAYGROUND_PID=$!" >> $GITHUB_ENV
               env:
                   CI: true
 
             - name: Wait for WordPress Playground to be ready
               run: |
-                  timeout 60 bash -c 'until curl -sSf http://127.0.0.1:$WP_PLAYGROUND_PORT > /dev/null 2>&1; do sleep 2; done' || echo "Playground may not be fully ready"
+                  fail() {
+                    echo "::error::WordPress Playground $1"
+                    if kill -0 "$PLAYGROUND_PID" 2>/dev/null; then
+                      echo "Process $PLAYGROUND_PID is still running."
+                    else
+                      echo "Process $PLAYGROUND_PID has exited."
+                    fi
+                    tail -n 100 "$RUNNER_TEMP/playground.log"
+                    exit 1
+                  }
+                  deadline=$((SECONDS + 120))
+                  until curl -sSf --max-time 5 "http://127.0.0.1:$WP_PLAYGROUND_PORT" > /dev/null 2>&1; do
+                    kill -0 "$PLAYGROUND_PID" 2>/dev/null || fail "exited before it was ready."
+                    [ "$SECONDS" -lt "$deadline" ] || fail "was not ready after 120 seconds."
+                    sleep 2
+                  done
                   sleep 5
 
             - name: Run Playwright tests
@@ -75,6 +91,15 @@ jobs:
                   if [ -n "$PLAYGROUND_PID" ]; then
                     kill $PLAYGROUND_PID || true
                   fi
+
+            - name: Upload WordPress Playground log
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: playground-log-php${{ matrix.php }}-wp${{ matrix.wordpress }}
+                  path: ${{ runner.temp }}/playground.log
+                  retention-days: 30
+                  if-no-files-found: ignore
 
             - name: Upload test results
               uses: actions/upload-artifact@v4
