@@ -31,34 +31,17 @@ const openPanel = async ( page ) => {
 	await page.waitForTimeout( 1500 );
 };
 
-const openSidebar = async ( page ) => {
-	const btn = page.locator( '.interface-pinned-items button[aria-label="Publication Checklist"]' );
-	if ( ( await btn.getAttribute( 'aria-pressed' ) ) !== 'true' ) {
-		await btn.click();
-	}
-	await page.locator( '.interface-complementary-area .altis-publication-checklist__required, .interface-complementary-area .altis-publication-checklist__toggle-completed' ).first().waitFor();
-	await page.waitForTimeout( 800 );
-};
-
-// Screenshot the sidebar from its header to the end of the checklist.
-const shootSidebar = async ( page, file ) => {
-	const area = await page.locator( '.interface-complementary-area' ).boundingBox();
-	const last = await page.locator( '.interface-complementary-area .altis-publication-checklist__items' ).last().boundingBox();
-	await page.mouse.move( 5, 5 );
-	const pad = 16;
-	await page.screenshot( {
-		path: path.join( OUT, file ),
-		clip: { x: area.x - pad, y: area.y, width: area.width + pad * 2, height: last.y + last.height - area.y + pad },
-	} );
-};
-
-// Screenshot the publish panel's checklist section with a little padding.
+// Screenshot the pre-publish panel from its header (with the Publish button)
+// to the end of the checklist.
 const shootPanel = async ( page, file ) => {
-	const box = await page.locator( '.altis-publication-checklist__panel' ).boundingBox();
+	const panel = await page.locator( '.editor-post-publish-panel' ).boundingBox();
+	const list = await page.locator( '.altis-publication-checklist__panel' ).boundingBox();
 	await page.mouse.move( 5, 5 );
+	await page.evaluate( () => document.activeElement?.blur() );
+	const pad = 12;
 	await page.screenshot( {
 		path: path.join( OUT, file ),
-		clip: { x: box.x, y: box.y, width: box.width, height: box.height + 16 },
+		clip: { x: panel.x - pad, y: panel.y, width: panel.width + pad * 2, height: list.y + list.height - panel.y + pad },
 	} );
 };
 
@@ -129,14 +112,14 @@ const seed = async ( page ) => {
 	const t = await page.locator( '.wp-list-table' ).boundingBox();
 	await page.screenshot( { path: path.join( OUT, 'tasks-column.png' ), clip: { x: t.x - 8, y: t.y, width: t.width + 16, height: t.height + 8 } } );
 
-	// Incomplete state.
+	// Incomplete state: pre-publish panel with the required tasks open.
 	await openEditor( page );
 	await page.evaluate( () => wp.data.dispatch( 'core/editor' ).editPost( { title: 'Spring launch' } ) );
 	await page.waitForTimeout( 1500 );
-	await openSidebar( page );
-	await shootSidebar( page, 'checklist-incomplete.png' );
+	await openPanel( page );
+	await shootPanel( page, 'checklist-incomplete.png' );
 
-	// Complete state.
+	// Complete state: every required task done while the panel stays open.
 	await page.evaluate( ( i ) => wp.data.dispatch( 'core/editor' ).editPost( {
 		title: 'Our spring product launch: what to expect',
 		featured_media: i.mediaId,
@@ -144,7 +127,6 @@ const seed = async ( page ) => {
 		excerpt: 'Everything shipping this season.',
 	} ), ids );
 	await page.waitForTimeout( 2500 );
-	await openPanel( page );
 	await shootPanel( page, 'checklist-complete.png' );
 	await ctx.close();
 
@@ -155,19 +137,22 @@ const seed = async ( page ) => {
 	} );
 	const vp = await vctx.newPage();
 	await openEditor( vp );
-	await openSidebar( vp );
-	await vp.waitForTimeout( 1500 );
-	await vp.frameLocator( 'iframe[name="editor-canvas"]' ).locator( '.editor-post-title__input' ).click();
-	await vp.keyboard.type( 'Spring launch', { delay: 130 } );
-	await vp.waitForTimeout( 1500 );
-	await vp.keyboard.type( ': what to expect this season', { delay: 130 } );
-	await vp.waitForTimeout( 1800 );
-	await vp.evaluate( ( i ) => wp.data.dispatch( 'core/editor' ).editPost( { categories: [ i.news ] } ), ids );
-	await vp.waitForTimeout( 2000 );
-	await vp.evaluate( ( i ) => wp.data.dispatch( 'core/editor' ).editPost( { featured_media: i.mediaId } ), ids );
-	await vp.waitForTimeout( 2500 );
+	// The Publish toggle stays disabled on an empty post, so start with some content.
+	await vp.evaluate( () => wp.data.dispatch( 'core/block-editor' ).resetBlocks( [
+		wp.blocks.createBlock( 'core/paragraph', { content: 'Everything shipping this season, in one place.' } ),
+	] ) );
+	await vp.waitForTimeout( 1000 );
 	await openPanel( vp );
-	await vp.waitForTimeout( 3000 );
+	await vp.waitForTimeout( 2000 );
+	await vp.frameLocator( 'iframe[name="editor-canvas"]' ).locator( '.editor-post-title__input' ).click();
+	await vp.keyboard.type( 'Spring launch', { delay: 200 } );
+	await vp.waitForTimeout( 1500 );
+	await vp.keyboard.type( ': what to expect this season', { delay: 200 } );
+	await vp.waitForTimeout( 2000 );
+	await vp.evaluate( ( i ) => wp.data.dispatch( 'core/editor' ).editPost( { categories: [ i.news ] } ), ids );
+	await vp.waitForTimeout( 2500 );
+	await vp.evaluate( ( i ) => wp.data.dispatch( 'core/editor' ).editPost( { featured_media: i.mediaId } ), ids );
+	await vp.waitForTimeout( 3500 );
 	await vctx.close();
 	await browser.close();
 } )();
